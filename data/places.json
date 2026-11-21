@@ -126,7 +126,8 @@
     "category": "restaurant",
     "tags": [
       "cheap-eats",
-      "iconic"
+      "iconic",
+      "deli"
     ],
     "lat": 45.51633,
     "lng": -73.57765,
@@ -600,7 +601,8 @@
     "name": "Kazu",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "japanese"
     ],
     "lat": 45.49305,
     "lng": -73.57988,
@@ -887,7 +889,8 @@
     "tags": [
       "cheap-eats",
       "iconic",
-      "late-night"
+      "late-night",
+      "quebecois"
     ],
     "lat": 45.5255,
     "lng": -73.5751,
@@ -1605,7 +1608,8 @@
     "name": "Ma Poule Mouillée",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "portuguese"
     ],
     "lat": 45.525165,
     "lng": -73.575064,
@@ -1664,7 +1668,9 @@
     "name": "Patati Patata",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "quebecois",
+      "burger"
     ],
     "lat": 45.517905,
     "lng": -73.58145,
@@ -1723,7 +1729,8 @@
     "name": "Arepera du Plateau",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "latin"
     ],
     "lat": 45.514772,
     "lng": -73.57183,
@@ -1843,7 +1850,8 @@
     "category": "restaurant",
     "tags": [
       "cheap-eats",
-      "iconic"
+      "iconic",
+      "deli"
     ],
     "lat": 45.522161,
     "lng": -73.606873,
@@ -1902,7 +1910,8 @@
     "name": "Le Petit Alep",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "middle-eastern"
     ],
     "lat": 45.536452,
     "lng": -73.616165,
@@ -1949,7 +1958,9 @@
     "name": "Pizzeria Gema",
     "category": "restaurant",
     "tags": [
-      "cheap-eats"
+      "cheap-eats",
+      "pizza",
+      "italian"
     ],
     "lat": 45.533253,
     "lng": -73.613136,
