@@ -14,9 +14,9 @@ Status legend: **[skeleton]** = needed for the Fri 11 PM checkpoint · **[harden
 
 ### Part 0: Foundations [skeleton] · ~30 min
 - **Job:** everything the other parts share.
-- **Files:** `lib/engine/config.js` (add `tickMin: 30`, `minLeadMin: 60`, `minFriends: 1`, `LEARNING.suppressAt: -0.5`, `suppressFactor: 0.3`, `noveltyDays: 14`); `lib/engine/timing.js` (stub `timingScore() → 0.5`, handed to Mhammad); `lib/engine/fixtures.js` (`makeCtx({ now, ... })` test builder with a fixed `now`, e.g. Fri 2026-11-20 20:00 local, built from `lib/mocks/*`).
+- **Files:** `lib/engine/config.js` (add `tickMin: 30`, `minLeadMin: 60`, `minFriends: 1`, `LEARNING.suppressAt: -0.5`, `suppressFactor: 0.3`, `noveltyDays: 14`); **no `timing.js`**: Mhammad writes it himself, so `scoring.js` uses a constant `timing = 0.5` until his file is merged (Part 7c then imports it); `lib/engine/context.js` (`indexContext(raw)`: the one pure function that shapes the EngineContext, used by both `load.js` and the fixtures); `lib/engine/fixtures.js` (`makeCtx({ now, ... })` test builder with a fixed `now`, e.g. Fri 2026-11-20 20:00 local, built from `lib/mocks/*`).
 - **Best version:** every later test starts from one line, `makeCtx()`.
-- **Done when:** PR merged; Mhammad told about `timing.js`.
+- **Done when:** committed + pushed to `backend_a`; PR to `main` merged.
 
 ### Part 1: Context loader [skeleton] · ~30 min
 - **Job:** the only I/O in the engine. Fetches everything in parallel and indexes it.
@@ -115,7 +115,7 @@ Three kinds of sync point. Claude will **stop and tell Anthony** at each one dur
 ### Per-part sync points
 | Part | CHECK (before / while) | APPROVE (before merge) | COMMIT + NOTIFY (after merge) |
 |---|---|---|---|
-| 0 Foundations | **Mhammad:** OK for you to create the `lib/engine/timing.js` stub in his file? | — | **Mhammad:** "timing stub is on main: replace the body, keep `timingScore(category, startIso, endIso) → 0..1`." **Adel:** "engine tests now use `lib/mocks/*`. Changing mocks may break `npm test`, so run it." |
+| 0 Foundations | — (timing is Mhammad's; nothing to ask) | — | **Adel:** "engine tests now use `lib/mocks/*`. Changing mocks may break `npm test`, so run it." **Mhammad:** "until your `lib/engine/timing.js` lands, scoring uses timing = 0.5. Keep the signature `timingScore(category, startIso, endIso) → 0..1` and ping me when it's merged." |
 | 1 Loader | **Adel:** are the 8 `lib/data` function names/arguments final? Will `getBusyBlocks` return *friends'* blocks once RLS is on? Will `getTravelTimes` cover every (user, place) pair? | — | **Adel:** "the engine depends on these 8 functions (list). Don't rename them; only change the bodies." |
 | 2 Time grid | — | **Team:** waking hours 09:00–23:00 and a 60-min lead time (no suggestions starting within the next hour). | — |
 | 3 Free masks | **Adel:** seeded busy blocks are UTC ISO and end-exclusive? | — | — |
@@ -133,7 +133,7 @@ Three kinds of sync point. Claude will **stop and tell Anthony** at each one dur
 | 14 Calendar | **Adel:** `busy_blocks` allows inserts with `source='google'`. | — | **Oscar:** "the onboarding 'Connect calendar' button now works (`/api/calendar/sync` returns `{ imported }`)." **Adel:** "real Google busy blocks are now in the DB for the demo user; the reset route must not wipe them (or must re-sync)." |
 
 ### Always-on rules
-- **Before every part:** `git pull origin main` into `feature/feed-engine`.
+- **Before every part:** `git pull origin main` into `backend_a`.
 - **Commit at least hourly** even mid-part (`feat(engine): …`), and push so the branch is visible.
 - **Shared files** (`types/*`, `package.json`, `next.config.mjs`, `app/layout.jsx`): announce before editing and get approval; then do it as its own tiny PR.
 - **Never merge a contract change silently.** If `npm test` (`tests/contracts.test.js`) fails because of your change, stop and notify.
@@ -150,7 +150,7 @@ Three kinds of sync point. Claude will **stop and tell Anthony** at each one dur
 Each part: one Claude session ("I'm Anthony, do Part N"), one PR, `npm test && npm run lint && npm run build` before merging.
 
 ## Hand-offs
-- **Mhammad:** `timingScore(category, startIso, endIso) → 0..1` (Part 0 stub); `captionCards(cards) → Map<cardId, caption>` (11c); `buildFeed` filters (11a).
+- **Mhammad:** `timingScore(category, startIso, endIso) → 0..1` (Mhammad writes it; constant 0.5 until then); `captionCards(cards) → Map<cardId, caption>` (11c); `buildFeed` filters (11a).
 - **Oscar:** dedupe cards by `card.id` across pages; the `cards` array can be empty.
 - **Adel:** RLS must let friends read each other's `busy_blocks`; `getTravelTimes` must cover every (user, place) pair.
 
