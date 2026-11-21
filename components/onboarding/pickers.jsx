@@ -77,7 +77,7 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
           placeholder="H2T or H2T 1S6"
           aria-invalid={Boolean(error) || invalid || undefined}
           aria-describedby={`${id}-help`}
-          className="min-w-0 flex-1 bg-transparent py-3 text-lg font-bold tracking-wider uppercase outline-none placeholder:font-semibold placeholder:tracking-normal placeholder:text-ink-muted"
+          className="min-w-0 flex-1 bg-transparent py-3 text-lg font-bold tracking-wider uppercase outline-none placeholder:font-semibold placeholder:tracking-normal placeholder:normal-case placeholder:text-ink-muted"
         />
         {isPostalCode(value) && !error && (
           <span

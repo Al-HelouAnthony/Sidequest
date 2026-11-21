@@ -67,7 +67,7 @@ export function TabBar({ active }) {
               aria-label={badge ? `${tab.label}, ${inviteCount} new ${inviteCount === 1 ? "invite" : "invites"}` : undefined}
               className={cn(
                 "relative z-10 flex min-h-[52px] flex-col items-center justify-center gap-0.5 rounded-[24px] text-[11px] font-bold transition-colors duration-300",
-                on ? "text-on-teal" : "text-ink/75 hover:text-ink",
+                on ? "text-on-teal" : "text-ink hover:text-ink",
                 focusRing,
               )}
             >

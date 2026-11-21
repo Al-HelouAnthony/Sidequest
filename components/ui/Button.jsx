@@ -88,7 +88,7 @@ export function Button({
 
 const ICON_VARIANTS = {
   /** Dark frost, for buttons that sit on a photo (feed card actions). */
-  glass: cn("glass-photo text-white hover:bg-black/55", pressable),
+  glass: cn("glass-photo hover:bg-raised", pressable),
   /** Paper island button (back, info). */
   solid: "press bg-surface text-ink",
   ghost: cn("text-ink hover:bg-ink/5", pressable),
