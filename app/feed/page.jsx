@@ -9,7 +9,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
 import { ToastProvider, useToast } from "@/components/ui/Toast";
+
+/** For the Refresh pill: "Showing fewer bars". */
+const CATEGORY_PLURALS = {
+  cafe: "cafés",
+  restaurant: "restaurants",
+  bar: "bars",
+  park: "parks",
+  viewpoint: "viewpoints",
+  activity: "activities",
+  event: "events",
+};
 
 /** Skip-out animation length. Matches --animate-skip-out in app/globals.css. */
 const SKIP_OUT_MS = 280;
@@ -65,6 +77,10 @@ function Feed() {
   /** Per-card counter; bumping it puts that card's swipe bar back to the start. */
   const [goResets, setGoResets] = useState(() => new Map(/** @type {[string, number][]} */ ([])));
   const [reloadKey, setReloadKey] = useState(0);
+  /** Text of the Refresh pill, or null when hidden. Shown after 2 skips so the learning is visible. */
+  const [refreshHint, setRefreshHint] = useState(/** @type {string | null} */ (null));
+  /** Skips per category since the last refresh. */
+  const skipCounts = useRef(/** @type {Map<string, number>} */ (new Map()));
 
   const scrollerRef = useRef(/** @type {HTMLElement | null} */ (null));
   const sentinelRef = useRef(/** @type {HTMLDivElement | null} */ (null));
@@ -140,6 +156,24 @@ function Feed() {
     });
   };
 
+  /** Records a skip; after 2 (since the last refresh) the Refresh pill appears. */
+  const noteSkip = (/** @type {import("@/types/domain").CategoryT} */ category) => {
+    const counts = skipCounts.current;
+    const n = (counts.get(category) ?? 0) + 1;
+    counts.set(category, n);
+    const total = [...counts.values()].reduce((a, b) => a + b, 0);
+    if (n >= 2) setRefreshHint(`Showing fewer ${CATEGORY_PLURALS[category] ?? "of those"}`);
+    else if (total >= 2) setRefreshHint("Your feed learned");
+  };
+
+  /** Re-ranked first page (the engine has learned from the skips). Back to the top. */
+  const refresh = () => {
+    skipCounts.current = new Map();
+    setRefreshHint(null);
+    scrollerRef.current?.scrollTo({ top: 0 });
+    retry();
+  };
+
   /**
    * Optimistic: the interaction goes out on tap, the card flies off, then leaves the list
    * and the next card snaps into its place. Reduced motion → removed at once.
@@ -148,6 +182,7 @@ function Feed() {
   const skip = (card) => {
     if (leaving.has(card.id)) return;
     sendInteraction(card, "skip");
+    noteSkip(card.place.category);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       removeCard(card.id);
       return;
@@ -190,6 +225,23 @@ function Feed() {
       className="mx-auto h-dvh w-full max-w-md snap-y snap-mandatory overflow-y-scroll overscroll-contain scrollbar-none"
     >
       <h1 className="sr-only">Sidequest feed</h1>
+
+      {/* Refresh pill: floats over the feed; the wrapper is a live region so it gets announced. */}
+      <div
+        aria-live="polite"
+        className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto flex max-w-md justify-center px-4 pt-safe"
+      >
+        {refreshHint && status === "ready" && (
+          <Button
+            variant="secondary"
+            onClick={refresh}
+            leadingIcon={<Icon name="refresh" strokeWidth={2.5} className="size-4" />}
+            className="pointer-events-auto shadow-cel motion-safe:animate-toast-in"
+          >
+            {refreshHint} · Refresh
+          </Button>
+        )}
+      </div>
 
       {status === "loading" && (
         <Page>

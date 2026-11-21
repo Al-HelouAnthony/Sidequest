@@ -32,6 +32,7 @@ const SHAPES = {
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
+  refresh: [{ d: "M20.5 12a8.5 8.5 0 1 1-2.6-6.1L20.5 8.5" }, { d: "M20.5 3.5v5h-5" }],
   info: [{ d: circle9, f: "teal" }, { d: "M12 11v5M12 8h.01" }],
   clock: [{ d: circle9, f: "teal" }, { d: "M12 7v5l3 2" }],
   pin: [
