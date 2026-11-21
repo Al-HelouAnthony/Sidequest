@@ -19,6 +19,7 @@
  *           SwipeToGo: animate-shake (needs --amp), animate-shard-fly (needs --dx/--dy/--rot), animate-shock,
  *           animate-draw-check, animate-land, animate-chev, animate-nudge-x.
  *           Plan screen: animate-confetti (needs --drift, --spin).
+ *           Search: animate-shake-once (a short "nope" shake, uses --amp), animate-scan (magnifier wobble while searching).
  *           Apply with motion-safe: so reduced-motion users get none.
  * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
@@ -81,6 +82,8 @@
   --animate-chev: chev 1.2s ease-in-out infinite;
   --animate-nudge-x: nudge-x 2.4s ease-in-out 1s infinite;
   --animate-confetti: confetti 1.9s cubic-bezier(0.25, 0.6, 0.45, 1) both;
+  --animate-shake-once: shake 70ms linear 5;
+  --animate-scan: scan 0.9s ease-in-out infinite;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -167,6 +170,11 @@
     0% { transform: translate(0, -12vh) rotate(0); opacity: 1; }
     85% { opacity: 1; }
     100% { transform: translate(var(--drift, 0px), 105vh) rotate(var(--spin, 360deg)); opacity: 0; }
+  }
+  @keyframes scan {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    25% { transform: translate(-2px, -1px) rotate(-10deg); }
+    75% { transform: translate(2px, 1px) rotate(10deg); }
   }
 }
 
