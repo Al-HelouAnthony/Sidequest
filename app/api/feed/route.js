@@ -1,19 +1,21 @@
 /**
- * GET /api/feed?cursor=<n>&filters=<url-encoded JSON FeedFilters>
- * Owner: Anthony. STUB: returns mock cards. Replace with lib/engine buildFeed().
- * Response shape: FeedResponse (types/api.js).
+ * GET /api/feed?cursor=<n>&filters=<url-encoded JSON FeedFilters>&debug=1
+ * Owner: Anthony. Response: FeedResponse (types/api.js), plus `debug` when debug=1.
  */
 import { FeedFilters } from "@/types/feed";
 import { getSessionUserId } from "@/lib/auth";
 import { jsonError } from "@/lib/http";
-import { buildMockFeedCards } from "@/lib/mocks/feedCards";
+import { nowLocal } from "@/lib/time";
 import { ENGINE } from "@/lib/engine/config";
+import { loadContext } from "@/lib/engine/load";
+import { buildFeed } from "@/lib/engine";
 
 /** @param {import("next/server").NextRequest} request */
 export async function GET(request) {
-  await getSessionUserId();
+  const userId = await getSessionUserId();
   const params = request.nextUrl.searchParams;
 
+  let filters = {};
   const rawFilters = params.get("filters");
   if (rawFilters) {
     let json;
@@ -24,12 +26,21 @@ export async function GET(request) {
     }
     const parsed = FeedFilters.safeParse(json);
     if (!parsed.success) return jsonError(400, "Invalid filters");
-    // TODO(Anthony): pass parsed.data to the engine.
+    filters = parsed.data;
   }
 
-  const offset = Number(params.get("cursor") ?? 0) || 0;
-  const all = buildMockFeedCards();
-  const cards = all.slice(offset, offset + ENGINE.pageSize);
+  const ctx = await loadContext(userId, nowLocal());
+  if (!ctx) return jsonError(404, "User not found");
+
+  const debug = params.get("debug") === "1";
+  const { cards, debug: info } = buildFeed(ctx, { filters, debug });
+
+  const offset = Math.max(0, Number(params.get("cursor") ?? 0) || 0);
+  const page = cards.slice(offset, offset + ENGINE.pageSize);
   const next = offset + ENGINE.pageSize;
-  return Response.json({ cards, nextCursor: next < all.length ? String(next) : null });
+  return Response.json({
+    cards: page,
+    nextCursor: next < cards.length ? String(next) : null,
+    ...(debug ? { debug: info } : {}),
+  });
 }
