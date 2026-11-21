@@ -13,22 +13,25 @@ const FILLS = {
   accent: "fill-accent",
   teal: "fill-teal",
   peach: "fill-peach",
-  paper: "fill-[#faf6f0]",
+  /** Follows the theme (light paper in light mode, dark surface in dark mode). */
+  paper: "fill-surface",
 };
 
-/** @typedef {{ d: string, f?: keyof typeof FILLS }} Shape */
+/**
+ * `w`: stroke-width multiplier for that path (e.g. 0.7 keeps the compass needle and ticks thin).
+ * @typedef {{ d: string, f?: keyof typeof FILLS, w?: number }} Shape
+ */
 
 /** Base cloud, reused (shifted up) by rain / snow / storm. */
 const cloud = "M7 19a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 9.5a4.5 4.5 0 0 1 .5 9.5z";
 const cloudUp = "M7 16a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 6.5a4.5 4.5 0 0 1 .5 9.5z";
-const circle9 = "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z";
 
 /** @type {Record<string, Shape[]>} */
 const SHAPES = {
-  x: [{ d: "M18 6 6 18M6 6l12 12" }],
+  x: [{ d: "M6.5 6.5l11 11M17.5 6.5l-11 11" }],
   heart: [{ d: "M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z", f: "accent" }],
-  arrowRight: [{ d: "M5 12h14M13 6l6 6-6 6" }],
-  arrowDown: [{ d: "M12 4v16M6 14l6 6 6-6" }],
+  arrowRight: [{ d: "M4.5 12h15M13.5 6l6 6-6 6" }],
+  arrowDown: [{ d: "M12 4.5v15M6 13.5l6 6 6-6" }],
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
@@ -39,9 +42,10 @@ const SHAPES = {
   ],
   /** Feed tab: a compass (discover). */
   compass: [
-    { d: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z", f: "paper" },
-    { d: "M15.8 8.2l-2.4 5.2-5.2 2.4 2.4-5.2z", f: "accent" },
-    { d: "M12 12h.01" },
+    { d: "M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z", f: "paper" },
+    { d: "M12 4.6v1.3M19.4 12h-1.3M12 19.4v-1.3M4.6 12h1.3", w: 0.7 },
+    { d: "M16.9 7.1L13.2 13.2L10.8 10.8Z", f: "accent", w: 0.7 },
+    { d: "M7.1 16.9L10.8 10.8L13.2 13.2Z", w: 0.7 },
   ],
   /** You tab: a person. */
   user: [
@@ -58,7 +62,10 @@ const SHAPES = {
     { d: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z", f: "teal" },
     { d: "M12 11v5.5M12 7.8h.01" },
   ],
-  clock: [{ d: circle9, f: "teal" }, { d: "M12 7v5l3 2" }],
+  clock: [
+    { d: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z", f: "teal" },
+    { d: "M12 7v5l3.2 2" },
+  ],
   pin: [
     { d: "M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z", f: "teal" },
     { d: "M12 12a2.5 2.5 0 1 0 0-5a2.5 2.5 0 1 0 0 5z", f: "accent" },
@@ -114,6 +121,7 @@ export function Icon({ name, filled = false, cel = false, strokeWidth = 1.5, cla
         <path
           key={i}
           d={s.d}
+          strokeWidth={s.w ? strokeWidth * s.w : undefined}
           className={s.f ? (filled ? "fill-current" : cel ? FILLS[s.f] : undefined) : undefined}
         />
       ))}

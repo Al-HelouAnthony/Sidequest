@@ -19,6 +19,7 @@ import { Button, IconButton, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "./options";
 import { InterestPicker, NeighbourhoodPicker, PeopleList } from "./pickers";
 
@@ -106,7 +107,9 @@ export function Onboarding() {
           : "Continue";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
       {/* Progress */}
       <div className="flex items-center gap-3">
         {step > 0 ? (
@@ -160,6 +163,7 @@ export function Onboarding() {
         </Button>
       </div>
     </main>
+    </>
   );
 }
 
@@ -249,11 +253,14 @@ function FriendsStep() {
 /** Suspense fallback for /onboarding. */
 export function OnboardingLoading() {
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
       <span className="sr-only">Loading…</span>
       <Skeleton className="h-11 rounded-full" />
       <Skeleton className="mx-auto mt-4 size-28 rounded-full" />
       <Skeleton className="h-20 rounded-tile" />
     </main>
+    </>
   );
 }

@@ -14,6 +14,7 @@ import { buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
 
 const POLL_MS = 5000;
@@ -64,7 +65,9 @@ export function MyPlans() {
   const waiting = visible.filter((p) => p.status === "pending" && mine(p)?.rsvp !== "invited");
 
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <h1 className="flex min-h-11 items-center font-display text-3xl font-extrabold">My plans</h1>
 
       {plans === null && !failed && <ListSkeleton />}
@@ -96,6 +99,7 @@ export function MyPlans() {
 
       <TabBar active="/plans" />
     </main>
+    </>
   );
 }
 

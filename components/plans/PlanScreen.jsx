@@ -10,6 +10,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { formatSlot } from "@/lib/time";
 import { usePlan } from "@/hooks/usePlan";
 import { useMeId } from "@/components/plans/useMeId";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { ConfirmSheet } from "@/components/ui/ConfirmSheet";
@@ -307,7 +308,12 @@ export function PlanLoading() {
 
 /** @param {{ children: React.ReactNode }} props */
 function Shell({ children }) {
-  return <main className="mx-auto min-h-dvh w-full max-w-md space-y-4 px-4 pt-safe pb-safe">{children}</main>;
+  return (
+    <>
+      <AppBackground />
+      <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-4 px-4 pt-safe pb-safe">{children}</main>
+    </>
+  );
 }
 
 function PlanSkeleton() {

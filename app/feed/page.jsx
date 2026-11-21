@@ -18,6 +18,7 @@ import { PlaceSheet } from "@/components/feed/PlaceSheet";
 import { WeatherSheet } from "@/components/feed/WeatherSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -288,7 +289,9 @@ function Feed() {
   };
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-md flex-col">
+    <>
+    <AppBackground />
+    <div className="relative z-10 mx-auto flex h-dvh w-full max-w-md flex-col">
       <FeedHeader onSearch={() => setSearchOpen((n) => n + 1)} />
       {search && (
         <SearchSummary summary={search.summary} onClear={clearSearch} onEdit={() => setSearchOpen((n) => n + 1)} />
@@ -416,6 +419,7 @@ function Feed() {
       </main>
       <TabBar active="/feed" />
     </div>
+    </>
   );
 }
 
