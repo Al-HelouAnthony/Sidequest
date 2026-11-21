@@ -40,23 +40,43 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  *   onGo?: () => void,
  *   onWhy?: () => void,
  *   priority?: boolean,
+ *   leaving?: boolean,
  *   className?: string,
  * }} props
  * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
+ * `leaving` plays the skip-out animation and blocks further taps (the parent removes the card after it).
  */
-export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, className }) {
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, leaving = false, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
   const [photoFailed, setPhotoFailed] = useState(false);
+  // Bumped on every save so the burst replays (new key = new animation).
+  const [burst, setBurst] = useState(0);
   const titleId = `card-${card.id}-title`;
+
+  const handleSave = () => {
+    if (!saved) setBurst((n) => n + 1);
+    onSave?.();
+  };
 
   return (
     <article
       aria-labelledby={titleId}
+      inert={leaving || undefined}
       className={cn(
         "relative isolate h-full overflow-hidden rounded-card border-[1.5px] border-line bg-ink shadow-cel",
+        leaving && "pointer-events-none motion-safe:animate-skip-out",
         className,
       )}
     >
+      {burst > 0 && (
+        <span
+          key={burst}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0 motion-safe:animate-heart-burst"
+        >
+          <Icon name="heart" cel strokeWidth={1.4} className="size-32 text-white drop-shadow-[0_6px_0_rgb(34_40_46/0.55)]" />
+        </span>
+      )}
       {!photoFailed && (
         // eslint-disable-next-line @next/next/no-img-element -- remote place photos, no next.config change needed
         <img
@@ -132,7 +152,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
               label={saved ? `Unsave ${place.name}` : `Save ${place.name}`}
               size="lg"
               pressed={saved}
-              onClick={onSave}
+              onClick={handleSave}
               icon={
                 <span key={saved ? "on" : "off"} className={saved ? "motion-safe:animate-pop" : undefined}>
                   <Icon name="heart" filled={saved} className={saved ? "text-love" : undefined} />

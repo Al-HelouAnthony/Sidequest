@@ -3,13 +3,16 @@
  * Feed screen. Owner: Oscar (PLAN.md F2/F3).
  * Full-screen snap scroll of FeedCards from GET /api/feed, more pages as you reach the end.
  * Skip and Save are optimistic (UI first, then POST /api/interactions).
- * TODO(F3): skip animation · TODO(F4): WhySheet · TODO(F5): InviteSheet on Let's go.
+ * TODO(F4): WhySheet · TODO(F5): InviteSheet on Let's go.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { Button } from "@/components/ui/Button";
 import { ToastProvider, useToast } from "@/components/ui/Toast";
+
+/** Skip-out animation length. Matches --animate-skip-out in app/globals.css. */
+const SKIP_OUT_MS = 280;
 
 /**
  * @param {string | null} cursor
@@ -55,6 +58,8 @@ function Feed() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [moreFailed, setMoreFailed] = useState(false);
   const [saved, setSaved] = useState(() => new Set(/** @type {string[]} */ ([])));
+  /** Cards playing the skip-out animation (still rendered, can't be tapped). */
+  const [leaving, setLeaving] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [reloadKey, setReloadKey] = useState(0);
 
   const scrollerRef = useRef(/** @type {HTMLElement | null} */ (null));
@@ -114,10 +119,41 @@ function Feed() {
     return () => io.disconnect();
   }, [nextCursor, loadMore, moreFailed, cards.length]);
 
-  /** @param {import("@/types/feed").FeedCardT} card */
+  // Skip timers, cleared if the feed unmounts mid-animation.
+  const skipTimers = useRef(/** @type {Set<ReturnType<typeof setTimeout>>} */ (new Set()));
+  useEffect(() => {
+    const timers = skipTimers.current;
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  /** @param {string} id */
+  const removeCard = (id) => {
+    setCards((list) => list.filter((c) => c.id !== id));
+    setLeaving((s) => {
+      const next = new Set(s);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  /**
+   * Optimistic: the interaction goes out on tap, the card flies off, then leaves the list
+   * and the next card snaps into its place. Reduced motion → removed at once.
+   * @param {import("@/types/feed").FeedCardT} card
+   */
   const skip = (card) => {
-    setCards((list) => list.filter((c) => c.id !== card.id));
+    if (leaving.has(card.id)) return;
     sendInteraction(card, "skip");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      removeCard(card.id);
+      return;
+    }
+    setLeaving((s) => new Set(s).add(card.id));
+    const t = setTimeout(() => {
+      skipTimers.current.delete(t);
+      removeCard(card.id);
+    }, SKIP_OUT_MS);
+    skipTimers.current.add(t);
   };
 
   /** @param {import("@/types/feed").FeedCardT} card */
@@ -177,6 +213,7 @@ function Feed() {
               card={card}
               priority={i === 0}
               saved={saved.has(card.id)}
+              leaving={leaving.has(card.id)}
               onSkip={() => skip(card)}
               onSave={() => toggleSave(card)}
               onGo={() => go(card)}
