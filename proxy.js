@@ -1,8 +1,9 @@
 /**
  * Next 16 proxy (formerly middleware). Owner: Anthony (Part 13).
- *  1. Real-accounts mode (DEMO_MODE=false): not signed in → pages go to /login, APIs get 401.
- *  2. Keeps the Supabase session fresh on every request (lib/supabase/proxy.js).
- * In demo mode (backup world) only step 2 runs.
+ *  1. Keeps the Supabase session fresh on every request and checks it's VALID (lib/supabase/proxy.js).
+ *  2. Real-accounts mode (DEMO_MODE=false): no valid session → pages go to /login, APIs get 401
+ *     (so expired/broken sessions never reach a route and crash with 500).
+ * In demo mode (backup world) only step 1 runs.
  */
 import { NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
@@ -10,15 +11,16 @@ import { routeDecision } from "@/lib/routeGuard";
 
 /** @param {import("next/server").NextRequest} request */
 export async function proxy(request) {
+  const { response, signedIn } = await updateSession(request);
   const decision = routeDecision({
     pathname: request.nextUrl.pathname,
     search: request.nextUrl.search,
-    hasSession: request.cookies.getAll().some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token")),
+    hasSession: signedIn,
     demoMode: process.env.DEMO_MODE !== "false",
   });
   if (decision.type === "unauthorized") return Response.json({ error: "Not signed in" }, { status: 401 });
   if (decision.type === "redirect") return NextResponse.redirect(new URL(decision.location, request.url));
-  return updateSession(request);
+  return response;
 }
 
 export const config = {
