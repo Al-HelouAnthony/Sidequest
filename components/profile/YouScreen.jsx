@@ -16,6 +16,44 @@ import { InterestPicker, NeighbourhoodPicker, PeopleList } from "@/components/on
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
+/**
+ * Data credits required by the licences (CC BY 4.0 for Ville de Montréal, ODbL for OpenStreetMap, plus the
+ * services' attribution terms). Wording from Adel; each source links to its licence or attribution page.
+ */
+const CREDITS = [
+  { text: "Ville de Montréal (CC BY 4.0)", href: "https://creativecommons.org/licenses/by/4.0/" },
+  { text: "© OpenStreetMap contributors", href: "https://www.openstreetmap.org/copyright" },
+  { text: "© openrouteservice.org by HeiGIT", href: "https://openrouteservice.org/" },
+  { text: "weather by Open-Meteo.com", href: "https://open-meteo.com/" },
+  { text: "photos: Wikimedia Commons contributors", href: "https://commons.wikimedia.org/" },
+];
+
+function DataCredits() {
+  return (
+    <section aria-labelledby="you-about" className="space-y-1.5 border-t-[1.5px] border-line/15 pt-4">
+      <h2 id="you-about" className="text-sm font-bold tracking-wide text-ink-muted uppercase">
+        About
+      </h2>
+      <p className="text-xs leading-relaxed text-ink-muted">
+        Data:{" "}
+        {CREDITS.map((c, i) => (
+          <span key={c.href}>
+            <a
+              href={c.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-ink-muted/40 underline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+            >
+              {c.text}
+            </a>
+            {i < CREDITS.length - 1 ? ", " : "."}
+          </span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
 export function YouScreen() {
   const [me, setMe] = useState(/** @type {MeBasics | null} */ (null));
   const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
@@ -30,13 +68,13 @@ export function YouScreen() {
     fetch("/api/me", { signal: ctrl.signal, cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`me ${r.status}`))))
       .then((json) => {
-        // neighbourhoodId isn't in the User contract yet; read it raw so it shows once PATCH /api/me stores it.
-        const raw = /** @type {{ user?: { neighbourhoodId?: unknown } }} */ (json).user?.neighbourhoodId;
         const { user } = MeResponse.parse(json);
         const known = new Set(INTERESTS.map((t) => t.id));
         setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl });
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
-        if (typeof raw === "string" && NEIGHBOURHOODS.some((n) => n.id === raw)) setNeighbourhoodId(raw);
+        // The server stores the neighbourhood's centre as the home (not the id), so match it back.
+        const home = NEIGHBOURHOODS.find((n) => Math.abs(n.lat - user.homeLat) < 1e-4 && Math.abs(n.lng - user.homeLng) < 1e-4);
+        if (home) setNeighbourhoodId(home.id);
       })
       .catch((e) => {
         if (ctrl.signal.aborted) return;
@@ -163,6 +201,8 @@ export function YouScreen() {
         </h2>
         <PeopleList />
       </section>
+
+      <DataCredits />
 
       <TabBar active="/me" />
     </main>
