@@ -8,7 +8,8 @@
 import { useState } from "react";
 import { formatSlot } from "@/lib/time";
 import { AvatarStack } from "@/components/ui/Avatar";
-import { Button, IconButton } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/Button";
+import { SwipeToGo } from "@/components/ui/SwipeToGo";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { PriceLevel } from "@/components/ui/PriceLevel";
@@ -41,12 +42,14 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  *   onWhy?: () => void,
  *   priority?: boolean,
  *   leaving?: boolean,
+ *   goResetKey?: string | number,
  *   className?: string,
  * }} props
+ * `onGo` fires ~700 ms after the swipe bar breaks. Change `goResetKey` to put the bar back.
  * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
  * `leaving` plays the skip-out animation and blocks further taps (the parent removes the card after it).
  */
-export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, leaving = false, className }) {
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, leaving = false, goResetKey = 0, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
   const [photoFailed, setPhotoFailed] = useState(false);
   // Bumped on every save so the burst replays (new key = new animation).
@@ -159,14 +162,13 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
                 </span>
               }
             />
-            <Button
-              size="lg"
-              className="flex-1"
-              onClick={onGo}
-              trailingIcon={<Icon name="arrowRight" strokeWidth={2.5} className="size-4" />}
-            >
-              Let&apos;s go
-            </Button>
+            <SwipeToGo
+              className="min-w-0 flex-1"
+              onGo={onGo}
+              resetKey={goResetKey}
+              disabled={leaving}
+              ariaLabel={`Let's go to ${place.name}: swipe right or press Enter`}
+            />
           </div>
         </div>
       </div>

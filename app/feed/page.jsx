@@ -13,6 +13,8 @@ import { ToastProvider, useToast } from "@/components/ui/Toast";
 
 /** Skip-out animation length. Matches --animate-skip-out in app/globals.css. */
 const SKIP_OUT_MS = 280;
+/** Until F5's InviteSheet exists: how long the broken swipe bar stays before it resets. */
+const GO_RESET_MS = 1200;
 
 /**
  * @param {string | null} cursor
@@ -60,6 +62,8 @@ function Feed() {
   const [saved, setSaved] = useState(() => new Set(/** @type {string[]} */ ([])));
   /** Cards playing the skip-out animation (still rendered, can't be tapped). */
   const [leaving, setLeaving] = useState(() => new Set(/** @type {string[]} */ ([])));
+  /** Per-card counter; bumping it puts that card's swipe bar back to the start. */
+  const [goResets, setGoResets] = useState(() => new Map(/** @type {[string, number][]} */ ([])));
   const [reloadKey, setReloadKey] = useState(0);
 
   const scrollerRef = useRef(/** @type {HTMLElement | null} */ (null));
@@ -171,7 +175,13 @@ function Feed() {
   /** @param {import("@/types/feed").FeedCardT} card */
   const go = (card) => {
     // TODO(F5): open InviteSheet → POST /api/plans → /plans/[id], and send the "go" interaction there.
+    // The sheet will reset the swipe bar when it closes; until then, reset it after the toast.
     toast.show({ message: `Invites for ${card.place.name} are coming soon` });
+    const t = setTimeout(() => {
+      skipTimers.current.delete(t);
+      setGoResets((m) => new Map(m).set(card.id, (m.get(card.id) ?? 0) + 1));
+    }, GO_RESET_MS);
+    skipTimers.current.add(t);
   };
 
   return (
@@ -214,6 +224,7 @@ function Feed() {
               priority={i === 0}
               saved={saved.has(card.id)}
               leaving={leaving.has(card.id)}
+              goResetKey={goResets.get(card.id) ?? 0}
               onSkip={() => skip(card)}
               onSave={() => toggleSave(card)}
               onGo={() => go(card)}

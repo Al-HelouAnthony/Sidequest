@@ -16,7 +16,10 @@
  *           glass (frosted light bar), glass-photo (dark frost for things on top of a photo).
  * Motion:   animate-sheet-up, animate-toast-in, animate-shimmer, animate-pop, animate-fade-in, animate-rise,
  *           animate-nudge, animate-ping-ring, animate-skip-out (feed card leaving), animate-heart-burst (save).
+ *           SwipeToGo: animate-shake (needs --amp), animate-shard-fly (needs --dx/--dy/--rot), animate-shock,
+ *           animate-draw-check, animate-land, animate-chev, animate-nudge-x.
  *           Apply with motion-safe: so reduced-motion users get none.
+ * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
 @theme {
   /* Surfaces (light). The dark theme overrides these below. */
@@ -68,6 +71,14 @@
   /* Keep this duration in sync with SKIP_OUT_MS in app/feed/page.jsx. */
   --animate-skip-out: skip-out 280ms cubic-bezier(0.5, 0, 0.9, 0.6) forwards;
   --animate-heart-burst: heart-burst 850ms cubic-bezier(0.2, 1.3, 0.4, 1) forwards;
+  /* SwipeToGo (components/ui/SwipeToGo.jsx) */
+  --animate-shake: shake 90ms linear infinite;
+  --animate-shard-fly: shard-fly 1s cubic-bezier(0.12, 0.75, 0.3, 1) both;
+  --animate-shock: shock 750ms cubic-bezier(0.1, 0.7, 0.3, 1) both;
+  --animate-draw-check: draw-check 450ms cubic-bezier(0.6, 0, 0.2, 1) 120ms forwards;
+  --animate-land: land 600ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  --animate-chev: chev 1.2s ease-in-out infinite;
+  --animate-nudge-x: nudge-x 2.4s ease-in-out 1s infinite;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -114,6 +125,66 @@
     80% { transform: scale(1); opacity: 1; }
     100% { transform: scale(1.25) translateY(-16px); opacity: 0; }
   }
+  /* Uses the `translate` property so it stacks with any transform on the element. */
+  @keyframes shake {
+    0% { translate: 0 0; }
+    25% { translate: calc(var(--amp, 0px) * -1) calc(var(--amp, 0px) * 0.4); }
+    50% { translate: var(--amp, 0px) 0; }
+    75% { translate: calc(var(--amp, 0px) * -0.6) calc(var(--amp, 0px) * -0.4); }
+    100% { translate: 0 0; }
+  }
+  @keyframes shard-fly {
+    0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.55); opacity: 0; }
+  }
+  @keyframes shock {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(3.8); opacity: 0; }
+  }
+  @keyframes draw-check {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes land {
+    0% { transform: scale(0.8); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+  @keyframes chev {
+    0% { opacity: 0.2; transform: translateX(-4px); }
+    50% { opacity: 1; transform: translateX(2px); }
+    100% { opacity: 0.2; transform: translateX(7px); }
+  }
+  @keyframes nudge-x {
+    0%, 55%, 100% { transform: translateX(0); }
+    70% { transform: translateX(6px); }
+    82% { transform: translateX(1px); }
+    90% { transform: translateX(3px); }
+  }
+}
+
+/* SwipeToGo track: glossy, saturated orange. Colours derive from the accent token. */
+@utility swipe-rail {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.08) 34%, rgb(255 255 255 / 0) 50%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent), white 22%) 0%,
+      var(--color-accent) 52%,
+      color-mix(in srgb, var(--color-accent), black 10%) 100%
+    );
+  border: 1.5px solid rgb(255 255 255 / 0.75);
+}
+/* Shatter pieces: same fill as the track. */
+@utility swipe-shard {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0) 60%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-accent), white 22%),
+      var(--color-accent) 55%,
+      color-mix(in srgb, var(--color-accent), black 10%)
+    );
 }
 
 /* Fonts come from next/font in app/layout.jsx. */
