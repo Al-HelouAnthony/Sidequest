@@ -10,7 +10,6 @@
  */
 import { useId } from "react";
 
-// eslint-disable-next-line no-unused-vars
 export function AppBackground({ variant } = {}) {
   const patternId = `sq-bg-dots-${useId().replace(/:/g, "")}`;
   return (
