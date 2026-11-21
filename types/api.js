@@ -96,7 +96,8 @@ export const MeResponse = z.object({ user: User });
 
 // ---- PATCH /api/me (onboarding: neighbourhood + interests) → MeResponse ----
 export const UpdateMeRequest = z.object({
-  neighbourhoodId: z.string().optional(), // id from lib/neighbourhoods.js, e.g. "plateau"
+  neighbourhoodId: z.string().optional(), // old picker (lib/neighbourhoods.js), kept until onboarding switches
+  postalCode: z.string().max(10).optional(), // e.g. "H2T 1S6": only "H2T" is kept (lib/geo/postalCode.js)
   interests: z.array(z.string()).optional(), // tags from lib/interests.js (checked by updateProfile)
 });
 /** @typedef {z.infer<typeof UpdateMeRequest>} UpdateMeRequestT */
