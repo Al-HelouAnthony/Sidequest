@@ -29,7 +29,7 @@ function Dots() {
     <svg className="size-full" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice">
       <defs>
         <pattern id={patternId} width="26" height="26" patternUnits="userSpaceOnUse">
-          <circle cx="13" cy="13" r="2.4" style={{ fill: "var(--color-ink)" }} opacity="0.12" />
+          <circle cx="13" cy="13" r="2.4" style={{ fill: "var(--color-ink)" }} opacity="0.08" />
         </pattern>
       </defs>
       <rect width="390" height="844" fill={`url(#${patternId})`} />
@@ -40,15 +40,18 @@ function Dots() {
           cy={13 + row * 26}
           r="5"
           className="sq-bg-pulse"
-          // Peak 0.35 (prompt had 0.55): at 0.55 a dot passing under plain text (e.g. "Cancel plan") competed with it.
-          style={{ fill: "var(--color-accent)", "--lo": 0.08, "--hi": 0.35, animationDelay: `${(i * 0.2).toFixed(1)}s` }}
+          // Peak 0.25 (prompt had 0.55): brighter dots passing under plain text competed with it (foreground first).
+          style={{ fill: "var(--color-accent)", "--lo": 0.05, "--hi": 0.25, animationDelay: `${(i * 0.2).toFixed(1)}s` }}
         />
       ))}
     </svg>
   );
 }
 
-const FRIENDS = [[110, 420], [300, 470], [140, 700], [290, 660]];
+/** Friend dots near the screen edges, so they don't sit between the content's chips and cards. */
+const FRIENDS = [[22, 470], [368, 540], [30, 690], [360, 720]];
+/** "You" sits behind the floating tab bar: the rings sweep up from there instead of from mid-screen content. */
+const ME = { x: 195, y: 800 };
 
 function Radar() {
   return (
@@ -56,24 +59,24 @@ function Radar() {
       {[0, 1, 2, 3].map((i) => (
         <circle
           key={i}
-          cx="195"
-          cy="560"
-          r="230"
+          cx={ME.x}
+          cy={ME.y}
+          r="300"
           fill="none"
-          strokeWidth="3"
+          strokeWidth="2"
           className="sq-bg-ring"
           style={{ stroke: "var(--color-teal)", animationDelay: `${i * 1.5}s` }}
         />
       ))}
-      <circle cx="195" cy="560" r="14" strokeWidth="3" style={{ fill: "var(--color-accent)", stroke: "var(--color-ink)", strokeOpacity: 0.3 }} />
+      <circle cx={ME.x} cy={ME.y} r="14" strokeWidth="3" style={{ fill: "var(--color-accent)", stroke: "var(--color-ink)", strokeOpacity: 0.3 }} />
       {FRIENDS.map(([x, y], i) => (
         <circle
           key={i}
           cx={x}
           cy={y}
-          r="9"
+          r="6"
           className="sq-bg-pulse"
-          style={{ fill: "var(--color-teal)", "--lo": 0.35, "--hi": 0.95, animationDelay: `${i * 0.7}s` }}
+          style={{ fill: "var(--color-teal)", "--lo": 0.2, "--hi": 0.55, animationDelay: `${i * 0.7}s` }}
         />
       ))}
     </svg>

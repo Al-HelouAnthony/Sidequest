@@ -363,9 +363,19 @@
   }
 }
 
+/* Text sitting straight on the animated background: a canvas-coloured halo so dots/rings fade out right
+   at the letters instead of cutting through them. Use on headings and notes that aren't inside a card. */
+@utility halo {
+  text-shadow:
+    0 0 1px var(--color-canvas),
+    0 0 3px var(--color-canvas),
+    0 0 8px var(--color-canvas),
+    0 0 14px var(--color-canvas);
+}
+
 /* Animated backgrounds (components/ui/AppBackground.jsx). Decorative only; motion stops under reduced motion. */
 @keyframes sq-bg-pulse { 0%, 100% { opacity: var(--lo, 0.1); } 50% { opacity: var(--hi, 0.6); } }
-@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.7; } to { transform: scale(1.7); opacity: 0; } }
+@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.45; } to { transform: scale(1.7); opacity: 0; } }
 .sq-bg-pulse { animation: sq-bg-pulse 3s ease-in-out infinite; }
 .sq-bg-ring { transform-box: fill-box; transform-origin: center; animation: sq-bg-ring 6s ease-out infinite; }
 @media (prefers-reduced-motion: reduce) {
