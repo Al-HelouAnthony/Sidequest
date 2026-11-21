@@ -68,13 +68,13 @@ export function MyPlans() {
     <>
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
-      <h1 className="halo flex min-h-11 items-center font-display text-3xl font-extrabold">My plans</h1>
+      <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
 
       {plans === null && !failed && <ListSkeleton />}
 
       {failed && plans === null && (
         <div className="cel space-y-3 rounded-card p-8 text-center">
-          <h2 className="font-display text-2xl font-extrabold">Couldn&apos;t load your plans</h2>
+          <h2 className="font-display text-card-title font-extrabold">Couldn&apos;t load your plans</h2>
           <p className="text-ink-muted">Check your connection and try again.</p>
           <button type="button" onClick={() => setReloadKey((k) => k + 1)} className={buttonClasses()}>
             Try again
@@ -85,7 +85,7 @@ export function MyPlans() {
       {plans !== null && visible.length === 0 && (
         <div className="cel space-y-3 rounded-card p-8 text-center">
           <Icon name="calendar" cel strokeWidth={1.6} className="mx-auto size-14" />
-          <h2 className="font-display text-2xl font-extrabold">No plans yet</h2>
+          <h2 className="font-display text-card-title font-extrabold">No plans yet</h2>
           <p className="text-ink-muted">Swipe the orange bar on something you like and invite your friends.</p>
           <Link href="/feed" className={buttonClasses({ size: "lg", className: "mt-1" })}>
             Find something to do
@@ -112,11 +112,11 @@ function Section({ title, plans, meId, highlight = false }) {
   const id = `section-${title.toLowerCase().replace(/\W+/g, "-")}`;
   return (
     <section aria-labelledby={id} className="space-y-2.5">
-      <h2 id={id} className="halo flex items-center gap-2 text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id={id} className="halo flex items-center gap-2 text-label font-bold text-ink-muted">
         {title}
         <span
           className={cn(
-            "inline-flex h-5 min-w-5 items-center justify-center rounded-full border-[1.5px] border-line px-1 text-[11px] text-ink",
+            "inline-flex h-5 min-w-5 items-center justify-center rounded-full border-[1.5px] border-line px-1 text-micro text-ink",
             highlight ? "bg-accent text-on-accent" : "bg-surface",
           )}
         >

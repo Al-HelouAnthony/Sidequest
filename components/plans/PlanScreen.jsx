@@ -102,7 +102,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <PlanSkeleton />
         ) : (
           <div className="cel space-y-3 rounded-card p-8 text-center">
-            <h1 className="font-display text-3xl font-extrabold">Plan not found</h1>
+            <h1 className="font-display text-heading font-extrabold">Plan not found</h1>
             <p className="text-ink-muted">It may have been cancelled, or you&apos;re not invited to it.</p>
             <Link href="/feed" className={cn("press inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-bold text-on-accent", focusRing)}>
               Back to the feed
@@ -157,7 +157,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <span className="glass-photo inline-flex h-7 w-fit items-center rounded-full px-3 text-xs font-semibold">
             {CATEGORY_LABELS[/** @type {keyof typeof CATEGORY_LABELS} */ (plan.place.category)] ?? plan.place.category}
           </span>
-          <h1 className="ink-pop font-display text-[2rem] leading-[0.95] font-extrabold break-words">{plan.place.name}</h1>
+          <h1 className="ink-pop font-display text-heading font-extrabold break-words">{plan.place.name}</h1>
         </div>
       </div>
 

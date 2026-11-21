@@ -1,6 +1,8 @@
 # Photo credits
 
-Place photos are stored in the Supabase Storage bucket `place-photos` (see `supabase/migrations/0003_place_photos_bucket.sql`).
+**Update (Sat Nov 21):** every curated place now uses a team-provided photo (free licence / our own), resized to 1080 px and served as a static file from `public/places/<placeId>.jpg` (`photoUrl: "/places/<id>.jpg"` in `data/places.json`). The table below is kept for the earlier Wikimedia photos.
+
+Place photos were previously stored in the Supabase Storage bucket `place-photos` (see `supabase/migrations/0003_place_photos_bucket.sql`).
 Photos below come from Wikimedia Commons and are used under their free licences. Each was resized for the app.
 Places not listed here still use placeholder images (picsum.photos) and need a photo of our own or an Unsplash image.
 

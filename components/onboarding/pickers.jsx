@@ -1,9 +1,7 @@
 "use client";
 /**
  * Profile pickers shared by onboarding (F9) and the You screen (/me). Owner: Oscar.
- *  - PostalCodeField (N5): home postal code, the main way to set your home (server keeps only "H2T");
- *    NeighbourhoodPicker stays as the fallback
- *  - NeighbourhoodPicker: one of NEIGHBOURHOODS (only the id goes to the server)
+ *  - PostalCodeField (N5): home postal code, full or just the first 3 characters (server keeps only "H2T")
  *  - InterestPicker: tag chips from PLAN.md §6.3
  *  - PeopleList: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends.
  *    With `canRemove` (You tab): ✕ on a friend → ConfirmSheet → DELETE /api/friends/[id] (proposed endpoint;
@@ -18,7 +16,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
-import { INTERESTS, NEIGHBOURHOODS } from "./options";
+import { INTERESTS } from "./options";
 
 /** Canadian postal code, full ("H2T 1S6") or just the area ("H2T"). The server keeps only the first 3 characters. */
 const POSTAL_RE = /^[A-Z]\d[A-Z](?: ?\d[A-Z]\d)?$/;
@@ -38,12 +36,12 @@ export const isPostalCode = (/** @type {string} */ v) => POSTAL_RE.test(v.trim()
  * @param {Response} res
  */
 export async function postalErrorFrom(res) {
-  if (res.status === 503) return "We can't look up postal codes right now. Try again, or pick your area below.";
+  if (res.status === 503) return "We can't look up postal codes right now. Try again in a moment.";
   if (res.status !== 400) return null;
   const json = await res.json().catch(() => ({}));
   return typeof json.error === "string" && json.error
     ? json.error
-    : "We couldn't use that postal code. Check it, or pick your area below.";
+    : "We couldn't use that postal code. Check it and try again.";
 }
 
 /**
@@ -51,10 +49,10 @@ export async function postalErrorFrom(res) {
  */
 export function PostalCodeField({ value, onChange, error, id = "postal-code" }) {
   const invalid = value.trim() !== "" && !isPostalCode(value);
-  const hint = error ?? (invalid ? "Format: H2T 1S6 (or just H2T)" : null);
+  const hint = error ?? (invalid ? "Format: H2T or H2T 1S6" : null);
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="halo block text-sm font-bold">
+      <label htmlFor={id} className="block text-sm font-bold">
         Postal code
       </label>
       <span
@@ -76,10 +74,10 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
           maxLength={7}
           value={value}
           onChange={(e) => onChange(formatPostalCode(e.target.value))}
-          placeholder="H2T 1S6"
+          placeholder="H2T or H2T 1S6"
           aria-invalid={Boolean(error) || invalid || undefined}
           aria-describedby={`${id}-help`}
-          className="min-w-0 flex-1 bg-transparent py-3 text-lg font-bold tracking-wider uppercase outline-none placeholder:font-semibold placeholder:tracking-normal placeholder:text-ink-muted"
+          className="min-w-0 flex-1 bg-transparent py-3 text-lg font-bold tracking-wider uppercase outline-none placeholder:font-semibold placeholder:tracking-normal placeholder:normal-case placeholder:text-ink-muted"
         />
         {isPostalCode(value) && !error && (
           <span
@@ -93,44 +91,10 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
       <p
         id={`${id}-help`}
         role={error ? "alert" : undefined}
-        className={cn("halo text-sm", error ? "font-semibold text-danger" : "text-ink-muted")}
+        className={cn("text-sm", error ? "font-semibold text-danger" : "text-ink-muted")}
       >
-        {hint ?? "Only the first 3 characters are kept, so your exact address is never stored."}
+        {hint ?? "The first 3 characters are enough. Only those are kept, so your exact address is never stored."}
       </p>
-    </div>
-  );
-}
-
-/** @param {{ value: string | null, onChange: (id: string) => void }} props */
-export function NeighbourhoodPicker({ value, onChange }) {
-  return (
-    <div role="radiogroup" aria-label="Neighbourhood" className="grid grid-cols-2 gap-2">
-      {NEIGHBOURHOODS.map((n) => {
-        const on = value === n.id;
-        return (
-          <button
-            key={n.id}
-            type="button"
-            role="radio"
-            aria-checked={on}
-            onClick={() => onChange(n.id)}
-            className={cn(
-              "press flex min-h-12 items-center gap-2 rounded-tile px-3 text-left text-sm font-semibold",
-              on ? "bg-teal text-on-teal" : "bg-surface text-ink",
-              focusRing,
-            )}
-          >
-            {on ? (
-              <span key="on" className="motion-safe:animate-pop">
-                <Icon name="check" strokeWidth={3} className="size-4" />
-              </span>
-            ) : (
-              <Icon name="pin" cel strokeWidth={1.9} className="size-4" />
-            )}
-            <span className="min-w-0 leading-tight">{n.name}</span>
-          </button>
-        );
-      })}
     </div>
   );
 }
@@ -340,7 +304,7 @@ export function PeopleList({ canRemove = false }) {
           {error}
         </p>
       )}
-      <p className="halo text-sm font-semibold text-ink-muted" aria-live="polite">
+      <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
         {friendCount} {friendCount === 1 ? "friend" : "friends"}
         {friendsOnly && " · adding new people opens soon"}
       </p>

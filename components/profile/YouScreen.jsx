@@ -1,7 +1,7 @@
 "use client";
 /**
  * You (/me): the third tab. Owner: Oscar.
- * Your profile after onboarding: neighbourhood + interests (saved with PATCH /api/me) and friends (PeopleList).
+ * Your profile after onboarding: home postal code + interests (saved with PATCH /api/me) and friends (PeopleList).
  * Reuses the onboarding pickers. Saving is skipped with a note while PATCH /api/me isn't live (404/405).
  */
 import { useEffect, useState } from "react";
@@ -12,8 +12,8 @@ import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { AppBackground } from "@/components/ui/AppBackground";
-import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "@/components/onboarding/options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
+import { INTERESTS, MIN_INTERESTS } from "@/components/onboarding/options";
+import { InterestPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
@@ -32,10 +32,10 @@ const CREDITS = [
 function DataCredits() {
   return (
     <section aria-labelledby="you-about" className="space-y-1.5 border-t-[1.5px] border-line/15 pt-4">
-      <h2 id="you-about" className="halo text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id="you-about" className="text-label font-bold text-ink-muted">
         About
       </h2>
-      <p className="halo text-xs leading-relaxed text-ink-muted">
+      <p className="text-xs leading-relaxed text-ink-muted">
         Data:{" "}
         {CREDITS.map((c, i) => (
           <span key={c.href}>
@@ -57,7 +57,6 @@ function DataCredits() {
 
 export function YouScreen() {
   const [me, setMe] = useState(/** @type {MeBasics | null} */ (null));
-  const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [dirty, setDirty] = useState(false);
   /** N5: home postal code. The server keeps only "H2T" and doesn't send it back, so we show the area we saved. */
@@ -78,9 +77,6 @@ export function YouScreen() {
         const known = new Set(INTERESTS.map((t) => t.id));
         setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl });
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
-        // The server stores the neighbourhood's centre as the home (not the id), so match it back.
-        const home = NEIGHBOURHOODS.find((n) => Math.abs(n.lat - user.homeLat) < 1e-4 && Math.abs(n.lng - user.homeLng) < 1e-4);
-        if (home) setNeighbourhoodId(home.id);
       })
       .catch((e) => {
         if (ctrl.signal.aborted) return;
@@ -101,14 +97,6 @@ export function YouScreen() {
     setStatus("idle");
   };
 
-  const pickNeighbourhood = (/** @type {string} */ id) => {
-    setNeighbourhoodId(id);
-    setPostal(""); // one home: picking an area clears a half-typed postal code
-    setPostalError(null);
-    setDirty(true);
-    setStatus("idle");
-  };
-
   const typePostal = (/** @type {string} */ v) => {
     setPostal(v);
     setPostalError(null);
@@ -122,9 +110,8 @@ export function YouScreen() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        // Postal code wins when given (N5); otherwise the picked neighbourhood.
         body: JSON.stringify({
-          ...(hasPostal ? { postalCode: postal.trim() } : neighbourhoodId ? { neighbourhoodId } : {}),
+          ...(hasPostal ? { postalCode: postal.trim() } : {}),
           interests: [...interests],
         }),
       });
@@ -144,7 +131,6 @@ export function YouScreen() {
       if (hasPostal) {
         // The server keeps only the first 3 characters (the area); show what was saved.
         setSavedArea(postal.trim().slice(0, 3));
-        setNeighbourhoodId(null);
         setPostal("");
       }
       setStatus("saved");
@@ -167,7 +153,7 @@ export function YouScreen() {
 
   return (
     <>
-    <AppBackground variant="radar" />
+    <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <div className="flex items-center gap-3">
         {me ? (
@@ -176,8 +162,8 @@ export function YouScreen() {
           <Skeleton className="size-16 rounded-full" />
         )}
         <div className="min-w-0">
-          <h1 className="halo font-display text-3xl font-extrabold">You</h1>
-          <p className="halo truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
+          <h1 className="font-display text-heading font-extrabold">You</h1>
+          <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
         </div>
       </div>
 
@@ -198,34 +184,32 @@ export function YouScreen() {
 
       <section aria-labelledby="you-area" className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 id="you-area" className="halo font-display text-xl font-extrabold">
+          <h2 id="you-area" className="font-display text-xl font-extrabold">
             Home
           </h2>
           {savedArea && (
-            <span className="halo inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
               <Icon name="check" strokeWidth={3} className="size-4 text-teal" />
               Home set to {savedArea}
             </span>
           )}
         </div>
         <PostalCodeField id="you-postal" value={postal} onChange={typePostal} error={postalError} />
-        <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
-        <NeighbourhoodPicker value={neighbourhoodId} onChange={pickNeighbourhood} />
       </section>
 
       <section aria-labelledby="you-interests" className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h2 id="you-interests" className="halo font-display text-xl font-extrabold">
+          <h2 id="you-interests" className="font-display text-xl font-extrabold">
             Interests
           </h2>
-          <span className="halo text-sm font-semibold text-ink-muted">{interests.size} selected</span>
+          <span className="text-sm font-semibold text-ink-muted">{interests.size} selected</span>
         </div>
         <InterestPicker selected={interests} onToggle={toggleInterest} />
       </section>
 
       <div className="space-y-2">
         {note && (
-          <p role="status" className={`halo text-center text-sm font-semibold ${note.className}`}>
+          <p role="status" className={`text-center text-sm font-semibold ${note.className}`}>
             {note.text}
           </p>
         )}
@@ -242,7 +226,7 @@ export function YouScreen() {
       </div>
 
       <section aria-labelledby="you-friends" className="space-y-3">
-        <h2 id="you-friends" className="halo font-display text-xl font-extrabold">
+        <h2 id="you-friends" className="font-display text-xl font-extrabold">
           Friends
         </h2>
         <PeopleList canRemove />

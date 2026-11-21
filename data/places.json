@@ -11,7 +11,7 @@
     "lng": -73.60026,
     "address": "124 Rue Saint-Viateur O",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000001.jpg",
     "hours": {
       "mon": [
         {
@@ -72,7 +72,7 @@
     "lng": -73.58705,
     "address": "1196 Voie Camillien-Houde",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000002.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000002.jpg",
     "hours": {
       "mon": [
         {
@@ -133,7 +133,7 @@
     "lng": -73.57765,
     "address": "3895 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000003.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000003.jpg",
     "hours": {
       "mon": [
         {
@@ -193,7 +193,7 @@
     "lng": -73.61506,
     "address": "7070 Av. Henri-Julien",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000004.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000004.jpg",
     "hours": {
       "mon": [
         {
@@ -253,7 +253,7 @@
     "lng": -73.56897,
     "address": "3933 Av. du Parc-La Fontaine",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000005.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000005.jpg",
     "hours": {
       "mon": [
         {
@@ -313,7 +313,7 @@
     "lng": -73.58316,
     "address": "354 Av. du Mont-Royal E",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000006.jpg",
     "hours": {
       "mon": [
         {
@@ -373,7 +373,7 @@
     "lng": -73.60195,
     "address": "263 Rue Saint-Viateur O",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000007.jpg",
     "hours": {
       "mon": [
         {
@@ -433,7 +433,7 @@
     "lng": -73.5794,
     "address": "1380 Rue Sherbrooke O",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000008.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000008.jpg",
     "hours": {
       "tue": [
         {
@@ -488,7 +488,7 @@
     "lng": -73.5457,
     "address": "1 Quai de l'Horloge",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000009.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000009.jpg",
     "hours": {
       "mon": [
         {
@@ -548,7 +548,7 @@
     "lng": -73.5629,
     "address": "1015 Rue Saint-Alexandre",
     "priceLevel": 3,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000010.jpg",
     "hours": {
       "sun": [
         {
@@ -608,7 +608,7 @@
     "lng": -73.57988,
     "address": "1844 Rue Sainte-Catherine O",
     "priceLevel": 2,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000011.jpg",
     "hours": {
       "thu": [
         {
@@ -650,7 +650,7 @@
     "lng": -73.62793,
     "address": "285 Rue Faillon O",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000012.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000012.jpg",
     "hours": {
       "mon": [
         {
@@ -709,7 +709,7 @@
     "lng": -73.57678,
     "address": "138 Av. Atwater",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000013.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000013.jpg",
     "hours": {
       "mon": [
         {
@@ -768,7 +768,7 @@
     "lng": -73.56682,
     "address": "1635 Rue Clark",
     "priceLevel": 2,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000014.jpg",
     "hours": {
       "mon": [
         {
@@ -828,7 +828,7 @@
     "lng": -73.5499,
     "address": "4777 Av. Pierre-De Coubertin",
     "priceLevel": 3,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000015.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000015.jpg",
     "hours": {
       "mon": [
         {
@@ -890,7 +890,7 @@
     "lng": -73.5751,
     "address": "994 Rue Rachel E",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000016.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000016.jpg",
     "hours": {
       "mon": [
         {
@@ -950,7 +950,7 @@
     "lng": -73.57,
     "address": "Canal de Lachine",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000017.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000017.jpg",
     "hours": {
       "mon": [
         {
@@ -1010,7 +1010,7 @@
     "lng": -73.618,
     "address": "3800 Chem. Queen Mary",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000018.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000018.jpg",
     "hours": {
       "mon": [
         {
@@ -1069,7 +1069,7 @@
     "lng": -73.55135,
     "address": "2 Rue de la Commune O",
     "priceLevel": 3,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000019.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000019.jpg",
     "hours": {
       "mon": [
         {
@@ -1130,7 +1130,7 @@
     "lng": -73.58403,
     "address": "4328 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000020.jpg",
     "hours": {
       "mon": [
         {
@@ -1189,7 +1189,7 @@
     "lng": -73.57773,
     "address": "1432 Rue Mackay",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000021.jpg",
     "hours": {
       "mon": [
         {
@@ -1248,7 +1248,7 @@
     "lng": -73.5793,
     "address": "4021 Boul. Saint-Laurent",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000022.jpg",
     "hours": {
       "mon": [
         {
@@ -1308,7 +1308,7 @@
     "lng": -73.580369,
     "address": "151 Rue Rachel E",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000023.jpg",
     "hours": {
       "mon": [
         {
@@ -1368,7 +1368,7 @@
     "lng": -73.557493,
     "address": "200 Rue Notre-Dame O",
     "priceLevel": 2,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000024.jpg",
     "hours": {
       "mon": [
         {
@@ -1429,7 +1429,7 @@
     "lng": -73.595347,
     "address": "74 Av. Fairmount O",
     "priceLevel": 1,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000025.jpg",
     "hours": {
       "mon": [
         {
@@ -1489,7 +1489,7 @@
     "lng": -73.586978,
     "address": "4524 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "/fallback/cafe.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000026.jpg",
     "hours": {
       "mon": [
         {
@@ -1549,7 +1549,7 @@
     "lng": -73.587392,
     "address": "93 Av. du Mont-Royal O",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000027.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000027.jpg",
     "hours": {
       "mon": [
         {
@@ -1609,7 +1609,7 @@
     "lng": -73.575064,
     "address": "969 Rue Rachel E",
     "priceLevel": 1,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000028.jpg",
     "hours": {
       "mon": [
         {
@@ -1670,7 +1670,7 @@
     "lng": -73.58145,
     "address": "4177 Boul. Saint-Laurent",
     "priceLevel": 1,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000029.jpg",
     "hours": {
       "mon": [
         {
@@ -1730,7 +1730,7 @@
     "lng": -73.57183,
     "address": "73 Rue Prince-Arthur E",
     "priceLevel": 1,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000030.jpg",
     "hours": {
       "mon": [
         {
@@ -1790,7 +1790,7 @@
     "lng": -73.570187,
     "address": "705 Rue Sainte-Catherine O",
     "priceLevel": 2,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000031.jpg",
     "hours": {
       "mon": [
         {
@@ -1851,7 +1851,7 @@
     "lng": -73.606873,
     "address": "1057 Av. Bernard",
     "priceLevel": 2,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000032.jpg",
     "hours": {
       "mon": [
         {
@@ -1911,7 +1911,7 @@
     "lng": -73.61636,
     "address": "191 Rue Jean-Talon E",
     "priceLevel": 2,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000033.jpg",
     "hours": {
       "tue": [
         {
@@ -1960,7 +1960,7 @@
     "lng": -73.613136,
     "address": "6827 Rue Saint-Dominique",
     "priceLevel": 2,
-    "photoUrl": "/fallback/restaurant.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000034.jpg",
     "hours": {
       "mon": [
         {
@@ -2020,7 +2020,7 @@
     "lng": -73.593264,
     "address": "29 Av. Laurier O",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000035.jpg",
     "hours": {
       "mon": [
         {
@@ -2080,7 +2080,7 @@
     "lng": -73.590618,
     "address": "4873 Boul. Saint-Laurent",
     "priceLevel": 1,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000036.jpg",
     "hours": {
       "mon": [
         {
@@ -2140,7 +2140,7 @@
     "lng": -73.576618,
     "address": "1254 Rue Mackay",
     "priceLevel": 3,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000037.jpg",
     "hours": {
       "tue": [
         {
@@ -2194,7 +2194,7 @@
     "lng": -73.594092,
     "address": "115 Av. Laurier O",
     "priceLevel": 3,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000038.jpg",
     "hours": {
       "mon": [
         {
@@ -2253,7 +2253,7 @@
     "lng": -73.56349,
     "address": "1649 Rue Saint-Denis",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000039.jpg",
     "hours": {
       "mon": [
         {
@@ -2313,7 +2313,7 @@
     "lng": -73.599234,
     "address": "5550 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000040.jpg",
     "hours": {
       "mon": [
         {
@@ -2373,7 +2373,7 @@
     "lng": -73.574612,
     "address": "1219 Rue Crescent",
     "priceLevel": 2,
-    "photoUrl": "/fallback/bar.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000041.jpg",
     "hours": {
       "mon": [
         {
@@ -2434,7 +2434,7 @@
     "lng": -73.5974,
     "address": "Parc du Mont-Royal, Chemin Remembrance",
     "priceLevel": 1,
-    "photoUrl": "/fallback/park.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000042.jpg",
     "hours": {
       "mon": [
         {
@@ -2495,7 +2495,7 @@
     "lng": -73.5343,
     "address": "1 Circuit Gilles-Villeneuve",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000043.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000043.jpg",
     "hours": {
       "mon": [
         {
@@ -2555,7 +2555,7 @@
     "lng": -73.5878,
     "address": "1115 Av. Laurier E",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000044.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000044.jpg",
     "hours": {
       "mon": [
         {
@@ -2616,7 +2616,7 @@
     "lng": -73.5698,
     "address": "Rue Saint-Denis & Av. Laval",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000045.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000045.jpg",
     "hours": {
       "mon": [
         {
@@ -2677,7 +2677,7 @@
     "lng": -73.5622,
     "address": "4601 Rue Sherbrooke E",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000046.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000046.jpg",
     "hours": {
       "mon": [
         {
@@ -2738,7 +2738,7 @@
     "lng": -73.5958,
     "address": "Boul. LaSalle & 6e Avenue",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000047.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000047.jpg",
     "hours": {
       "mon": [
         {
@@ -2799,7 +2799,7 @@
     "lng": -73.5924,
     "address": "Voie Camillien-Houde",
     "priceLevel": 1,
-    "photoUrl": "/fallback/viewpoint.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000048.jpg",
     "hours": {
       "mon": [
         {
@@ -2860,7 +2860,7 @@
     "lng": -73.6072,
     "address": "Parc Summit, Westmount",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000049.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000049.jpg",
     "hours": {
       "mon": [
         {
@@ -2920,7 +2920,7 @@
     "lng": -73.5487,
     "address": "362 Rue de la Commune E",
     "priceLevel": 2,
-    "photoUrl": "/fallback/viewpoint.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000052.jpg",
     "hours": {
       "sun": [
         {
@@ -2981,7 +2981,7 @@
     "lng": -73.5433,
     "address": "Av. Pierre-Dupuy",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000053.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000053.jpg",
     "hours": {
       "mon": [
         {
@@ -3040,7 +3040,7 @@
     "lng": -73.5612,
     "address": "4101 Rue Sherbrooke E",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000054.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000054.jpg",
     "hours": {
       "tue": [
         {
@@ -3094,7 +3094,7 @@
     "lng": -73.5542,
     "address": "350 Place Royale",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000055.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000055.jpg",
     "hours": {
       "tue": [
         {
@@ -3148,7 +3148,7 @@
     "lng": -73.5734,
     "address": "690 Rue Sherbrooke O",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000056.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000056.jpg",
     "hours": {
       "tue": [
         {
@@ -3201,7 +3201,7 @@
     "lng": -73.5505,
     "address": "4801 Av. Pierre-De Coubertin",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000057.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000057.jpg",
     "hours": {
       "tue": [
         {
@@ -3255,7 +3255,7 @@
     "lng": -73.556,
     "address": "110 Rue Notre-Dame O",
     "priceLevel": 2,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000058.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000058.jpg",
     "hours": {
       "mon": [
         {
@@ -3314,7 +3314,7 @@
     "lng": -73.5939,
     "address": "5150 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "/fallback/activity.svg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000059.jpg",
     "hours": {
       "mon": [
         {
@@ -3374,7 +3374,7 @@
     "lng": -73.5515,
     "address": "350 Rue Saint-Paul E",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000060.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000060.jpg",
     "hours": {
       "sun": [
         {
@@ -3435,7 +3435,7 @@
     "lng": -73.5879,
     "address": "Boucle du Sommet, Parc du Mont-Royal",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000061.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000061.jpg",
     "hours": {
       "mon": [
         {
@@ -3496,7 +3496,7 @@
     "lng": -73.6107,
     "address": "Parc Tiohtià:ke Otsira'kéhne, Outremont",
     "priceLevel": 1,
-    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000062.jpg",
+    "photoUrl": "/places/10000000-0000-4000-8000-000000000062.jpg",
     "hours": {
       "mon": [
         {

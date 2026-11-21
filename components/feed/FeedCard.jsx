@@ -82,7 +82,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0 motion-safe:animate-heart-burst"
         >
-          <Icon name="heart" cel strokeWidth={1.4} className="size-32 text-white drop-shadow-[0_6px_0_rgb(34_40_46/0.55)]" />
+          <Icon name="heart" cel strokeWidth={1.4} className="size-32 text-white drop-shadow-[0_6px_0_var(--color-shade)]" />
         </span>
       )}
       {!photoFailed && (
@@ -152,7 +152,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
           </div>
 
           <div>
-            <h2 id={titleId} className="ink-pop line-clamp-2 font-display text-[2rem] leading-[0.95] font-extrabold break-words">
+            <h2 id={titleId} className="ink-pop line-clamp-2 font-display text-heading font-extrabold break-words">
               {place.name}
             </h2>
             <p className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-white/85">
@@ -242,7 +242,7 @@ export function FeedCardSkeleton({ className }) {
         </div>
         <div className="space-y-3">
           <div className="h-8 w-40 rounded-full bg-surface/60" />
-          <div className="h-9 w-3/4 rounded-xl bg-surface/60" />
+          <div className="h-9 w-3/4 rounded-button bg-surface/60" />
           <div className="h-4 w-1/2 rounded-full bg-surface/60" />
           <div className="h-4 w-full rounded-full bg-surface/60" />
           <div className="flex gap-3 pt-1">

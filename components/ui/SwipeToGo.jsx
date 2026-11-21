@@ -5,13 +5,13 @@
  *
  * The knob doesn't follow the finger 1:1: knob = 0.86 × (1 − (1 − p)³) of the track, so the first
  * third flies, the middle drags and the end barely moves. Past 55% of the pull the bar strains
- * (shake, cracks, glow). At 97% of the pull, or on release past 90%, it breaks: the knob slams to the
+ * (shake, a throbbing landing socket, sparks). At 97% of the pull, or on release past 90%, it breaks: the knob slams to the
  * end, the track shatters, a shockwave rings out and the knob turns teal with a check. `onGo` fires
  * ~700 ms after the break. Released early, it springs back.
  *
  * Pointer events live on the knob only, and it uses touch-action: pan-y, so a vertical swipe on it
  * still scrolls the feed (the browser then cancels our pointer and the knob springs back).
- * Keyboard: Enter / Space / ArrowRight. Reduced motion: no shake, cracks or shards, instant check.
+ * Keyboard: Enter / Space / ArrowRight. Reduced motion: no shake, sparks or shards, instant check.
  *
  * Reset after a break: change `resetKey` (or remount with a new `key`).
  */
@@ -42,12 +42,10 @@ const GO_DELAY_MS = 700;
 const SNAP_EASE = "cubic-bezier(0.8, 0, 1, 1)";
 const SPRING_EASE = "cubic-bezier(0.2, 1.5, 0.35, 1)";
 
-/** Crack zigzags: [fraction along the track, y in px]. */
-const CRACKS = [
-  [[0.02, 18], [0.18, 30], [0.3, 22], [0.46, 38], [0.6, 28]],
-  [[0.22, 40], [0.38, 28], [0.54, 38], [0.72, 24], [0.92, 34]],
-  [[0.5, 14], [0.64, 26], [0.78, 16], [0.97, 30]],
-];
+/** Distance between two spark bursts while dragging. */
+const SPARK_STEP = 22;
+/** Where the 3 pieces of a spark burst fly (px, halfway point; they go 2.4× further). */
+const SPARK_DIRS = [[-10, -16], [-14, 2], [-8, 16]];
 
 /** Shatter confetti: the palette, so the break feels like a celebration. */
 const SHARD_COLORS = ["var(--color-accent)", "var(--color-teal)", "var(--color-warning)", "var(--color-peach)", "#ffffff"];
@@ -207,8 +205,8 @@ export function SwipeToGo({
   const text = p < 0.05 ? label : tension <= 0 ? "Keep going" : tension < 0.6 ? "Harder" : "Almost…";
   const straining = phase === "drag" && tension > 0;
 
-  // Cel look: a hard drop shadow, plus a thin flat ring that grows while you pull.
-  const glow = `0 0 0 ${(x * 3 + tension * 2).toFixed(1)}px color-mix(in srgb, var(--color-accent) 30%, transparent), 0 3px 0 var(--color-shade)`;
+  // Cel look: a hard drop shadow that deepens as the bar strains. No soft glow.
+  const glow = `0 ${(3 + tension * 3).toFixed(1)}px 0 var(--color-shade)`;
 
   /** Transition for things that move with the knob. */
   const follow = (/** @type {string} */ prop) =>
@@ -241,6 +239,7 @@ export function SwipeToGo({
         style={{
           boxShadow: glow,
           "--amp": `${(phase === "snap" ? 5 : tension * 2.6).toFixed(2)}px`,
+          scale: phase === "drag" ? String(1 + tension * 0.035) : undefined,
           transition: phase === "done" ? undefined : phase === "drag" ? "box-shadow 80ms linear" : "box-shadow 500ms ease",
         }}
       >
@@ -251,56 +250,30 @@ export function SwipeToGo({
             className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-linear-to-r from-transparent via-white/45 to-transparent motion-safe:animate-shine motion-reduce:hidden"
           />
         )}
-        {/* Pulled-through fill: heats up from teal to yellow. */}
+        {/* Pulled-through fill: solid teal with moving stripes. */}
         <div
-          className="swipe-heat absolute inset-y-0 left-0 rounded-full border-r-2 border-line motion-safe:animate-stripes"
+          className={cn("swipe-heat absolute inset-y-0 left-0 rounded-full motion-safe:animate-stripes", x > 0 && "border-r-2 border-line")}
           style={{ width: x > 0 ? px + KNOB + PAD * 2 : 0, transition: follow("width") }}
         />
 
-        {/* Cracks */}
-        <svg
-          className="pointer-events-none absolute inset-0 size-full motion-reduce:hidden"
-          viewBox={`0 0 ${w} ${HEIGHT}`}
-          preserveAspectRatio="none"
-        >
-          {CRACKS.map((pts, i) => (
-            <path
-              key={i}
-              d={"M" + pts.map(([f, y]) => `${Math.round(f * w)} ${y}`).join(" L")}
-              pathLength={1}
-              fill="none"
-              stroke="rgb(255 255 255 / 0.95)"
-              strokeWidth={2.2}
-              strokeLinejoin="round"
-              strokeDasharray={1}
-              strokeDashoffset={Math.max(0, 1 - tension * (1.2 - i * 0.15))}
-            />
-          ))}
-        </svg>
+        {/* Socket: where the knob has to land. Appears while you pull, throbs harder under strain. */}
+        {phase === "drag" && (
+          <span
+            className={cn(
+              "pointer-events-none absolute rounded-full border-2 border-dashed border-white",
+              tension > 0 && "bg-white/25 motion-safe:animate-socket",
+            )}
+            style={{ top: PAD - 2, right: PAD - 2, width: KNOB + 4, height: KNOB + 4, animationDuration: `${Math.round(700 - tension * 450)}ms` }}
+          />
+        )}
 
-        {/* Ticks */}
-        {TICKS.map((t, i) => {
-          const lit = p >= t;
-          return (
-            <span
-              key={`${i}-${lit}`}
-              className={cn(
-                // On the bottom edge, so they never sit on the label.
-                "absolute bottom-[4px] size-2 rounded-full border border-line",
-                lit ? "bg-warning motion-safe:animate-tick-on" : "bg-white/60",
-              )}
-              style={{ left: PAD + KNOB / 2 + curve(t) * travel - 4 }}
-            />
-          );
-        })}
-
-        {/* Resting label: its own lane right of the knob. Chevrons drop out when the lane is narrow. */}
+        {/* Resting label: its own lane right of the knob; the chevrons always show. */}
         <div
-          className="@container absolute inset-y-0 flex items-center justify-center gap-1 text-on-accent transition-opacity duration-300"
+          className="absolute inset-y-0 flex items-center justify-center gap-1 text-white transition-opacity duration-300 [text-shadow:0_2px_0_var(--color-line)] [&_svg]:drop-shadow-[0_2px_0_var(--color-line)]"
           style={{ left: LABEL_LEFT, right: LABEL_RIGHT, opacity: phase === "drag" || broken ? 0 : 1 }}
         >
-          <span className="font-display text-[15px] leading-none font-extrabold whitespace-nowrap">{label}</span>
-          <span className="flex shrink-0 -space-x-1.5 @max-[7.5rem]:hidden">
+          <span className="font-display text-base leading-none font-extrabold whitespace-nowrap">{label}</span>
+          <span className="flex shrink-0 -space-x-1.5">
             {[0, 1, 2].map((i) => (
               <svg
                 key={i}
@@ -326,16 +299,33 @@ export function SwipeToGo({
             className="absolute inset-y-0 flex items-center justify-end overflow-hidden text-on-accent"
             style={{ left: LABEL_RIGHT, width: Math.max(0, pullRoom), opacity: clamp01((pullRoom - text.length * 8.5) / 16) }}
           >
-            {/* Light halo so the white strain cracks fade out behind the word instead of cutting through it. */}
             <span
               key={text}
-              className="font-display text-[15px] leading-none font-extrabold whitespace-nowrap [text-shadow:0_0_3px_rgb(255_255_255/0.9),0_0_10px_rgb(255_255_255/0.55)] motion-safe:animate-pop"
+              className="font-display text-[15px] leading-none font-extrabold whitespace-nowrap text-on-teal motion-safe:animate-pop"
             >
               {text}
             </span>
           </div>
         )}
       </div>
+
+      {/* Sparks: every SPARK_STEP px of pull, a 3-piece burst flies off behind the knob (palette colours). */}
+      {phase === "drag" &&
+        Array.from({ length: Math.min(4, Math.floor(px / SPARK_STEP) + 1) }, (_, k) => {
+          const n = Math.floor(px / SPARK_STEP) - k;
+          return SPARK_DIRS.map(([sx, sy], j) => (
+            <span
+              key={`${n}-${j}`}
+              className="pointer-events-none absolute top-1/2 z-5 size-3 rounded-full border-[1.5px] border-line motion-safe:animate-spark motion-reduce:hidden"
+              style={{
+                left: PAD + n * SPARK_STEP,
+                backgroundColor: SHARD_COLORS[(n + j) % SHARD_COLORS.length],
+                "--sx": `${sx}px`,
+                "--sy": `${sy}px`,
+              }}
+            />
+          ));
+        })}
 
       {/* Shatter */}
       {showFx &&
@@ -385,7 +375,7 @@ export function SwipeToGo({
       {phase === "done" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold text-white drop-shadow-[0_2px_0_rgb(34_40_46/0.6)] motion-safe:animate-rise"
+          className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold text-white drop-shadow-[0_2px_0_var(--color-shade)] motion-safe:animate-rise"
           style={{ right: KNOB + PAD * 2, animationDelay: "250ms" }}
         >
           {doneLabel}
@@ -412,9 +402,7 @@ export function SwipeToGo({
             broken ? "cursor-default" : "cursor-grab active:cursor-grabbing",
             phase === "done"
               ? cn("bg-teal text-on-teal", !instant && "animate-land")
-              : straining
-                ? "bg-warning text-on-accent"
-                : "bg-on-accent text-white",
+              : "bg-on-accent text-white",
             focusRing,
           )}
           style={{
@@ -422,7 +410,7 @@ export function SwipeToGo({
             height: KNOB,
             transform:
               phase === "drag" ? `scale(${(1.03 + x * 0.04 + tension * 0.03).toFixed(3)})` : undefined,
-            boxShadow: `0 3px 0 var(--color-shade), 0 0 0 ${(x * 3).toFixed(1)}px rgb(255 255 255 / 0.4)`,
+            boxShadow: `0 3px 0 var(--color-shade)`,
           }}
         >
           {phase === "done" ? (
@@ -441,7 +429,7 @@ export function SwipeToGo({
               />
             </svg>
           ) : (
-            <span className={phase === "drag" ? undefined : "motion-safe:animate-nudge-x"}>
+            <span className={straining ? "motion-safe:animate-shake" : phase === "drag" ? undefined : "motion-safe:animate-nudge-x"}>
               <Icon name="arrowRight" strokeWidth={2.6} className="size-5" />
             </span>
           )}

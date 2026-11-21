@@ -496,7 +496,7 @@ function Feed() {
 function StateIsland({ title, body, children }) {
   return (
     <div className="cel flex h-full flex-col items-center justify-center gap-3 rounded-card p-8 text-center">
-      <h2 className="font-display text-3xl font-extrabold">{title}</h2>
+      <h2 className="font-display text-card-title font-extrabold">{title}</h2>
       <p className="max-w-64 text-ink-muted">{body}</p>
       {children && <div className="pt-2">{children}</div>}
     </div>
