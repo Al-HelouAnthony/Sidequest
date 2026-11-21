@@ -3,7 +3,7 @@
  * Onboarding (PLAN.md F9). Owner: Oscar. Four quick steps, clickable in ~20 s on stage:
  *   1. Calendar: status from the sign-in redirect (?calendar=synced|failed|skipped). Sync only happens at sign-in
  *      (team decision), so failed/skipped offer "Sign in again" → /login?next=/onboarding, not a retry call.
- *   2. Neighbourhood: one of NEIGHBOURHOODS; only the id is sent (coords are looked up server-side)
+ *   2. Home: postal code (N5, server keeps "H2T" and looks up its centre); neighbourhood picker as fallback
  *   3. Interests: tags from PLAN.md §6.3, at least MIN_INTERESTS
  *   4. Friends: PeopleList (GET /api/users → POST /api/friends; falls back to GET /api/friends)
  * The pickers live in ./pickers.jsx (shared with the You screen).
@@ -19,8 +19,9 @@ import { Button, IconButton, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "./options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList } from "./pickers";
+import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "./pickers";
 
 const STEPS = ["Calendar", "Neighbourhood", "Interests", "Friends"];
 
@@ -47,6 +48,10 @@ export function Onboarding() {
   /** @type {CalendarState} */
   const calendar = fromRedirect === "synced" || fromRedirect === "failed" ? fromRedirect : "skipped";
   const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
+  /** N5: home postal code (main way); neighbourhood stays as the fallback. */
+  const [postal, setPostal] = useState("");
+  const [postalError, setPostalError] = useState(/** @type {string | null} */ (null));
+  const hasPostal = isPostalCode(postal);
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(/** @type {string | null} */ (null));
@@ -81,8 +86,21 @@ export function Onboarding() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ neighbourhoodId, interests: [...interests] }),
+        // Postal code wins when given (one home only); otherwise the picked neighbourhood.
+        body: JSON.stringify(
+          hasPostal ? { postalCode: postal.trim(), interests: [...interests] } : { neighbourhoodId, interests: [...interests] },
+        ),
       });
+      if (hasPostal) {
+        const msg = await postalErrorFrom(res);
+        if (msg) {
+          // Back to the home step with the reason under the field.
+          setPostalError(msg);
+          setStep(1);
+          setSaving(false);
+          return;
+        }
+      }
       if (!res.ok && !notLiveYet(res.status)) throw new Error(`PATCH /api/me ${res.status}`);
       if (notLiveYet(res.status)) console.warn("[onboarding] PATCH /api/me not live yet; profile not saved");
       router.replace(next);
@@ -94,19 +112,21 @@ export function Onboarding() {
   };
 
   const canContinue =
-    step === 0 ? true : step === 1 ? Boolean(neighbourhoodId) : step === 2 ? interests.size >= MIN_INTERESTS : true;
+    step === 0 ? true : step === 1 ? hasPostal || Boolean(neighbourhoodId) : step === 2 ? interests.size >= MIN_INTERESTS : true;
   const isLast = step === STEPS.length - 1;
   const ctaLabel =
     step === 2 && interests.size < MIN_INTERESTS
       ? `Pick ${MIN_INTERESTS - interests.size} more`
-      : step === 1 && !neighbourhoodId
-        ? "Pick your neighbourhood"
+      : step === 1 && !hasPostal && !neighbourhoodId
+        ? "Add a postal code or pick an area"
         : isLast
           ? "Start exploring"
           : "Continue";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
       {/* Progress */}
       <div className="flex items-center gap-3">
         {step > 0 ? (
@@ -130,14 +150,25 @@ export function Onboarding() {
             />
           ))}
         </div>
-        <span className="w-11 shrink-0 text-right text-sm font-semibold text-ink-muted tabular-nums">
+        <span className="halo w-11 shrink-0 text-right text-sm font-semibold text-ink-muted tabular-nums">
           {step + 1}/{STEPS.length}
         </span>
       </div>
 
       <div key={step} className="flex flex-1 flex-col gap-4 motion-safe:animate-rise">
         {step === 0 && <CalendarStep state={calendar} />}
-        {step === 1 && <NeighbourhoodStep value={neighbourhoodId} onChange={setNeighbourhoodId} />}
+        {step === 1 && (
+          <NeighbourhoodStep
+            value={neighbourhoodId}
+            onChange={setNeighbourhoodId}
+            postal={postal}
+            onPostal={(v) => {
+              setPostal(v);
+              setPostalError(null);
+            }}
+            postalError={postalError}
+          />
+        )}
         {step === 2 && <InterestsStep selected={interests} onToggle={toggleInterest} />}
         {step === 3 && <FriendsStep />}
       </div>
@@ -160,6 +191,7 @@ export function Onboarding() {
         </Button>
       </div>
     </main>
+    </>
   );
 }
 
@@ -167,8 +199,8 @@ export function Onboarding() {
 function StepTitle({ title, body }) {
   return (
     <div className="space-y-1.5">
-      <h1 className="font-display text-[2rem] leading-[1.02] font-extrabold">{title}</h1>
-      {body && <p className="text-ink-muted">{body}</p>}
+      <h1 className="halo font-display text-[2rem] leading-[1.02] font-extrabold">{title}</h1>
+      {body && <p className="halo text-ink-muted">{body}</p>}
     </div>
   );
 }
@@ -211,11 +243,15 @@ function CalendarStep({ state }) {
   );
 }
 
-/** @param {{ value: string | null, onChange: (id: string) => void }} props */
-function NeighbourhoodStep({ value, onChange }) {
+/**
+ * @param {{ value: string | null, onChange: (id: string) => void, postal: string, onPostal: (v: string) => void, postalError: string | null }} props
+ */
+function NeighbourhoodStep({ value, onChange, postal, onPostal, postalError }) {
   return (
     <>
-      <StepTitle title="Where do you live?" body="We use it to work out travel times. Pick the closest area." />
+      <StepTitle title="Where do you live?" body="Your postal code gives everyone their real travel times." />
+      <PostalCodeField value={postal} onChange={onPostal} error={postalError} />
+      <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
       <NeighbourhoodPicker value={value} onChange={onChange} />
     </>
   );
@@ -230,7 +266,7 @@ function InterestsStep({ selected, onToggle }) {
         body={`Pick at least ${MIN_INTERESTS}. Your feed learns the rest from your swipes.`}
       />
       <InterestPicker selected={selected} onToggle={onToggle} />
-      <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
+      <p className="halo text-sm font-semibold text-ink-muted" aria-live="polite">
         {selected.size} selected
       </p>
     </>
@@ -249,11 +285,14 @@ function FriendsStep() {
 /** Suspense fallback for /onboarding. */
 export function OnboardingLoading() {
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
       <span className="sr-only">Loading…</span>
       <Skeleton className="h-11 rounded-full" />
       <Skeleton className="mx-auto mt-4 size-28 rounded-full" />
       <Skeleton className="h-20 rounded-tile" />
     </main>
+    </>
   );
 }

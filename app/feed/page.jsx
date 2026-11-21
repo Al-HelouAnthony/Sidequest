@@ -18,6 +18,8 @@ import { PlaceSheet } from "@/components/feed/PlaceSheet";
 import { WeatherSheet } from "@/components/feed/WeatherSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { addVisitParams, newSeed, readSeen, rememberSeen } from "@/components/feed/visit";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -41,11 +43,13 @@ const SKIP_OUT_MS = 280;
  * @param {string | null} cursor
  * @param {AbortSignal} [signal]
  * @param {import("@/types/feed").FeedFiltersT | null} [filters] active search filters (next pages of a search)
+ * @param {{ seed: number, seen: string[] }} [visit] N2: per-visit seed + places seen in earlier visits
  * @returns {Promise<import("@/types/api").FeedResponseT>}
  */
-async function fetchFeed(cursor, signal, filters) {
+async function fetchFeed(cursor, signal, filters, visit) {
   const params = new URLSearchParams();
   if (cursor) params.set("cursor", cursor);
+  if (visit) addVisitParams(params, visit);
   if (filters && Object.keys(filters).length) params.set("filters", JSON.stringify(filters));
   const qs = params.toString();
   const url = qs ? `/api/feed?${qs}` : "/api/feed";
@@ -58,6 +62,21 @@ async function fetchFeed(cursor, signal, filters) {
     throw new Error("The feed came back in an unexpected shape");
   }
   return parsed.data;
+}
+
+/** Cards ahead of the end of the list at which the next page starts loading (N3). */
+const PREFETCH_AHEAD = 5;
+
+/**
+ * Warm the browser cache with a page's photos so each card arrives with its image (N3).
+ * @param {import("@/types/feed").FeedCardT[]} cards
+ */
+function preloadPhotos(cards) {
+  for (const c of cards) {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = c.place.photoUrl;
+  }
 }
 
 /**
@@ -73,10 +92,17 @@ function sendInteraction(card, action) {
   }).catch((e) => console.warn("[feed] interaction not sent", e));
 }
 
-/** One full-screen snap page. */
-function Page({ children }) {
+/**
+ * One full-screen snap page. `placeId` marks card pages so the feed can remember what was actually seen (N2).
+ * @param {{ children: React.ReactNode, placeId?: string }} props
+ */
+function Page({ children, placeId }) {
   return (
-    <section className="h-full snap-start snap-always px-3 pt-1" style={{ paddingBottom: TAB_BAR_SPACE }}>
+    <section
+      data-place-id={placeId}
+      className="h-full snap-start snap-always px-3 pt-1"
+      style={{ paddingBottom: TAB_BAR_SPACE }}
+    >
       {children}
     </section>
   );
@@ -107,6 +133,13 @@ function Feed() {
   const [searchOpen, setSearchOpen] = useState(0);
   /** Filters of the active search, reused for the next pages and for Refresh. */
   const filtersRef = useRef(/** @type {import("@/types/feed").FeedFiltersT | null} */ (null));
+  /**
+   * N2: one seed per visit + the places seen BEFORE this visit (snapshot), reused for every page.
+   * Created on first use inside effects/handlers, never during render: Next 16 (cacheComponents) refuses
+   * Math.random() while prerendering.
+   */
+  const visitRef = useRef(/** @type {{ seed: number, seen: string[] } | null} */ (null));
+  const getVisit = () => (visitRef.current ??= { seed: newSeed(), seen: readSeen() });
   const router = useRouter();
   /** Invites from friends that I haven't answered (polling GET /api/plans). */
   const { invites, dismiss: dismissInvite } = useInvites();
@@ -121,9 +154,10 @@ function Feed() {
   // First page (and retries).
   useEffect(() => {
     const ctrl = new AbortController();
-    fetchFeed(null, ctrl.signal, filtersRef.current)
+    fetchFeed(null, ctrl.signal, filtersRef.current, getVisit())
       .then((d) => {
         setCards(d.cards);
+        preloadPhotos(d.cards.slice(1));
         setNextCursor(d.nextCursor);
         setStatus("ready");
       })
@@ -145,10 +179,12 @@ function Feed() {
     setLoadingMore(true);
     setMoreFailed(false);
     try {
-      const d = await fetchFeed(nextCursor, undefined, filtersRef.current);
+      const d = await fetchFeed(nextCursor, undefined, filtersRef.current, getVisit());
       setCards((list) => {
         const seen = new Set(list.map((c) => c.id));
-        return [...list, ...d.cards.filter((c) => !seen.has(c.id))];
+        const fresh = d.cards.filter((c) => !seen.has(c.id));
+        preloadPhotos(fresh);
+        return [...list, ...fresh];
       });
       setNextCursor(d.nextCursor);
     } catch (e) {
@@ -160,7 +196,7 @@ function Feed() {
     }
   }, [nextCursor, loadingMore]);
 
-  // Load the next page when the second-to-last card comes into view.
+  // Load the next page early: when the card PREFETCH_AHEAD from the end comes into view (N3).
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el || !nextCursor || moreFailed) return;
@@ -171,6 +207,23 @@ function Feed() {
     io.observe(el);
     return () => io.disconnect();
   }, [nextCursor, loadMore, moreFailed, cards.length]);
+
+  // N2: remember places whose card was actually seen (60% on screen), for the next visits' "seen" list.
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const id = /** @type {HTMLElement} */ (e.target).dataset.placeId;
+          if (e.isIntersecting && id) rememberSeen(id);
+        }
+      },
+      { root, threshold: 0.6 },
+    );
+    root.querySelectorAll("section[data-place-id]").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [cards]);
 
   // Skip timers, cleared if the feed unmounts mid-animation.
   const skipTimers = useRef(/** @type {Set<ReturnType<typeof setTimeout>>} */ (new Set()));
@@ -288,7 +341,9 @@ function Feed() {
   };
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-md flex-col">
+    <>
+    <AppBackground />
+    <div className="relative z-10 mx-auto flex h-dvh w-full max-w-md flex-col">
       <FeedHeader onSearch={() => setSearchOpen((n) => n + 1)} />
       {search && (
         <SearchSummary summary={search.summary} onClear={clearSearch} onEdit={() => setSearchOpen((n) => n + 1)} />
@@ -361,7 +416,7 @@ function Feed() {
 
         {status === "ready" &&
           cards.map((card, i) => (
-            <Page key={card.id}>
+            <Page key={card.id} placeId={card.place.id}>
               <FeedCard
                 card={card}
                 priority={i === 0}
@@ -375,7 +430,7 @@ function Feed() {
                 onDetails={() => setDetailsCard(card)}
                 onWeather={() => setWeatherCard(card)}
               />
-              {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
+              {i === Math.max(0, cards.length - PREFETCH_AHEAD) && <div ref={sentinelRef} aria-hidden="true" />}
             </Page>
           ))}
 
@@ -390,6 +445,20 @@ function Feed() {
           <Page>
             <StateIsland title="Couldn't load more" body="Something went wrong fetching the next ideas.">
               <Button onClick={loadMore}>Try again</Button>
+            </StateIsland>
+          </Page>
+        )}
+
+        {/* N3: never a dead end. The server loops (Anthony), but if it ever has nothing more, offer a refresh. */}
+        {status === "ready" && cards.length > 0 && !nextCursor && !loadingMore && !moreFailed && (
+          <Page>
+            <StateIsland
+              title={search ? "That's every match" : "You're all caught up"}
+              body={search ? `Those are all the ideas for “${search.query}”.` : "Fresh ideas show up as free time and plans change."}
+            >
+              <Button variant="secondary" onClick={search ? clearSearch : refresh}>
+                {search ? "Back to the feed" : "Refresh"}
+              </Button>
             </StateIsland>
           </Page>
         )}
@@ -416,6 +485,7 @@ function Feed() {
       </main>
       <TabBar active="/feed" />
     </div>
+    </>
   );
 }
 

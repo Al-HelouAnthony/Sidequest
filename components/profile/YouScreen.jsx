@@ -11,8 +11,9 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "@/components/onboarding/options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList } from "@/components/onboarding/pickers";
+import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
@@ -31,10 +32,10 @@ const CREDITS = [
 function DataCredits() {
   return (
     <section aria-labelledby="you-about" className="space-y-1.5 border-t-[1.5px] border-line/15 pt-4">
-      <h2 id="you-about" className="text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id="you-about" className="halo text-sm font-bold tracking-wide text-ink-muted uppercase">
         About
       </h2>
-      <p className="text-xs leading-relaxed text-ink-muted">
+      <p className="halo text-xs leading-relaxed text-ink-muted">
         Data:{" "}
         {CREDITS.map((c, i) => (
           <span key={c.href}>
@@ -59,6 +60,11 @@ export function YouScreen() {
   const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [dirty, setDirty] = useState(false);
+  /** N5: home postal code. The server keeps only "H2T" and doesn't send it back, so we show the area we saved. */
+  const [postal, setPostal] = useState("");
+  const [postalError, setPostalError] = useState(/** @type {string | null} */ (null));
+  const [savedArea, setSavedArea] = useState(/** @type {string | null} */ (null));
+  const hasPostal = isPostalCode(postal);
   const [status, setStatus] = useState(/** @type {"idle" | "saving" | "saved" | "unavailable" | "error"} */ ("idle"));
   const [loadFailed, setLoadFailed] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -97,6 +103,15 @@ export function YouScreen() {
 
   const pickNeighbourhood = (/** @type {string} */ id) => {
     setNeighbourhoodId(id);
+    setPostal(""); // one home: picking an area clears a half-typed postal code
+    setPostalError(null);
+    setDirty(true);
+    setStatus("idle");
+  };
+
+  const typePostal = (/** @type {string} */ v) => {
+    setPostal(v);
+    setPostalError(null);
     setDirty(true);
     setStatus("idle");
   };
@@ -107,13 +122,31 @@ export function YouScreen() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...(neighbourhoodId ? { neighbourhoodId } : {}), interests: [...interests] }),
+        // Postal code wins when given (N5); otherwise the picked neighbourhood.
+        body: JSON.stringify({
+          ...(hasPostal ? { postalCode: postal.trim() } : neighbourhoodId ? { neighbourhoodId } : {}),
+          interests: [...interests],
+        }),
       });
+      if (hasPostal) {
+        const msg = await postalErrorFrom(res);
+        if (msg) {
+          setPostalError(msg);
+          setStatus("idle");
+          return;
+        }
+      }
       if (res.status === 404 || res.status === 405) {
         setStatus("unavailable");
         return;
       }
       if (!res.ok) throw new Error(`PATCH /api/me ${res.status}`);
+      if (hasPostal) {
+        // The server keeps only the first 3 characters (the area); show what was saved.
+        setSavedArea(postal.trim().slice(0, 3));
+        setNeighbourhoodId(null);
+        setPostal("");
+      }
       setStatus("saved");
       setDirty(false);
     } catch (e) {
@@ -123,6 +156,7 @@ export function YouScreen() {
   };
 
   const tooFew = interests.size < MIN_INTERESTS;
+  const postalTypedButInvalid = postal.trim() !== "" && !hasPostal;
   const note = {
     idle: null,
     saving: null,
@@ -132,7 +166,9 @@ export function YouScreen() {
   }[status];
 
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
+    <>
+    <AppBackground variant="radar" />
+    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <div className="flex items-center gap-3">
         {me ? (
           <Avatar src={me.avatarUrl} name={me.name} size="xl" decorative />
@@ -140,8 +176,8 @@ export function YouScreen() {
           <Skeleton className="size-16 rounded-full" />
         )}
         <div className="min-w-0">
-          <h1 className="font-display text-3xl font-extrabold">You</h1>
-          <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
+          <h1 className="halo font-display text-3xl font-extrabold">You</h1>
+          <p className="halo truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
         </div>
       </div>
 
@@ -161,32 +197,42 @@ export function YouScreen() {
       )}
 
       <section aria-labelledby="you-area" className="space-y-3">
-        <h2 id="you-area" className="font-display text-xl font-extrabold">
-          Neighbourhood
-        </h2>
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 id="you-area" className="halo font-display text-xl font-extrabold">
+            Home
+          </h2>
+          {savedArea && (
+            <span className="halo inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
+              <Icon name="check" strokeWidth={3} className="size-4 text-teal" />
+              Home set to {savedArea}
+            </span>
+          )}
+        </div>
+        <PostalCodeField id="you-postal" value={postal} onChange={typePostal} error={postalError} />
+        <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
         <NeighbourhoodPicker value={neighbourhoodId} onChange={pickNeighbourhood} />
       </section>
 
       <section aria-labelledby="you-interests" className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h2 id="you-interests" className="font-display text-xl font-extrabold">
+          <h2 id="you-interests" className="halo font-display text-xl font-extrabold">
             Interests
           </h2>
-          <span className="text-sm font-semibold text-ink-muted">{interests.size} selected</span>
+          <span className="halo text-sm font-semibold text-ink-muted">{interests.size} selected</span>
         </div>
         <InterestPicker selected={interests} onToggle={toggleInterest} />
       </section>
 
       <div className="space-y-2">
         {note && (
-          <p role="status" className={`text-center text-sm font-semibold ${note.className}`}>
+          <p role="status" className={`halo text-center text-sm font-semibold ${note.className}`}>
             {note.text}
           </p>
         )}
         <Button
           size="lg"
           fullWidth
-          disabled={!dirty || tooFew}
+          disabled={!dirty || tooFew || postalTypedButInvalid}
           loading={status === "saving"}
           onClick={save}
           leadingIcon={status === "saved" && !dirty ? <Icon name="check" strokeWidth={3} className="size-4" /> : undefined}
@@ -196,15 +242,16 @@ export function YouScreen() {
       </div>
 
       <section aria-labelledby="you-friends" className="space-y-3">
-        <h2 id="you-friends" className="font-display text-xl font-extrabold">
+        <h2 id="you-friends" className="halo font-display text-xl font-extrabold">
           Friends
         </h2>
-        <PeopleList />
+        <PeopleList canRemove />
       </section>
 
       <DataCredits />
 
       <TabBar active="/me" />
     </main>
+    </>
   );
 }
