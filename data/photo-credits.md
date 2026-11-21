@@ -1,10 +1,13 @@
 # Photo credits
 
-**Update (Sat Nov 21):** every curated place now uses a team-provided photo (free licence / our own), resized to 1080 px and served as a static file from `public/places/<placeId>.jpg` (`photoUrl: "/places/<id>.jpg"` in `data/places.json`). The table below is kept for the earlier Wikimedia photos.
+**Current (Sat Nov 21): every curated place uses an AI-generated illustration**, not a photo of the actual venue.
+This was a team decision: no Google Places API, no scraping. The 60 images are bundled with the app in
+`public/places/<placeId>.jpg` (`photoUrl: "/places/<id>.jpg"` in `data/places.json`), resized to 1080 px.
+Say so on Devpost and in the demo ("illustrative images"). Registry restaurants (cuisine search) use the
+category fallback images in `public/fallback/`.
 
-Place photos were previously stored in the Supabase Storage bucket `place-photos` (see `supabase/migrations/0003_place_photos_bucket.sql`).
-Photos below come from Wikimedia Commons and are used under their free licences. Each was resized for the app.
-Places not listed here still use placeholder images (picsum.photos) and need a photo of our own or an Unsplash image.
+**History, no longer used:** the table below lists the Wikimedia Commons photos we used earlier
+(Supabase Storage bucket `place-photos`, migration 0003). Kept for the record.
 
 | Place | Photo | Author | Licence |
 |---|---|---|---|
