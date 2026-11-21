@@ -5,10 +5,11 @@
  * weather, caption, and the Skip / Save / Let's go actions.
  * Presentational: the parent (the feed screen) owns saved state and what each action does.
  */
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { formatSlot } from "@/lib/time";
 import { AvatarStack } from "@/components/ui/Avatar";
-import { Button, IconButton } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/Button";
+import { SwipeToGo } from "@/components/ui/SwipeToGo";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { PriceLevel } from "@/components/ui/PriceLevel";
@@ -40,23 +41,45 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  *   onGo?: () => void,
  *   onWhy?: () => void,
  *   priority?: boolean,
+ *   leaving?: boolean,
+ *   goResetKey?: string | number,
  *   className?: string,
  * }} props
+ * `onGo` fires ~700 ms after the swipe bar breaks. Change `goResetKey` to put the bar back.
  * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
+ * `leaving` plays the skip-out animation and blocks further taps (the parent removes the card after it).
  */
-export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, className }) {
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, leaving = false, goResetKey = 0, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
   const [photoFailed, setPhotoFailed] = useState(false);
+  // Bumped on every save so the burst replays (new key = new animation).
+  const [burst, setBurst] = useState(0);
   const titleId = `card-${card.id}-title`;
+
+  const handleSave = () => {
+    if (!saved) setBurst((n) => n + 1);
+    onSave?.();
+  };
 
   return (
     <article
       aria-labelledby={titleId}
+      inert={leaving || undefined}
       className={cn(
         "relative isolate h-full overflow-hidden rounded-card border-[1.5px] border-line bg-ink shadow-cel",
+        leaving && "pointer-events-none motion-safe:animate-skip-out",
         className,
       )}
     >
+      {burst > 0 && (
+        <span
+          key={burst}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0 motion-safe:animate-heart-burst"
+        >
+          <Icon name="heart" cel strokeWidth={1.4} className="size-32 text-white drop-shadow-[0_6px_0_rgb(34_40_46/0.55)]" />
+        </span>
+      )}
       {!photoFailed && (
         // eslint-disable-next-line @next/next/no-img-element -- remote place photos, no next.config change needed
         <img
@@ -110,12 +133,15 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
             {friends.length > 0 ? (
               <>
                 <AvatarStack people={friends} size="sm" tone="photo" />
-                <p className="min-w-0 text-sm font-semibold text-white/90">
+                {/* Each "Name 12 min" stays together; the line wraps between friends, never mid-name. */}
+                <p className="min-w-0 text-sm leading-snug font-semibold text-white/90">
                   {friends.map((f, i) => (
-                    <span key={f.id} className="whitespace-nowrap">
+                    <Fragment key={f.id}>
                       {i > 0 && <span aria-hidden="true"> · </span>}
-                      {f.name} {travel(f.travelMin, f.travelIsEstimate)}
-                    </span>
+                      <span className="whitespace-nowrap">
+                        {f.name} {travel(f.travelMin, f.travelIsEstimate)}
+                      </span>
+                    </Fragment>
                   ))}
                 </p>
               </>
@@ -132,21 +158,20 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
               label={saved ? `Unsave ${place.name}` : `Save ${place.name}`}
               size="lg"
               pressed={saved}
-              onClick={onSave}
+              onClick={handleSave}
               icon={
                 <span key={saved ? "on" : "off"} className={saved ? "motion-safe:animate-pop" : undefined}>
                   <Icon name="heart" filled={saved} className={saved ? "text-love" : undefined} />
                 </span>
               }
             />
-            <Button
-              size="lg"
-              className="flex-1"
-              onClick={onGo}
-              trailingIcon={<Icon name="arrowRight" strokeWidth={2.5} className="size-4" />}
-            >
-              Let&apos;s go
-            </Button>
+            <SwipeToGo
+              className="min-w-0 flex-1"
+              onGo={onGo}
+              resetKey={goResetKey}
+              disabled={leaving}
+              ariaLabel={`Let's go to ${place.name}: swipe right or press Enter`}
+            />
           </div>
         </div>
       </div>
