@@ -30,13 +30,13 @@ export function YouScreen() {
     fetch("/api/me", { signal: ctrl.signal, cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`me ${r.status}`))))
       .then((json) => {
-        // neighbourhoodId isn't in the User contract yet; read it raw so it shows once PATCH /api/me stores it.
-        const raw = /** @type {{ user?: { neighbourhoodId?: unknown } }} */ (json).user?.neighbourhoodId;
         const { user } = MeResponse.parse(json);
         const known = new Set(INTERESTS.map((t) => t.id));
         setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl });
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
-        if (typeof raw === "string" && NEIGHBOURHOODS.some((n) => n.id === raw)) setNeighbourhoodId(raw);
+        // The server stores the neighbourhood's centre as the home (not the id), so match it back.
+        const home = NEIGHBOURHOODS.find((n) => Math.abs(n.lat - user.homeLat) < 1e-4 && Math.abs(n.lng - user.homeLng) < 1e-4);
+        if (home) setNeighbourhoodId(home.id);
       })
       .catch((e) => {
         if (ctrl.signal.aborted) return;

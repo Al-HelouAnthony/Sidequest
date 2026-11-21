@@ -6,7 +6,7 @@
  *  - PeopleList: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends
  */
 import { useEffect, useState } from "react";
-import { FriendsResponse } from "@/types/api";
+import { FriendsResponse, UsersResponse } from "@/types/api";
 import { Avatar } from "@/components/ui/Avatar";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
@@ -64,17 +64,17 @@ export function InterestPicker({ selected, onToggle }) {
 /** @typedef {{ id: string, name: string, avatarUrl: string, isFriend: boolean }} Person */
 
 /**
- * GET /api/users → { users: [{ id, name, avatarUrl, isFriend }] } (UsersResponse on Mhammad's branch).
- * Checked by hand until UsersResponse is on main, then swap for UsersResponse.parse.
+ * GET /api/users → UsersResponse { users: [{ id, name, avatarUrl, isFriend }] } (Mhammad, everyone except me).
  * @param {unknown} json
- * @returns {Person[] | null}
+ * @returns {Person[] | null} null when the shape doesn't match (logged), so the friends fallback kicks in.
  */
 function parseUsers(json) {
-  const users = /** @type {{ users?: unknown }} */ (json)?.users;
-  if (!Array.isArray(users)) return null;
-  return users
-    .filter((u) => u && typeof u.id === "string" && typeof u.name === "string")
-    .map((u) => ({ id: u.id, name: u.name, avatarUrl: typeof u.avatarUrl === "string" ? u.avatarUrl : "", isFriend: Boolean(u.isFriend) }));
+  const parsed = UsersResponse.safeParse(json);
+  if (!parsed.success) {
+    console.error("[people] GET /api/users does not match UsersResponse", parsed.error.issues);
+    return null;
+  }
+  return parsed.data.users;
 }
 
 /** People to add as friends, with an Add button. Shows existing friends only until GET /api/users is live. */
