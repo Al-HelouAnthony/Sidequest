@@ -22,6 +22,8 @@ export function YouScreen() {
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [dirty, setDirty] = useState(false);
   const [status, setStatus] = useState(/** @type {"idle" | "saving" | "saved" | "unavailable" | "error"} */ ("idle"));
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -36,9 +38,13 @@ export function YouScreen() {
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
         if (typeof raw === "string" && NEIGHBOURHOODS.some((n) => n.id === raw)) setNeighbourhoodId(raw);
       })
-      .catch((e) => !ctrl.signal.aborted && console.error("[you] /api/me", e));
+      .catch((e) => {
+        if (ctrl.signal.aborted) return;
+        console.error("[you] /api/me", e);
+        setLoadFailed(true);
+      });
     return () => ctrl.abort();
-  }, []);
+  }, [reloadKey]);
 
   const toggleInterest = (/** @type {string} */ id) => {
     setInterests((s) => {
@@ -97,9 +103,24 @@ export function YouScreen() {
         )}
         <div className="min-w-0">
           <h1 className="font-display text-3xl font-extrabold">You</h1>
-          <p className="truncate text-ink-muted">{me ? me.name : "Loading…"}</p>
+          <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
         </div>
       </div>
+
+      {loadFailed && !me && (
+        <div role="alert" className="cel flex items-center justify-between gap-3 rounded-tile p-3.5">
+          <span className="text-sm font-semibold">Check your connection and try again.</span>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setLoadFailed(false);
+              setReloadKey((k) => k + 1);
+            }}
+          >
+            Try again
+          </Button>
+        </div>
+      )}
 
       <section aria-labelledby="you-area" className="space-y-3">
         <h2 id="you-area" className="font-display text-xl font-extrabold">
