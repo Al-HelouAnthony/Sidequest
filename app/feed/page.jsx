@@ -12,6 +12,7 @@ import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
 import { WhySheet } from "@/components/feed/WhySheet";
+import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -64,7 +65,7 @@ function sendInteraction(card, action) {
 
 /** One full-screen snap page. */
 function Page({ children }) {
-  return <section className="h-dvh snap-start snap-always px-3 pt-safe pb-safe">{children}</section>;
+  return <section className="h-full snap-start snap-always px-3 pt-1 pb-safe">{children}</section>;
 }
 
 function Feed() {
@@ -235,103 +236,106 @@ function Feed() {
   };
 
   return (
-    <main
-      ref={scrollerRef}
-      className="mx-auto h-dvh w-full max-w-md snap-y snap-mandatory overflow-y-scroll overscroll-contain scrollbar-none"
-    >
-      <h1 className="sr-only">Sidequest feed</h1>
-
-      {/* Top stack floating over the feed: invite banner (F7), then the Refresh pill.
-          The wrapper is a live region so both get announced. */}
-      <div
-        aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto flex max-w-md flex-col items-center gap-2 px-3 pt-safe"
+    <div className="mx-auto flex h-dvh w-full max-w-md flex-col">
+      <FeedHeader inviteCount={invites.length} />
+      <main
+        ref={scrollerRef}
+        aria-label="Suggestions"
+        className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-scroll overscroll-contain scrollbar-none"
       >
-        {invites[0] && (
-          <InviteBanner
-            invite={invites[0]}
-            moreCount={invites.length - 1}
-            onOpen={() => dismissInvite(invites[0].id)}
-            onDismiss={() => dismissInvite(invites[0].id)}
-            className="pointer-events-auto"
-          />
-        )}
-        {refreshHint && status === "ready" && (
-          <Button
-            variant="secondary"
-            onClick={refresh}
-            leadingIcon={<Icon name="refresh" strokeWidth={2.5} className="size-4" />}
-            className="pointer-events-auto shadow-cel motion-safe:animate-toast-in"
-          >
-            {refreshHint} · Refresh
-          </Button>
-        )}
-      </div>
-
-      {status === "loading" && (
-        <Page>
-          <span className="sr-only">Loading…</span>
-          <FeedCardSkeleton className="motion-safe:animate-pulse" />
-        </Page>
-      )}
-
-      {status === "error" && (
-        <Page>
-          <StateIsland title="The feed didn't load" body="Check your connection and try again.">
-            <Button onClick={retry}>Try again</Button>
-          </StateIsland>
-        </Page>
-      )}
-
-      {status === "ready" && cards.length === 0 && !nextCursor && (
-        <Page>
-          <StateIsland title="Everyone's busy" body="No shared free time right now. Try again next week.">
-            <Button variant="secondary" onClick={retry}>
-              Refresh
-            </Button>
-          </StateIsland>
-        </Page>
-      )}
-
-      {status === "ready" &&
-        cards.map((card, i) => (
-          <Page key={card.id}>
-            <FeedCard
-              card={card}
-              priority={i === 0}
-              saved={saved.has(card.id)}
-              leaving={leaving.has(card.id)}
-              goResetKey={goResets.get(card.id) ?? 0}
-              onSkip={() => skip(card)}
-              onSave={() => toggleSave(card)}
-              onGo={() => go(card)}
-              onWhy={() => setWhyCard(card)}
+        {/* Top stack floating over the feed: invite banner (F7), then the Refresh pill.
+            The wrapper is a live region so both get announced. */}
+        <div
+          aria-live="polite"
+          className="pointer-events-none fixed inset-x-0 z-30 mx-auto flex max-w-md flex-col items-center gap-2 px-3 pt-2"
+          style={{ top: `calc(${FEED_HEADER_REM}rem + env(safe-area-inset-top))` }}
+        >
+          {invites[0] && (
+            <InviteBanner
+              invite={invites[0]}
+              moreCount={invites.length - 1}
+              onOpen={() => dismissInvite(invites[0].id)}
+              onDismiss={() => dismissInvite(invites[0].id)}
+              className="pointer-events-auto"
             />
-            {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
+          )}
+          {refreshHint && status === "ready" && (
+            <Button
+              variant="secondary"
+              onClick={refresh}
+              leadingIcon={<Icon name="refresh" strokeWidth={2.5} className="size-4" />}
+              className="pointer-events-auto shadow-cel motion-safe:animate-toast-in"
+            >
+              {refreshHint} · Refresh
+            </Button>
+          )}
+        </div>
+
+        {status === "loading" && (
+          <Page>
+            <span className="sr-only">Loading…</span>
+            <FeedCardSkeleton className="motion-safe:animate-pulse" />
           </Page>
-        ))}
+        )}
 
-      {status === "ready" && loadingMore && (
-        <Page>
-          <span className="sr-only">Loading more…</span>
-          <FeedCardSkeleton className="motion-safe:animate-pulse" />
-        </Page>
-      )}
+        {status === "error" && (
+          <Page>
+            <StateIsland title="The feed didn't load" body="Check your connection and try again.">
+              <Button onClick={retry}>Try again</Button>
+            </StateIsland>
+          </Page>
+        )}
 
-      {status === "ready" && moreFailed && !loadingMore && (
-        <Page>
-          <StateIsland title="Couldn't load more" body="Something went wrong fetching the next ideas.">
-            <Button onClick={loadMore}>Try again</Button>
-          </StateIsland>
-        </Page>
-      )}
+        {status === "ready" && cards.length === 0 && !nextCursor && (
+          <Page>
+            <StateIsland title="Everyone's busy" body="No shared free time right now. Try again next week.">
+              <Button variant="secondary" onClick={retry}>
+                Refresh
+              </Button>
+            </StateIsland>
+          </Page>
+        )}
 
-      {whyCard && <WhySheet key={whyCard.id} card={whyCard} onClose={() => setWhyCard(null)} />}
+        {status === "ready" &&
+          cards.map((card, i) => (
+            <Page key={card.id}>
+              <FeedCard
+                card={card}
+                priority={i === 0}
+                saved={saved.has(card.id)}
+                leaving={leaving.has(card.id)}
+                goResetKey={goResets.get(card.id) ?? 0}
+                onSkip={() => skip(card)}
+                onSave={() => toggleSave(card)}
+                onGo={() => go(card)}
+                onWhy={() => setWhyCard(card)}
+              />
+              {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
+            </Page>
+          ))}
 
-      {inviteCard && (
-        <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
-      )}
-    </main>
+        {status === "ready" && loadingMore && (
+          <Page>
+            <span className="sr-only">Loading more…</span>
+            <FeedCardSkeleton className="motion-safe:animate-pulse" />
+          </Page>
+        )}
+
+        {status === "ready" && moreFailed && !loadingMore && (
+          <Page>
+            <StateIsland title="Couldn't load more" body="Something went wrong fetching the next ideas.">
+              <Button onClick={loadMore}>Try again</Button>
+            </StateIsland>
+          </Page>
+        )}
+
+        {whyCard && <WhySheet key={whyCard.id} card={whyCard} onClose={() => setWhyCard(null)} />}
+
+        {inviteCard && (
+          <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
+        )}
+      </main>
+    </div>
   );
 }
 
