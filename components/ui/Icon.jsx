@@ -32,6 +32,16 @@ const SHAPES = {
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
+  /** Feed tab: a compass (discover). */
+  compass: [
+    { d: circle9, f: "paper" },
+    { d: "M15.5 8.5l-2 5-5 2 2-5z", f: "accent" },
+  ],
+  /** You tab: a person. */
+  user: [
+    { d: "M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8z", f: "teal" },
+    { d: "M4.5 20.5c.8-4 3.8-6.2 7.5-6.2s6.7 2.2 7.5 6.2" },
+  ],
   calendar: [
     { d: "M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z", f: "paper" },
     { d: "M4 10h16M8 3v4M16 3v4" },

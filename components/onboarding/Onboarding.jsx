@@ -4,21 +4,21 @@
  *   1. Calendar: status from the sign-in redirect (?calendar=synced|failed|skipped), retry via POST /api/calendar/sync
  *   2. Neighbourhood: one of NEIGHBOURHOODS; only the id is sent (coords are looked up server-side)
  *   3. Interests: tags from PLAN.md §6.3, at least MIN_INTERESTS
- *   4. Friends: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends
+ *   4. Friends: PeopleList (GET /api/users → POST /api/friends; falls back to GET /api/friends)
+ * The pickers live in ./pickers.jsx (shared with the You screen).
  * Finish → PATCH /api/me { neighbourhoodId, interests } → router.replace(?next, default /feed).
  * Endpoints that aren't live yet (404/405) are skipped so onboarding never gets stuck during the build.
  * Must render inside <Suspense> (useSearchParams with cacheComponents).
  */
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CalendarSyncResponse, FriendsResponse, MeResponse } from "@/types/api";
-import { Avatar } from "@/components/ui/Avatar";
+import { CalendarSyncResponse, MeResponse } from "@/types/api";
 import { Button, IconButton } from "@/components/ui/Button";
-import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { cn, focusRing } from "@/components/ui/classes";
-import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "./options";
+import { cn } from "@/components/ui/classes";
+import { INTERESTS, MIN_INTERESTS } from "./options";
+import { InterestPicker, NeighbourhoodPicker, PeopleList } from "./pickers";
 
 const STEPS = ["Calendar", "Neighbourhood", "Interests", "Friends"];
 
@@ -233,34 +233,7 @@ function NeighbourhoodStep({ value, onChange }) {
   return (
     <>
       <StepTitle title="Where do you live?" body="We use it to work out travel times. Pick the closest area." />
-      <div role="radiogroup" aria-label="Neighbourhood" className="grid grid-cols-2 gap-2">
-        {NEIGHBOURHOODS.map((n) => {
-          const on = value === n.id;
-          return (
-            <button
-              key={n.id}
-              type="button"
-              role="radio"
-              aria-checked={on}
-              onClick={() => onChange(n.id)}
-              className={cn(
-                "press flex min-h-12 items-center gap-2 rounded-tile px-3 text-left text-sm font-semibold",
-                on ? "bg-teal text-on-teal" : "bg-surface text-ink",
-                focusRing,
-              )}
-            >
-              {on ? (
-                <span key="on" className="motion-safe:animate-pop">
-                  <Icon name="check" strokeWidth={3} className="size-4" />
-                </span>
-              ) : (
-                <Icon name="pin" cel strokeWidth={1.9} className="size-4" />
-              )}
-              <span className="min-w-0 leading-tight">{n.name}</span>
-            </button>
-          );
-        })}
-      </div>
+      <NeighbourhoodPicker value={value} onChange={onChange} />
     </>
   );
 }
@@ -273,13 +246,7 @@ function InterestsStep({ selected, onToggle }) {
         title="What gets you off the couch?"
         body={`Pick at least ${MIN_INTERESTS}. Your feed learns the rest from your swipes.`}
       />
-      <div className="flex flex-wrap gap-2.5">
-        {INTERESTS.map((t) => (
-          <Chip key={t.id} selected={selected.has(t.id)} onClick={() => onToggle(t.id)}>
-            {t.label}
-          </Chip>
-        ))}
-      </div>
+      <InterestPicker selected={selected} onToggle={onToggle} />
       <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
         {selected.size} selected
       </p>
@@ -287,130 +254,11 @@ function InterestsStep({ selected, onToggle }) {
   );
 }
 
-/** @typedef {{ id: string, name: string, avatarUrl: string, isFriend: boolean }} Person */
-
-/**
- * Shape agreed with Mhammad: GET /api/users → { users: [{ id, name, avatarUrl, isFriend }] } (minus me).
- * Validated by hand until the Zod schema lands in types/api.js.
- * @param {unknown} json
- * @returns {Person[] | null}
- */
-function parseUsers(json) {
-  const users = /** @type {{ users?: unknown }} */ (json)?.users;
-  if (!Array.isArray(users)) return null;
-  return users
-    .filter((u) => u && typeof u.id === "string" && typeof u.name === "string")
-    .map((u) => ({ id: u.id, name: u.name, avatarUrl: typeof u.avatarUrl === "string" ? u.avatarUrl : "", isFriend: Boolean(u.isFriend) }));
-}
-
 function FriendsStep() {
-  const [people, setPeople] = useState(/** @type {Person[] | null} */ (null));
-  /** true when GET /api/users isn't live yet and we only show existing friends. */
-  const [friendsOnly, setFriendsOnly] = useState(false);
-  const [busy, setBusy] = useState(/** @type {string | null} */ (null));
-  const [error, setError] = useState(/** @type {string | null} */ (null));
-
-  useEffect(() => {
-    const ctrl = new AbortController();
-    (async () => {
-      try {
-        const res = await fetch("/api/users", { signal: ctrl.signal, cache: "no-store" });
-        const users = res.ok ? parseUsers(await res.json()) : null;
-        if (users) {
-          setPeople(users);
-          return;
-        }
-        // Fallback until GET /api/users lands: show who you're already friends with.
-        const fr = await fetch("/api/friends", { signal: ctrl.signal, cache: "no-store" });
-        const { friends } = FriendsResponse.parse(await fr.json());
-        setPeople(friends.map((f) => ({ id: f.id, name: f.name, avatarUrl: f.avatarUrl, isFriend: true })));
-        setFriendsOnly(true);
-      } catch (e) {
-        if (ctrl.signal.aborted) return;
-        console.error("[onboarding] people", e);
-        setPeople([]);
-      }
-    })();
-    return () => ctrl.abort();
-  }, []);
-
-  const add = async (/** @type {Person} */ p) => {
-    setBusy(p.id);
-    setError(null);
-    setPeople((list) => list?.map((x) => (x.id === p.id ? { ...x, isFriend: true } : x)) ?? null);
-    try {
-      const res = await fetch("/api/friends", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ friendId: p.id, closeness: 2 }),
-      });
-      if (!res.ok) throw new Error(`POST /api/friends ${res.status}`);
-    } catch (e) {
-      console.error("[onboarding] add friend", e);
-      setPeople((list) => list?.map((x) => (x.id === p.id ? { ...x, isFriend: false } : x)) ?? null);
-      setError(`Couldn't add ${p.name}. Try again.`);
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  const friendCount = people?.filter((p) => p.isFriend).length ?? 0;
-
   return (
     <>
-      <StepTitle
-        title="Who do you hang out with?"
-        body={friendsOnly ? "Your friends on Sidequest. Adding new people opens soon." : "Add friends so we can find time you're all free."}
-      />
-      {people === null ? (
-        <div className="space-y-2">
-          <span className="sr-only">Loading people…</span>
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} className="h-16 rounded-tile" />
-          ))}
-        </div>
-      ) : people.length === 0 ? (
-        <p className="cel rounded-tile p-4 text-center text-ink-muted">Nobody here yet. You can add friends later.</p>
-      ) : (
-        <ul className="space-y-2">
-          {people.map((p) => (
-            <li key={p.id} className="cel flex min-h-16 items-center gap-3 rounded-tile px-3 py-2">
-              <Avatar src={p.avatarUrl} name={p.name} size="md" decorative />
-              <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
-              {p.isFriend ? (
-                <span className="inline-flex h-9 items-center gap-1 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal">
-                  <Icon name="check" strokeWidth={3} className="size-4" />
-                  Friends
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => add(p)}
-                  disabled={busy !== null}
-                  aria-label={`Add ${p.name}`}
-                  className={cn(
-                    "press inline-flex min-h-11 items-center gap-1 rounded-full bg-accent px-4 text-sm font-bold text-on-accent disabled:opacity-55",
-                    focusRing,
-                  )}
-                >
-                  <Icon name="plus" strokeWidth={2.5} className="size-4" />
-                  Add
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-      {error && (
-        <p role="alert" className="text-sm font-semibold text-danger">
-          {error}
-        </p>
-      )}
-      {people !== null && people.length > 0 && (
-        <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
-          {friendCount} {friendCount === 1 ? "friend" : "friends"}
-        </p>
-      )}
+      <StepTitle title="Who do you hang out with?" body="Add friends so we can find time you're all free." />
+      <PeopleList />
     </>
   );
 }

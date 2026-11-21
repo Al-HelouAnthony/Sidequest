@@ -13,6 +13,7 @@ import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
 import { WhySheet } from "@/components/feed/WhySheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
+import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -65,7 +66,11 @@ function sendInteraction(card, action) {
 
 /** One full-screen snap page. */
 function Page({ children }) {
-  return <section className="h-full snap-start snap-always px-3 pt-1 pb-safe">{children}</section>;
+  return (
+    <section className="h-full snap-start snap-always px-3 pt-1" style={{ paddingBottom: TAB_BAR_SPACE }}>
+      {children}
+    </section>
+  );
 }
 
 function Feed() {
@@ -242,7 +247,7 @@ function Feed() {
 
   return (
     <div className="mx-auto flex h-dvh w-full max-w-md flex-col">
-      <FeedHeader inviteCount={invites.length} />
+      <FeedHeader />
       <main
         ref={scrollerRef}
         aria-label="Suggestions"
@@ -340,6 +345,7 @@ function Feed() {
           <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
         )}
       </main>
+      <TabBar active="/feed" />
     </div>
   );
 }
