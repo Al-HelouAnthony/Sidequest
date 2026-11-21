@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "@/components/onboarding/options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList } from "@/components/onboarding/pickers";
+import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
@@ -60,6 +60,11 @@ export function YouScreen() {
   const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [dirty, setDirty] = useState(false);
+  /** N5: home postal code. The server keeps only "H2T" and doesn't send it back, so we show the area we saved. */
+  const [postal, setPostal] = useState("");
+  const [postalError, setPostalError] = useState(/** @type {string | null} */ (null));
+  const [savedArea, setSavedArea] = useState(/** @type {string | null} */ (null));
+  const hasPostal = isPostalCode(postal);
   const [status, setStatus] = useState(/** @type {"idle" | "saving" | "saved" | "unavailable" | "error"} */ ("idle"));
   const [loadFailed, setLoadFailed] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -98,6 +103,15 @@ export function YouScreen() {
 
   const pickNeighbourhood = (/** @type {string} */ id) => {
     setNeighbourhoodId(id);
+    setPostal(""); // one home: picking an area clears a half-typed postal code
+    setPostalError(null);
+    setDirty(true);
+    setStatus("idle");
+  };
+
+  const typePostal = (/** @type {string} */ v) => {
+    setPostal(v);
+    setPostalError(null);
     setDirty(true);
     setStatus("idle");
   };
@@ -108,13 +122,31 @@ export function YouScreen() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...(neighbourhoodId ? { neighbourhoodId } : {}), interests: [...interests] }),
+        // Postal code wins when given (N5); otherwise the picked neighbourhood.
+        body: JSON.stringify({
+          ...(hasPostal ? { postalCode: postal.trim() } : neighbourhoodId ? { neighbourhoodId } : {}),
+          interests: [...interests],
+        }),
       });
+      if (hasPostal) {
+        const msg = await postalErrorFrom(res);
+        if (msg) {
+          setPostalError(msg);
+          setStatus("idle");
+          return;
+        }
+      }
       if (res.status === 404 || res.status === 405) {
         setStatus("unavailable");
         return;
       }
       if (!res.ok) throw new Error(`PATCH /api/me ${res.status}`);
+      if (hasPostal) {
+        // The server keeps only the first 3 characters (the area); show what was saved.
+        setSavedArea(postal.trim().slice(0, 3));
+        setNeighbourhoodId(null);
+        setPostal("");
+      }
       setStatus("saved");
       setDirty(false);
     } catch (e) {
@@ -124,6 +156,7 @@ export function YouScreen() {
   };
 
   const tooFew = interests.size < MIN_INTERESTS;
+  const postalTypedButInvalid = postal.trim() !== "" && !hasPostal;
   const note = {
     idle: null,
     saving: null,
@@ -164,9 +197,19 @@ export function YouScreen() {
       )}
 
       <section aria-labelledby="you-area" className="space-y-3">
-        <h2 id="you-area" className="halo font-display text-xl font-extrabold">
-          Neighbourhood
-        </h2>
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 id="you-area" className="halo font-display text-xl font-extrabold">
+            Home
+          </h2>
+          {savedArea && (
+            <span className="halo inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
+              <Icon name="check" strokeWidth={3} className="size-4 text-teal" />
+              Home set to {savedArea}
+            </span>
+          )}
+        </div>
+        <PostalCodeField id="you-postal" value={postal} onChange={typePostal} error={postalError} />
+        <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
         <NeighbourhoodPicker value={neighbourhoodId} onChange={pickNeighbourhood} />
       </section>
 
@@ -189,7 +232,7 @@ export function YouScreen() {
         <Button
           size="lg"
           fullWidth
-          disabled={!dirty || tooFew}
+          disabled={!dirty || tooFew || postalTypedButInvalid}
           loading={status === "saving"}
           onClick={save}
           leadingIcon={status === "saved" && !dirty ? <Icon name="check" strokeWidth={3} className="size-4" /> : undefined}
