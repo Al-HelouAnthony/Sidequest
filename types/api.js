@@ -14,9 +14,23 @@ export const ApiError = z.object({ error: z.string(), details: z.unknown().optio
 // ---- GET /api/feed?cursor=<string>&filters=<url-encoded JSON of FeedFilters> ----
 export const FeedResponse = z.object({
   cards: z.array(FeedCard),
-  /** null = end of feed. */
+  /**
+   * Opaque: send it back as `cursor`. Format "pass:offset" (N3). null = end of feed, which only happens
+   * for searches/filters; the main feed loops forever (pass ≥ 3, card ids end in ":p<pass>").
+   */
   nextCursor: z.string().nullable(),
 });
+
+/**
+ * N2 (variety) query params on GET /api/feed, as Oscar's components/feed/visit.js sends them:
+ * seed = one random int per visit (same for every page), seen = comma-separated place ids from earlier visits.
+ * Invalid/unknown ids in `seen` are ignored, never an error.
+ */
+export const FeedVisitParams = z.object({
+  seed: z.coerce.number().int().min(0).max(2 ** 31 - 1).optional(),
+  seen: z.array(z.string()).max(100).optional(),
+});
+/** @typedef {z.infer<typeof FeedVisitParams>} FeedVisitParamsT */
 /** @typedef {z.infer<typeof FeedResponse>} FeedResponseT */
 
 // ---- POST /api/interactions ----

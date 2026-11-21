@@ -17,7 +17,8 @@ const places = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(i
 const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const ORDER = ["cafe", "restaurant", "bar", "park", "viewpoint", "activity", "event"];
 
-const todo = places.filter((p) => p.photoUrl.includes("picsum.photos"));
+// Placeholder = a random picsum photo (old) or a category image from public/fallback/.
+const todo = places.filter((p) => p.photoUrl.includes("picsum.photos") || p.photoUrl.startsWith("/fallback/"));
 const folderArg = process.argv[2];
 let files = [];
 if (folderArg) {

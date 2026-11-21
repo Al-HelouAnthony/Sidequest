@@ -9,9 +9,10 @@ import { Category, Place } from "@/types/domain";
 import places from "@/data/places.json";
 import { INTEREST_LABELS, INTEREST_TAGS } from "@/lib/interests";
 import { NEIGHBOURHOODS } from "@/lib/neighbourhoods";
+import { CUISINE_IDS } from "@/lib/cuisines";
 
-/** Shared tag vocabulary (PLAN.md §6.3): one source, lib/interests.js. Onboarding chips use the same list. */
-const TAG_VOCABULARY = INTEREST_TAGS;
+/** Shared tag vocabulary (PLAN.md §6.3): interests (lib/interests.js, onboarding chips) + cuisines (lib/cuisines.js, N1). */
+const TAG_VOCABULARY = [...INTEREST_TAGS, ...CUISINE_IDS];
 
 /** Greater Montréal, generous box. Catches swapped lat/lng and typos. */
 const BBOX = { minLat: 45.4, maxLat: 45.71, minLng: -73.98, maxLng: -73.47 };
@@ -48,6 +49,14 @@ describe("data/places.json", () => {
   it("only uses tags from the shared vocabulary", () => {
     const unknown = places.flatMap((p) => p.tags.filter((t) => !TAG_VOCABULARY.includes(t)).map((t) => `${p.name}: ${t}`));
     expect(unknown).toEqual([]);
+  });
+
+  it("restaurants whose name or food says their cuisine carry it as a tag (N1 cuisine search)", () => {
+    const tagged = places.filter((p) => p.category === "restaurant" && p.tags.some((t) => CUISINE_IDS.includes(t)));
+    expect(tagged.length).toBeGreaterThanOrEqual(8);
+    expect(places.find((p) => p.name === "Pizzeria Gema")?.tags).toContain("pizza");
+    // Curated ids must stay below the registry id range (getPlaces() filters on it).
+    expect(places.filter((p) => !p.id.startsWith("10000000-")).map((p) => p.name)).toEqual([]);
   });
 
   it("every place has at least one tag", () => {
