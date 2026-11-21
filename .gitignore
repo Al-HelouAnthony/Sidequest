@@ -41,5 +41,6 @@ yarn-error.log*
 next-env.d.ts
 !.env.example
 
-#buisnesses database, too large
+# datasets, too large
 businesses.csv
+evenements.csv
