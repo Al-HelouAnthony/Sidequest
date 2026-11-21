@@ -17,7 +17,7 @@ import { PriceLevel } from "@/components/ui/PriceLevel";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
 import { INTERESTS } from "@/components/onboarding/options";
-import { CATEGORY_LABELS } from "./FeedCard";
+import { CATEGORY_LABELS, HoursNotVerified } from "./FeedCard";
 
 const TAG_LABELS = new Map(INTERESTS.map((t) => [t.id, t.label]));
 const WEEK = /** @type {const} */ (["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
@@ -101,6 +101,8 @@ function PlaceSheetBody({ card, onClose }) {
   const day = weekdayKey(toLocal(slot.start));
   const todays = extras?.hours[day] ?? [];
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
+  /** N1: assumed hours (registry place). Same contract caveat as the description. */
+  const hoursUnverified = /** @type {{ hoursVerified?: boolean }} */ (place).hoursVerified === false;
   /** Not in the contract yet (place descriptions are pending): shows once the field arrives. */
   const description = /** @type {{ description?: string }} */ (place).description;
 
@@ -147,7 +149,12 @@ function PlaceSheetBody({ card, onClose }) {
             About {duration(minutesBetween(slot.start, slot.end))} there
             {extras && extras.typicalDurationMin !== minutesBetween(slot.start, slot.end) && ` (people usually stay ${duration(extras.typicalDurationMin)})`}
           </p>
-          {extras === undefined && <Skeleton className="mt-2 h-24 rounded-xl" />}
+          {hoursUnverified && (
+            <div className="mt-2">
+              <HoursNotVerified />
+            </div>
+          )}
+          {extras === undefined && !hoursUnverified && <Skeleton className="mt-2 h-24 rounded-xl" />}
           {extras && (
             <>
               {todays.length > 0 && (
