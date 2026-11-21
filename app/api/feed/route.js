@@ -9,6 +9,8 @@ import { nowLocal } from "@/lib/time";
 import { ENGINE } from "@/lib/engine/config";
 import { loadContext } from "@/lib/engine/load";
 import { buildFeed } from "@/lib/engine";
+import { attachCaptions } from "@/lib/engine/attachCaptions";
+import { captionCards } from "@/lib/ai/captions";
 
 /** @param {import("next/server").NextRequest} request */
 export async function GET(request) {
@@ -36,11 +38,12 @@ export async function GET(request) {
   const { cards, debug: info } = buildFeed(ctx, { filters, debug });
 
   const offset = Math.max(0, Number(params.get("cursor") ?? 0) || 0);
-  const page = cards.slice(offset, offset + ENGINE.pageSize);
+  // Claude captions only for the cards on this page (Part 11c); templates if Claude is slow or down.
+  const { cards: page, info: captions } = await attachCaptions(cards.slice(offset, offset + ENGINE.pageSize), captionCards);
   const next = offset + ENGINE.pageSize;
   return Response.json({
     cards: page,
     nextCursor: next < cards.length ? String(next) : null,
-    ...(debug ? { debug: info } : {}),
+    ...(debug ? { debug: { ...info, captions } } : {}),
   });
 }
