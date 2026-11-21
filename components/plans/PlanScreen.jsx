@@ -236,7 +236,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       )}
 
       {me?.isCreator && planStatus === "pending" && (
-        <p className="text-center text-sm text-ink-muted">Invites sent. This updates live when friends answer.</p>
+        <p className="halo text-center text-sm text-ink-muted">Invites sent. This updates live when friends answer.</p>
       )}
 
       {/* Cancelled: one clear card for everyone, with a way back to ideas */}
@@ -256,14 +256,18 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       {/* Organizer: cancel the whole plan (invitees use "Can't make it" instead) */}
       {me?.isCreator && planStatus !== "cancelled" && (
         <Button
-          variant="ghost"
+          variant="night"
+          size="lg"
           fullWidth
           onClick={() => {
             setCancelError(null);
             setCancelOpen(true);
           }}
-          leadingIcon={<Icon name="x" strokeWidth={2.6} className="size-4 text-danger" />}
-          className="text-ink-muted"
+          leadingIcon={
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-accent text-on-accent">
+              <Icon name="x" strokeWidth={2.8} className="size-3.5" />
+            </span>
+          }
         >
           Cancel plan
         </Button>
