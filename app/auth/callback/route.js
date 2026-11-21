@@ -9,11 +9,12 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { DEMO_COOKIE, safeNextPath } from "@/lib/auth";
 import { afterSignIn } from "@/lib/signin";
+import { syncCalendar } from "@/lib/calendar/google";
 import * as data from "@/lib/data";
 
 /**
  * Adel's data functions, looked up by name so this builds before they exist
- * (ensureUser / syncCalendar are picked up automatically once they're exported).
+ * (ensureUser / replaceBusyBlocks are picked up automatically once they're exported).
  * @param {string} name
  */
 const optional = (name) => {
@@ -51,7 +52,12 @@ export async function GET(request) {
   try {
     const result = await afterSignIn(
       { authUser: session.user, providerToken: session.provider_token, next },
-      { getUser: data.getUser, ensureUser: optional("ensureUser"), syncCalendar: optional("syncCalendar") },
+      {
+        getUser: data.getUser,
+        ensureUser: optional("ensureUser"),
+        // Part 14: Google free/busy → busy_blocks, saved with Adel's replaceBusyBlocks.
+        syncCalendar: (userId, token) => syncCalendar(userId, token, { save: optional("replaceBusyBlocks") }),
+      },
     );
     redirectTo = result.redirectTo;
   } catch (e) {
