@@ -204,10 +204,8 @@ export function SwipeToGo({
   const text = p < 0.05 ? label : tension <= 0 ? "Keep going" : tension < 0.6 ? "Harder" : "Almost…";
   const straining = phase === "drag" && tension > 0;
 
-  const glow = [
-    `0 0 0 ${(3 + x * 6 + tension * 3).toFixed(1)}px color-mix(in srgb, var(--color-accent) ${Math.round(22 + x * 20)}%, transparent)`,
-    `0 ${Math.round(8 + x * 8)}px ${Math.round(20 + x * 24 + tension * 24)}px color-mix(in srgb, var(--color-accent) ${Math.round(45 + x * 35)}%, transparent)`,
-  ].join(", ");
+  // Cel look: a hard drop shadow, plus a thin flat ring that grows while you pull.
+  const glow = `0 0 0 ${(x * 3 + tension * 2).toFixed(1)}px color-mix(in srgb, var(--color-accent) 30%, transparent), 0 3px 0 var(--color-shade)`;
 
   /** Transition for things that move with the knob. */
   const follow = (/** @type {string} */ prop) =>
@@ -279,7 +277,7 @@ export function SwipeToGo({
               className={cn(
                 // On the bottom edge, so they never sit on the label.
                 "absolute bottom-[5px] size-1.5 rounded-full",
-                lit ? "bg-white shadow-[0_0_6px_rgb(255_255_255/0.9)] motion-safe:animate-pop" : "bg-white/50",
+                lit ? "bg-white motion-safe:animate-pop" : "bg-white/50",
               )}
               style={{ left: PAD + KNOB / 2 + curve(t) * travel - 3 }}
             />
