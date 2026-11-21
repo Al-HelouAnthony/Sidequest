@@ -32,6 +32,10 @@ const SHAPES = {
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
+  search: [
+    { d: "M10.5 17.5a7 7 0 1 0 0-14a7 7 0 1 0 0 14z", f: "paper" },
+    { d: "M15.5 15.5l5 5" },
+  ],
   /** Feed tab: a compass (discover). */
   compass: [
     { d: circle9, f: "paper" },

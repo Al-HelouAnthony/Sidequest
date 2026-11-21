@@ -37,7 +37,12 @@ export function BottomSheet({ open, onClose, title, description, children, foote
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      dialog.showModal();
+      // showModal focuses the first button (✕). A field marked data-autofocus gets the caret instead, right away,
+      // so typing + Enter can't land on ✕ and close the sheet.
+      /** @type {HTMLElement | null} */ (dialog.querySelector("[data-autofocus]"))?.focus();
+    }
     if (!open && dialog.open) dialog.close();
     return () => {
       if (dialog.open) dialog.close();
