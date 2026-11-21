@@ -85,8 +85,24 @@ export const FriendView = User.pick({ id: true, name: true, avatarUrl: true }).e
 export const FriendsResponse = z.object({ friends: z.array(FriendView) });
 export const AddFriendRequest = z.object({ friendId: Id, closeness: Closeness.default(2) });
 
+// ---- GET /api/users (people I can add as friends: everyone except me) ----
+export const UserListItem = User.pick({ id: true, name: true, avatarUrl: true }).extend({ isFriend: z.boolean() });
+/** @typedef {z.infer<typeof UserListItem>} UserListItemT */
+export const UsersResponse = z.object({ users: z.array(UserListItem) });
+/** @typedef {z.infer<typeof UsersResponse>} UsersResponseT */
+
 // ---- GET /api/me ----
 export const MeResponse = z.object({ user: User });
+
+// ---- PATCH /api/me (onboarding: neighbourhood + interests) → MeResponse ----
+export const UpdateMeRequest = z.object({
+  neighbourhoodId: z.string().optional(), // id from lib/neighbourhoods.js, e.g. "plateau"
+  interests: z.array(z.string()).optional(), // tags from lib/interests.js (checked by updateProfile)
+});
+/** @typedef {z.infer<typeof UpdateMeRequest>} UpdateMeRequestT */
+
+// ---- POST /api/friends { friendId } → { ok: true } ----
+export const OkResponse = z.object({ ok: z.literal(true) });
 
 // ---- POST /api/calendar/sync ----
 export const CalendarSyncResponse = z.object({ imported: z.number().int().nonnegative() });
