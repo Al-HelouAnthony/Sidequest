@@ -32,6 +32,10 @@ const SHAPES = {
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
+  calendar: [
+    { d: "M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z", f: "paper" },
+    { d: "M4 10h16M8 3v4M16 3v4" },
+  ],
   refresh: [{ d: "M20.5 12a8.5 8.5 0 1 1-2.6-6.1L20.5 8.5" }, { d: "M20.5 3.5v5h-5" }],
   info: [{ d: circle9, f: "teal" }, { d: "M12 11v5M12 8h.01" }],
   clock: [{ d: circle9, f: "teal" }, { d: "M12 7v5l3 2" }],
