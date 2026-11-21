@@ -18,6 +18,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, focusRing } from "@/components/ui/classes";
 import { CATEGORY_LABELS } from "@/components/feed/FeedCard";
+import { BookItSheet } from "@/components/plans/BookItSheet";
 
 const STATUS = {
   pending: { label: "Waiting for replies", className: "bg-warning text-on-accent" },
@@ -49,6 +50,9 @@ export function PlanScreen({ planId, back = BACK.feed }) {
   const [cancelError, setCancelError] = useState(/** @type {string | null} */ (null));
   /** Cancelled from this screen: shown right away, before usePlan's next refresh confirms it. */
   const [cancelledHere, setCancelledHere] = useState(false);
+  // N4 Book it (organizer, confirmed plan). requestedHere = shown before usePlan's next refresh.
+  const [bookOpen, setBookOpen] = useState(false);
+  const [requestedHere, setRequestedHere] = useState(false);
 
   // Confetti when the status flips to confirmed while the screen is open (not when it loads confirmed).
   const [lastStatus, setLastStatus] = useState(/** @type {string | null} */ (null));
@@ -239,6 +243,38 @@ export function PlanScreen({ planId, back = BACK.feed }) {
         <p className="halo text-center text-sm text-ink-muted">Invites sent. This updates live when friends answer.</p>
       )}
 
+      {/* N4 Book it: everyone sees "requested"; the organizer gets the button */}
+      {planStatus === "confirmed" &&
+        (plan.bookingStatus === "requested" || requestedHere ? (
+          <div role="status" className="cel flex items-center gap-3 rounded-tile p-4 motion-safe:animate-rise">
+            <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-teal text-on-teal">
+              <Icon name="check" strokeWidth={3} className="size-4" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-bold">Reservation requested</span>
+              <span className="block text-sm text-ink-muted">
+                by {members.find((m) => m.isCreator)?.name.split(" ")[0] ?? "the organizer"}
+              </span>
+            </span>
+            {me?.isCreator && (
+              <Button variant="ghost" onClick={() => setBookOpen(true)}>
+                Details
+              </Button>
+            )}
+          </div>
+        ) : (
+          me?.isCreator && (
+            <Button
+              size="lg"
+              fullWidth
+              onClick={() => setBookOpen(true)}
+              leadingIcon={<Icon name="calendar" strokeWidth={2.4} className="size-5" />}
+            >
+              Book it
+            </Button>
+          )
+        ))}
+
       {/* Cancelled: one clear card for everyone, with a way back to ideas */}
       {planStatus === "cancelled" && (
         <div role="status" className="cel space-y-2 rounded-tile p-4 text-center motion-safe:animate-rise">
@@ -290,6 +326,17 @@ export function PlanScreen({ planId, back = BACK.feed }) {
         onConfirm={cancelPlan}
         onClose={() => setCancelOpen(false)}
       />
+
+      {me?.isCreator && (
+        <BookItSheet
+          planId={planId}
+          category={plan.place.category}
+          open={bookOpen}
+          onClose={() => setBookOpen(false)}
+          title={`${plan.place.name} · ${formatSlot(plan.startAt, plan.endAt)}`}
+          onRequested={() => setRequestedHere(true)}
+        />
+      )}
     </Shell>
   );
 }
