@@ -1180,5 +1180,2363 @@
     },
     "typicalDurationMin": 90,
     "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000021",
+    "name": "Café Myriade",
+    "category": "cafe",
+    "tags": [
+      "coffee"
+    ],
+    "lat": 45.496165,
+    "lng": -73.57773,
+    "address": "1432 Rue Mackay",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/myriade/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:30",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:30",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000022",
+    "name": "Café Dispatch",
+    "category": "cafe",
+    "tags": [
+      "coffee"
+    ],
+    "lat": 45.516919,
+    "lng": -73.5793,
+    "address": "4021 Boul. Saint-Laurent",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/dispatch/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000023",
+    "name": "Café Névé",
+    "category": "cafe",
+    "tags": [
+      "coffee",
+      "brunch"
+    ],
+    "lat": 45.519411,
+    "lng": -73.580369,
+    "address": "151 Rue Rachel E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/neve/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000024",
+    "name": "Café Tommy",
+    "category": "cafe",
+    "tags": [
+      "coffee",
+      "iconic"
+    ],
+    "lat": 45.503802,
+    "lng": -73.557493,
+    "address": "200 Rue Notre-Dame O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/tommy/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000025",
+    "name": "Fairmount Bagel",
+    "category": "cafe",
+    "tags": [
+      "cheap-eats",
+      "iconic",
+      "late-night"
+    ],
+    "lat": 45.522956,
+    "lng": -73.595347,
+    "address": "74 Av. Fairmount O",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/fairmount/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "00:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 30,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000026",
+    "name": "Hof Kelsten",
+    "category": "cafe",
+    "tags": [
+      "coffee",
+      "brunch"
+    ],
+    "lat": 45.520383,
+    "lng": -73.586978,
+    "address": "4524 Boul. Saint-Laurent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/hofkelsten/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000027",
+    "name": "Beauty's Luncheonette",
+    "category": "restaurant",
+    "tags": [
+      "brunch",
+      "iconic"
+    ],
+    "lat": 45.518983,
+    "lng": -73.587392,
+    "address": "93 Av. du Mont-Royal O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/beautys/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "15:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000028",
+    "name": "Ma Poule Mouillée",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.525165,
+    "lng": -73.575064,
+    "address": "969 Rue Rachel E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/poulemouillee/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000029",
+    "name": "Patati Patata",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.517905,
+    "lng": -73.58145,
+    "address": "4177 Boul. Saint-Laurent",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/patati/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000030",
+    "name": "Arepera du Plateau",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.514772,
+    "lng": -73.57183,
+    "address": "73 Rue Prince-Arthur E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/arepera/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000031",
+    "name": "Time Out Market Montréal",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats",
+      "iconic"
+    ],
+    "lat": 45.502775,
+    "lng": -73.570187,
+    "address": "705 Rue Sainte-Catherine O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/timeout/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 75,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000032",
+    "name": "Lester's Deli",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats",
+      "iconic"
+    ],
+    "lat": 45.522161,
+    "lng": -73.606873,
+    "address": "1057 Av. Bernard",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/lesters/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:00",
+          "close": "21:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000033",
+    "name": "Le Petit Alep",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.536452,
+    "lng": -73.616165,
+    "address": "199 Rue Jean-Talon E",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/petitalep/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:00",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 75,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000034",
+    "name": "Pizzeria Gema",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.533253,
+    "lng": -73.613136,
+    "address": "6827 Rue Saint-Dominique",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/gema/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "11:30",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 75,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000035",
+    "name": "Brasserie Dieu du Ciel!",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "iconic"
+    ],
+    "lat": 45.522569,
+    "lng": -73.593264,
+    "address": "29 Av. Laurier O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/dieuduciel/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "15:00",
+          "close": "01:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000036",
+    "name": "Casa del Popolo",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "live-music"
+    ],
+    "lat": 45.522048,
+    "lng": -73.590618,
+    "address": "4873 Boul. Saint-Laurent",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/casadelpopolo/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "12:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000037",
+    "name": "Upstairs Jazz Bar & Grill",
+    "category": "bar",
+    "tags": [
+      "live-music",
+      "cocktails"
+    ],
+    "lat": 45.495628,
+    "lng": -73.576618,
+    "address": "1254 Rue Mackay",
+    "priceLevel": 3,
+    "photoUrl": "https://picsum.photos/seed/upstairs/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "17:30",
+          "close": "00:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000038",
+    "name": "Bar Henrietta",
+    "category": "bar",
+    "tags": [
+      "cocktails",
+      "bars"
+    ],
+    "lat": 45.521618,
+    "lng": -73.594092,
+    "address": "115 Av. Laurier O",
+    "priceLevel": 3,
+    "photoUrl": "https://picsum.photos/seed/henrietta/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "17:00",
+          "close": "01:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000039",
+    "name": "Pub L'Île Noire",
+    "category": "bar",
+    "tags": [
+      "bars"
+    ],
+    "lat": 45.515107,
+    "lng": -73.56349,
+    "address": "1649 Rue Saint-Denis",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/ilenoire/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000040",
+    "name": "Bar Waverly",
+    "category": "bar",
+    "tags": [
+      "cocktails",
+      "late-night"
+    ],
+    "lat": 45.525967,
+    "lng": -73.599234,
+    "address": "5550 Boul. Saint-Laurent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/waverly/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "17:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000041",
+    "name": "Brutopia",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "live-music"
+    ],
+    "lat": 45.496644,
+    "lng": -73.574612,
+    "address": "1219 Rue Crescent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/brutopia/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000042",
+    "name": "Lac aux Castors",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "nature",
+      "free"
+    ],
+    "lat": 45.4987,
+    "lng": -73.5974,
+    "address": "Parc du Mont-Royal, Chemin Remembrance",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/lacauxcastors/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000043",
+    "name": "Parc Jean-Drapeau",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "nature",
+      "views"
+    ],
+    "lat": 45.5139,
+    "lng": -73.5343,
+    "address": "1 Circuit Gilles-Villeneuve",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/jeandrapeau/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000044",
+    "name": "Parc Laurier",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.5321,
+    "lng": -73.5878,
+    "address": "1115 Av. Laurier E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/laurier/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000045",
+    "name": "Square Saint-Louis",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "free",
+      "iconic"
+    ],
+    "lat": 45.5171,
+    "lng": -73.5698,
+    "address": "Rue Saint-Denis & Av. Laval",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/squarestlouis/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000046",
+    "name": "Parc Maisonneuve",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "nature",
+      "free"
+    ],
+    "lat": 45.5651,
+    "lng": -73.5622,
+    "address": "4601 Rue Sherbrooke E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/maisonneuve/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000047",
+    "name": "Parc des Rapides",
+    "category": "park",
+    "tags": [
+      "nature",
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.4263,
+    "lng": -73.5958,
+    "address": "Boul. LaSalle & 6e Avenue",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/rapides/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000048",
+    "name": "Belvédère Camillien-Houde",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.5104,
+    "lng": -73.5924,
+    "address": "Voie Camillien-Houde",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/camillienhoude/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000049",
+    "name": "Summit Park Lookout",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "nature",
+      "free"
+    ],
+    "lat": 45.4926,
+    "lng": -73.6072,
+    "address": "Parc Summit, Westmount",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/summit/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000052",
+    "name": "La Grande Roue de Montréal",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "iconic"
+    ],
+    "lat": 45.5085,
+    "lng": -73.5487,
+    "address": "362 Rue de la Commune E",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/granderoue/800/1400",
+    "hours": {
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "22:00"
+        }
+      ],
+      "mon": [
+        {
+          "open": "10:00",
+          "close": "22:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000053",
+    "name": "Parc de Dieppe (Cité du Havre)",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.5058,
+    "lng": -73.5433,
+    "address": "Av. Pierre-Dupuy",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/dieppe/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000054",
+    "name": "Jardin botanique",
+    "category": "activity",
+    "tags": [
+      "nature"
+    ],
+    "lat": 45.5595,
+    "lng": -73.5612,
+    "address": "4101 Rue Sherbrooke E",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/jardinbotanique/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000055",
+    "name": "Pointe-à-Callière",
+    "category": "activity",
+    "tags": [
+      "museums",
+      "iconic"
+    ],
+    "lat": 45.5026,
+    "lng": -73.5542,
+    "address": "350 Place Royale",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/pointeacalliere/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000056",
+    "name": "Musée McCord Stewart",
+    "category": "activity",
+    "tags": [
+      "museums",
+      "art"
+    ],
+    "lat": 45.5043,
+    "lng": -73.5734,
+    "address": "690 Rue Sherbrooke O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/mccord/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000057",
+    "name": "Planétarium Rio Tinto Alcan",
+    "category": "activity",
+    "tags": [
+      "museums"
+    ],
+    "lat": 45.5606,
+    "lng": -73.5505,
+    "address": "4801 Av. Pierre-De Coubertin",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/planetarium/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "17:15"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "17:15"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "17:15"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "20:45"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "20:45"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "20:45"
+        }
+      ]
+    },
+    "typicalDurationMin": 75,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000058",
+    "name": "Basilique Notre-Dame",
+    "category": "activity",
+    "tags": [
+      "art",
+      "iconic"
+    ],
+    "lat": 45.5044,
+    "lng": -73.556,
+    "address": "110 Rue Notre-Dame O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/notredame/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "12:30",
+          "close": "16:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000059",
+    "name": "Cinéma Moderne",
+    "category": "activity",
+    "tags": [
+      "art"
+    ],
+    "lat": 45.5234,
+    "lng": -73.5939,
+    "address": "5150 Boul. Saint-Laurent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/cinemamoderne/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "00:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "00:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "00:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "00:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "00:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "00:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "00:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000060",
+    "name": "Marché Bonsecours",
+    "category": "activity",
+    "tags": [
+      "markets",
+      "iconic"
+    ],
+    "lat": 45.5089,
+    "lng": -73.5515,
+    "address": "350 Rue Saint-Paul E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/bonsecours/800/1400",
+    "hours": {
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "18:00"
+        }
+      ],
+      "mon": [
+        {
+          "open": "10:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "19:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000061",
+    "name": "Croix du mont Royal",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "iconic",
+      "free"
+    ],
+    "lat": 45.5088,
+    "lng": -73.5879,
+    "address": "Boucle du Sommet, Parc du Mont-Royal",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/croixmontroyal/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000062",
+    "name": "Parc Tiohtià:ke Otsira'kéhne Lookout",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "nature",
+      "free"
+    ],
+    "lat": 45.5072,
+    "lng": -73.6107,
+    "address": "Parc Tiohtià:ke Otsira'kéhne, Outremont",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/troisiemesommet/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
   }
 ]

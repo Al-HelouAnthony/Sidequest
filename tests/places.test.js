@@ -30,8 +30,8 @@ const TAG_VOCABULARY = [
 /** Greater Montréal, generous box. Catches swapped lat/lng and typos. */
 const BBOX = { minLat: 45.4, maxLat: 45.71, minLng: -73.98, maxLng: -73.47 };
 
-/** Flip to true in Phase 2 once the dataset is complete (60+ places, 8+ per category). */
-const DATASET_COMPLETE = false;
+/** Phase 2: the dataset is complete (60+ places, 8+ per category). */
+const DATASET_COMPLETE = true;
 const MIN_PLACES = 60;
 const MIN_PER_CATEGORY = 8;
 /** "event" has no stable recurring venues; team decision pending (see PLAN.md open questions). */
