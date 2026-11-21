@@ -550,46 +550,46 @@
     "priceLevel": 3,
     "photoUrl": "/fallback/bar.svg",
     "hours": {
+      "sun": [
+        {
+          "open": "16:30",
+          "close": "02:00"
+        }
+      ],
       "mon": [
         {
-          "open": "16:00",
+          "open": "16:30",
           "close": "02:00"
         }
       ],
       "tue": [
         {
-          "open": "16:00",
+          "open": "16:30",
           "close": "02:00"
         }
       ],
       "wed": [
         {
-          "open": "16:00",
+          "open": "16:30",
           "close": "02:00"
         }
       ],
       "thu": [
         {
-          "open": "16:00",
+          "open": "16:30",
           "close": "02:00"
         }
       ],
       "fri": [
         {
-          "open": "16:00",
-          "close": "02:00"
+          "open": "16:30",
+          "close": "03:00"
         }
       ],
       "sat": [
         {
-          "open": "16:00",
-          "close": "02:00"
-        }
-      ],
-      "sun": [
-        {
-          "open": "16:00",
-          "close": "02:00"
+          "open": "16:30",
+          "close": "19:00"
         }
       ]
     },
@@ -610,34 +610,28 @@
     "priceLevel": 2,
     "photoUrl": "/fallback/restaurant.svg",
     "hours": {
-      "mon": [
-        {
-          "open": "12:00",
-          "close": "22:00"
-        }
-      ],
       "thu": [
         {
-          "open": "12:00",
-          "close": "22:00"
+          "open": "17:00",
+          "close": "21:30"
         }
       ],
       "fri": [
         {
-          "open": "12:00",
-          "close": "22:00"
+          "open": "17:00",
+          "close": "21:30"
         }
       ],
       "sat": [
         {
-          "open": "12:00",
-          "close": "22:00"
+          "open": "17:00",
+          "close": "21:30"
         }
       ],
       "sun": [
         {
-          "open": "12:00",
-          "close": "22:00"
+          "open": "17:00",
+          "close": "21:00"
         }
       ]
     },
@@ -778,44 +772,44 @@
     "hours": {
       "mon": [
         {
-          "open": "08:00",
-          "close": "18:00"
+          "open": "07:30",
+          "close": "19:00"
         }
       ],
       "tue": [
         {
-          "open": "08:00",
-          "close": "18:00"
+          "open": "07:30",
+          "close": "19:00"
         }
       ],
       "wed": [
         {
-          "open": "08:00",
-          "close": "18:00"
+          "open": "07:30",
+          "close": "19:00"
         }
       ],
       "thu": [
         {
-          "open": "08:00",
-          "close": "18:00"
+          "open": "07:30",
+          "close": "19:00"
         }
       ],
       "fri": [
         {
-          "open": "08:00",
-          "close": "18:00"
+          "open": "07:30",
+          "close": "19:00"
         }
       ],
       "sat": [
         {
           "open": "08:00",
-          "close": "18:00"
+          "close": "19:00"
         }
       ],
       "sun": [
         {
           "open": "08:00",
-          "close": "18:00"
+          "close": "19:00"
         }
       ]
     },
