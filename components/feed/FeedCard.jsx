@@ -41,6 +41,7 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  *   onGo?: () => void,
  *   onWhy?: () => void,
  *   onDetails?: () => void,
+ *   onWeather?: () => void,
  *   priority?: boolean,
  *   leaving?: boolean,
  *   goResetKey?: string | number,
@@ -50,7 +51,7 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
  * `leaving` plays the skip-out animation and blocks further taps (the parent removes the card after it).
  */
-export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onDetails, priority = false, leaving = false, goResetKey = 0, className }) {
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onDetails, onWeather, priority = false, leaving = false, goResetKey = 0, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
   const [photoFailed, setPhotoFailed] = useState(false);
   // Bumped on every save so the burst replays (new key = new animation).
@@ -120,7 +121,19 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
                 {CATEGORY_LABELS[place.category] ?? place.category}
               </Chip>
             )}
-            <WeatherBadge {...weather} />
+            {onWeather ? (
+              // Tap the weather for the hour-by-hour chart around the visit (same 44px hit-area trick as the chip).
+              <button
+                type="button"
+                onClick={onWeather}
+                aria-label={`Weather for ${place.name}: ${Math.round(weather.tempC)}°C, ${weather.rainProb}% chance of rain. Show hour by hour`}
+                className={cn("relative rounded-full before:absolute before:-inset-1.5 before:content-['']", pressable, focusRing)}
+              >
+                <WeatherBadge {...weather} />
+              </button>
+            ) : (
+              <WeatherBadge {...weather} />
+            )}
           </div>
           {onWhy && <IconButton label="Why am I seeing this?" icon={<Icon name="info" />} onClick={onWhy} />}
         </div>
