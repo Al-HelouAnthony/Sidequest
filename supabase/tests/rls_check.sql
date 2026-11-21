@@ -101,14 +101,30 @@ begin
 
   select count(*) into n from public.places where id = place;
   if n <> 1 then failures := failures || text 'anon can read places'; end if;
+  -- anon has no privileges on these tables: "permission denied" (or 0 rows) both mean blocked.
+  begin
+    select count(*) into n from public.busy_blocks;
+    if n <> 0 then failures := failures || text 'anon cannot read busy_blocks'; end if;
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    select count(*) into n from public.users;
+    if n <> 0 then failures := failures || text 'anon cannot read users'; end if;
+  exception when insufficient_privilege then null;
+  end;
+
+  -- ---------- act as the server (service role: bypasses RLS, needs table grants) ----------
+  perform set_config('role', 'service_role', true);
+  perform set_config('request.jwt.claims', json_build_object('role', 'service_role')::text, true);
+
   select count(*) into n from public.busy_blocks;
-  if n <> 0 then failures := failures || text 'anon cannot read busy_blocks'; end if;
-  select count(*) into n from public.users;
-  if n <> 0 then failures := failures || text 'anon cannot read users'; end if;
+  if n < 3 then failures := failures || text 'service_role can read all busy_blocks (grants missing? run 0002_grants.sql)'; end if;
+  select count(*) into n from public.plan_members;
+  if n < 2 then failures := failures || text 'service_role can read plan_members'; end if;
 
   -- ---------- report (always raises, so everything above rolls back) ----------
   if array_length(failures, 1) is null then
-    raise exception 'RLS CHECK PASSED (17 checks). This error is intentional: it rolls back the test rows.';
+    raise exception 'RLS CHECK PASSED (19 checks). This error is intentional: it rolls back the test rows.';
   else
     raise exception 'RLS CHECK FAILED: %', array_to_string(failures, '; ');
   end if;
