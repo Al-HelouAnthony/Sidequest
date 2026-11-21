@@ -18,6 +18,7 @@
  *           animate-nudge, animate-ping-ring, animate-skip-out (feed card leaving), animate-heart-burst (save).
  *           SwipeToGo: animate-shake (needs --amp), animate-shard-fly (needs --dx/--dy/--rot), animate-shock,
  *           animate-draw-check, animate-land, animate-chev, animate-nudge-x.
+ *           Plan screen: animate-confetti (needs --drift, --spin).
  *           Apply with motion-safe: so reduced-motion users get none.
  * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
@@ -79,6 +80,7 @@
   --animate-land: land 600ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
   --animate-chev: chev 1.2s ease-in-out infinite;
   --animate-nudge-x: nudge-x 2.4s ease-in-out 1s infinite;
+  --animate-confetti: confetti 1.9s cubic-bezier(0.25, 0.6, 0.45, 1) both;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -160,6 +162,11 @@
     70% { transform: translateX(6px); }
     82% { transform: translateX(1px); }
     90% { transform: translateX(3px); }
+  }
+  @keyframes confetti {
+    0% { transform: translate(0, -12vh) rotate(0); opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translate(var(--drift, 0px), 105vh) rotate(var(--spin, 360deg)); opacity: 0; }
   }
 }
 
