@@ -50,6 +50,15 @@ describe("PATCH /api/me", () => {
     expect((await res.json()).error).toBe("We don't know that postal code");
   });
 
+  it("a code outside the home area: Adel's message is shown as-is (400)", async () => {
+    const { DataInputError } = await import("@/lib/data");
+    lookup.mockResolvedValueOnce({ fsa: "G1R", lat: 46.81, lng: -71.21 }); // Québec City
+    updateProfile.mockRejectedValueOnce(new DataInputError("That postal code is outside the Montréal area"));
+    const res = await patch({ postalCode: "G1R 4P5" });
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("That postal code is outside the Montréal area");
+  });
+
   it("postal code lookup down gives 503", async () => {
     lookup.mockRejectedValueOnce(new PostalCodeError("Couldn't look up that postal code. Try again.", 503));
     expect((await patch({ postalCode: "H2T 1S6" })).status).toBe(503);
