@@ -26,32 +26,38 @@ const circle9 = "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z";
 /** @type {Record<string, Shape[]>} */
 const SHAPES = {
   x: [{ d: "M18 6 6 18M6 6l12 12" }],
-  heart: [{ d: "M12 20.5s-8.5-4.9-8.5-11A4.5 4.5 0 0 1 12 6.6a4.5 4.5 0 0 1 8.5 2.9c0 6.1-8.5 11-8.5 11z", f: "accent" }],
+  heart: [{ d: "M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z", f: "accent" }],
   arrowRight: [{ d: "M5 12h14M13 6l6 6-6 6" }],
   arrowDown: [{ d: "M12 4v16M6 14l6 6 6-6" }],
   back: [{ d: "M15 5l-7 7 7 7" }],
   check: [{ d: "M5 12.5l4.5 4.5L19 7.5" }],
   plus: [{ d: "M12 5v14M5 12h14" }],
   search: [
-    { d: "M10.5 17.5a7 7 0 1 0 0-14a7 7 0 1 0 0 14z", f: "paper" },
-    { d: "M15.5 15.5l5 5" },
+    { d: "M10.5 3.5a7 7 0 1 0 0 14a7 7 0 1 0 0-14z", f: "paper" },
+    { d: "M15.6 15.6l4.9 4.9" },
+    { d: "M7.6 9.2a3.2 3.2 0 0 1 2.4-2.4" },
   ],
   /** Feed tab: a compass (discover). */
   compass: [
-    { d: circle9, f: "paper" },
-    { d: "M15.5 8.5l-2 5-5 2 2-5z", f: "accent" },
+    { d: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z", f: "paper" },
+    { d: "M15.8 8.2l-2.4 5.2-5.2 2.4 2.4-5.2z", f: "accent" },
+    { d: "M12 12h.01" },
   ],
   /** You tab: a person. */
   user: [
-    { d: "M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8z", f: "teal" },
-    { d: "M4.5 20.5c.8-4 3.8-6.2 7.5-6.2s6.7 2.2 7.5 6.2" },
+    { d: "M12 11.5a3.8 3.8 0 1 0 0-7.6a3.8 3.8 0 1 0 0 7.6z", f: "teal" },
+    { d: "M4.5 20.5c.9-3.9 3.8-6 7.5-6s6.6 2.1 7.5 6" },
   ],
   calendar: [
-    { d: "M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z", f: "paper" },
-    { d: "M4 10h16M8 3v4M16 3v4" },
+    { d: "M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v10a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z", f: "paper" },
+    { d: "M4 10h16M8.5 3v4M15.5 3v4" },
+    { d: "M13.5 13.5h3.5v3h-3.5z", f: "accent" },
   ],
   refresh: [{ d: "M20.5 12a8.5 8.5 0 1 1-2.6-6.1L20.5 8.5" }, { d: "M20.5 3.5v5h-5" }],
-  info: [{ d: circle9, f: "teal" }, { d: "M12 11v5M12 8h.01" }],
+  info: [
+    { d: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z", f: "teal" },
+    { d: "M12 11v5.5M12 7.8h.01" },
+  ],
   clock: [{ d: circle9, f: "teal" }, { d: "M12 7v5l3 2" }],
   pin: [
     { d: "M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z", f: "teal" },
@@ -89,8 +95,9 @@ const SHAPES = {
  * @param {{ name: IconName, filled?: boolean, cel?: boolean, strokeWidth?: number, className?: string }} props
  * `filled` fills every shape with currentColor (the saved heart on a photo).
  * `cel` gives the main shapes their flat brand fill. `filled` wins if both are set.
+ * `strokeWidth` defaults to 1.5 ("Cel pop" style); pass a bigger one for small or bold icons.
  */
-export function Icon({ name, filled = false, cel = false, strokeWidth = 2, className }) {
+export function Icon({ name, filled = false, cel = false, strokeWidth = 1.5, className }) {
   return (
     <svg
       viewBox="0 0 24 24"
