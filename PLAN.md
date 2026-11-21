@@ -10,10 +10,10 @@
 
 | Person | Role | You own (only you edit these) | Branch |
 |---|---|---|---|
-| **Anthony** | **Engine, part A** + team lead | `lib/engine/` (except `timing.js`), `lib/time.js`, `app/api/feed/`, `app/api/interactions/` | `feature/feed-engine` |
-| **Mhammad** | **Engine, part B: AI + timing**, then **Social** | `lib/engine/timing.js`, `lib/ai/`, `app/api/search/` · later: `lib/social/`, `lib/auth.js`, `hooks/`, `app/api/plans/`, `app/api/friends/`, `app/api/calendar/`, `app/(auth)/` | `feature/ai` → `feature/social` |
-| **Adel** | **Data + schema** (+ Devpost writeup) | `supabase/`, `lib/data/`, `data/`, `lib/mocks/`, `app/api/dev/seed/` | `feature/data` |
-| **Oscar** | **Frontend** | `app/feed/`, `app/plans/`, `app/onboarding/`, `components/`, `app/globals.css` | `feature/frontend` |
+| **Anthony** | **Engine, part A** + team lead | `lib/engine/` (except `timing.js`), `lib/time.js`, `app/api/feed/`, `app/api/interactions/` | `backend_a` |
+| **Mhammad** | **Engine, part B: AI + timing**, then **Social** | `lib/engine/timing.js`, `lib/ai/`, `app/api/search/` · later: `lib/social/`, `lib/auth.js`, `hooks/`, `app/api/plans/`, `app/api/friends/`, `app/api/calendar/`, `app/(auth)/` | `backend_b` |
+| **Adel** | **Data + schema** (+ Devpost writeup) | `supabase/`, `lib/data/`, `data/`, `lib/mocks/`, `app/api/dev/seed/` | `database` |
+| **Oscar** | **Frontend** | `app/feed/`, `app/plans/`, `app/onboarding/`, `components/`, `app/globals.css` | `frontend` |
 
 **Shared files** (announce in the team chat *before* editing, then do it in a tiny PR on its own):
 `types/*`, `package.json` / `package-lock.json`, `app/layout.jsx`, `next.config.mjs`, `supabase/migrations/*` (Adel merges these), `PLAN.md`.
@@ -128,7 +128,7 @@ Everybody codes against **contracts** that ship with the scaffold. Nobody waits 
 
 Each task has a **Done when** check. Don't call it done until you've actually run it.
 
-### 6.1 Anthony: Engine, part A (`feature/feed-engine`)
+### 6.1 Anthony: Engine, part A (`backend_a`)
 
 > **Detailed breakdown:** [docs/engine-parts.md](docs/engine-parts.md) splits this section into 15 small parts (Part 0–14), each with its own tests and a table of **what Anthony will ask you, and when**. Mhammad, Adel and Oscar: skim the "Per-part sync points" table there so you know what's coming your way.
 
@@ -153,7 +153,7 @@ Each task has a **Done when** check. Don't call it done until you've actually ru
 
 ---
 
-### 6.2 Mhammad: Engine, part B (AI + timing) → then Social (`feature/ai`, later `feature/social`)
+### 6.2 Mhammad: Engine, part B (AI + timing) → then Social (`backend_b`)
 
 **Mission, part B (Fri + Sat morning):** the "smart" layer on top of the ranking. It never decides the ranking itself, only explains it (captions) and translates requests (search). Plus the timing heuristic.
 **Mission, social (Sat 2 PM onward):** make plans persistent and live. See §6.5.
@@ -163,7 +163,7 @@ Each task has a **Done when** check. Don't call it done until you've actually ru
 
 | # | Task | Files | Done when |
 |---|---|---|---|
-| B1 | **`timingScore(category, slotStartIso, slotEndIso): number`** (0–1). Restaurants peak at lunch 11:30–13:30 / dinner 18:00–20:30; cafés morning/afternoon; bars after 20:00; viewpoints near sunset (Montréal in late Nov ≈ 16:15 local, so hardcode it or ask Adel for Open-Meteo `daily=sunset`); parks midday; activities/museums afternoon. | `lib/engine/timing.js`, `timing.test.js` | Tests: bar at 21:00 > bar at 14:00; restaurant at 12:30 > 15:30. Tell Anthony when it's merged. |
+| B1 | **`timingScore(category, slotStartIso, slotEndIso): number`** (0–1). Restaurants peak at lunch 11:30–13:30 / dinner 18:00–20:30; cafés morning/afternoon; bars after 20:00; viewpoints near sunset (Montréal in late Nov ≈ 16:15 local, so hardcode it or ask Adel for Open-Meteo `daily=sunset`); parks midday; activities/museums afternoon. | `lib/engine/timing.js`, `timing.test.js` | Tests: bar at 21:00 > bar at 14:00; restaurant at 12:30 > 15:30. **Mhammad writes this file himself** (Anthony does not stub it); until it is merged Anthony uses a constant 0.5. Tell Anthony when it is merged. |
 | B2 | **Claude client.** Server-only wrapper around `@anthropic-ai/sdk` with a timeout (~4 s) and no retries on the hot path. Model: use a current fast model (check the `claude-api` skill for the current model IDs; don't guess). | `lib/ai/client.js` | Calling it with no API key throws a clear error, and callers catch it. |
 | B3 | **`captionCards(cards: FeedCard[]): Promise<Map<cardId, caption>>`**. ONE batched call for ~10 cards. Prompt includes each card's place, slot (formatted with `formatSlot`), friend names, travel, weather. Ask for JSON `[{cardId, caption}]`, **validate with Zod**, ≤ 120 chars, no invented facts. Cache by `card.id` (in-memory Map is fine). Any failure → `templateCaption()` for that card. | `lib/ai/captions.js` + test (mock the client) | Feed loads in < 2.5 s with captions; with a bad key it still loads with template captions. |
 | B4 | **NL search → filters.** "something cheap with Maya tomorrow night" → Claude returns `FeedFilters` (use tool calling / structured output per the skill). Give Claude: today's date in Montréal, the user's friend list (names + IDs), the category enum. Validate with Zod. Map relative dates using `lib/time.js`. | `lib/ai/search.js`, `app/api/search/route.js` | 5 test queries produce sensible filters; invalid output → 422, not a crash. Returns `SearchResponse` with a human `summary` ("Cheap · with Maya · Sat night"). |
@@ -174,7 +174,7 @@ Each task has a **Done when** check. Don't call it done until you've actually ru
 
 ---
 
-### 6.3 Adel: Data + schema (`feature/data`)
+### 6.3 Adel: Data + schema (`database`)
 
 **Mission:** real, reliable data behind the `lib/data` functions, and a one-command demo reset.
 **You produce:** the Supabase schema, the places dataset, weather + travel times, and the seed/reset scripts. You also own `lib/mocks/` and keep them matching the schema.
@@ -196,7 +196,7 @@ Each task has a **Done when** check. Don't call it done until you've actually ru
 
 ---
 
-### 6.4 Oscar: Frontend (`feature/frontend`)
+### 6.4 Oscar: Frontend (`frontend`)
 
 **Mission:** make it feel like a real app. Full-screen snap-scroll feed, instant reactions, a smooth invite flow, polished states. Phone-first (test at 390×844).
 **You consume:** the `/api/*` routes (already returning valid mock data), `usePlan()`, the `FeedCard` / `PlanView` types, `formatSlot()`, `SCORE_WEIGHTS`.
