@@ -9,7 +9,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
+import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
+import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -79,6 +81,8 @@ function Feed() {
   /** Card whose invite sheet is open (after its swipe bar broke), or null. */
   const [inviteCard, setInviteCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   const router = useRouter();
+  /** Invites from friends that I haven't answered (polling GET /api/plans). */
+  const { invites, dismiss: dismissInvite } = useInvites();
   /** Text of the Refresh pill, or null when hidden. Shown after 2 skips so the learning is visible. */
   const [refreshHint, setRefreshHint] = useState(/** @type {string | null} */ (null));
   /** Skips per category since the last refresh. */
@@ -234,11 +238,21 @@ function Feed() {
     >
       <h1 className="sr-only">Sidequest feed</h1>
 
-      {/* Refresh pill: floats over the feed; the wrapper is a live region so it gets announced. */}
+      {/* Top stack floating over the feed: invite banner (F7), then the Refresh pill.
+          The wrapper is a live region so both get announced. */}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto flex max-w-md justify-center px-4 pt-safe"
+        className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto flex max-w-md flex-col items-center gap-2 px-3 pt-safe"
       >
+        {invites[0] && (
+          <InviteBanner
+            invite={invites[0]}
+            moreCount={invites.length - 1}
+            onOpen={() => dismissInvite(invites[0].id)}
+            onDismiss={() => dismissInvite(invites[0].id)}
+            className="pointer-events-auto"
+          />
+        )}
         {refreshHint && status === "ready" && (
           <Button
             variant="secondary"

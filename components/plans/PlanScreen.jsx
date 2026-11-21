@@ -4,12 +4,12 @@
  * Place, time, who's in, and I'm in / Can't make it for invitees. Live through usePlan() (Mhammad):
  * polling today, Realtime later, same shape. Confetti when the plan flips to confirmed while you watch.
  */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { MeResponse } from "@/types/api";
 import { formatSlot } from "@/lib/time";
 import { usePlan } from "@/hooks/usePlan";
+import { useMeId } from "@/components/plans/useMeId";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -28,20 +28,6 @@ const RSVP = {
   invited: { label: "Invited", className: "bg-surface text-ink-muted" },
   out: { label: "Can't make it", className: "bg-raised text-ink-muted" },
 };
-
-/** The signed-in user's id (demo cookie or real session), or null while loading / on error. */
-function useMeId() {
-  const [id, setId] = useState(/** @type {string | null} */ (null));
-  useEffect(() => {
-    const ctrl = new AbortController();
-    fetch("/api/me", { signal: ctrl.signal, cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`me ${r.status}`))))
-      .then((j) => setId(MeResponse.parse(j).user.id))
-      .catch((e) => !ctrl.signal.aborted && console.warn("[plan] /api/me", e));
-    return () => ctrl.abort();
-  }, []);
-  return id;
-}
 
 /** @param {{ planId: string }} props */
 export function PlanScreen({ planId }) {
