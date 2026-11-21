@@ -1,7 +1,7 @@
 "use client";
 /**
  * You (/me): the third tab. Owner: Oscar.
- * Your profile after onboarding: neighbourhood + interests (saved with PATCH /api/me) and friends (PeopleList).
+ * Your profile after onboarding: home postal code + interests (saved with PATCH /api/me) and friends (PeopleList).
  * Reuses the onboarding pickers. Saving is skipped with a note while PATCH /api/me isn't live (404/405).
  */
 import { useEffect, useState } from "react";
@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
-import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "@/components/onboarding/options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
+import { INTERESTS, MIN_INTERESTS } from "@/components/onboarding/options";
+import { InterestPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
@@ -56,7 +56,6 @@ function DataCredits() {
 
 export function YouScreen() {
   const [me, setMe] = useState(/** @type {MeBasics | null} */ (null));
-  const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [dirty, setDirty] = useState(false);
   /** N5: home postal code. The server keeps only "H2T" and doesn't send it back, so we show the area we saved. */
@@ -77,9 +76,6 @@ export function YouScreen() {
         const known = new Set(INTERESTS.map((t) => t.id));
         setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl });
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
-        // The server stores the neighbourhood's centre as the home (not the id), so match it back.
-        const home = NEIGHBOURHOODS.find((n) => Math.abs(n.lat - user.homeLat) < 1e-4 && Math.abs(n.lng - user.homeLng) < 1e-4);
-        if (home) setNeighbourhoodId(home.id);
       })
       .catch((e) => {
         if (ctrl.signal.aborted) return;
@@ -100,14 +96,6 @@ export function YouScreen() {
     setStatus("idle");
   };
 
-  const pickNeighbourhood = (/** @type {string} */ id) => {
-    setNeighbourhoodId(id);
-    setPostal(""); // one home: picking an area clears a half-typed postal code
-    setPostalError(null);
-    setDirty(true);
-    setStatus("idle");
-  };
-
   const typePostal = (/** @type {string} */ v) => {
     setPostal(v);
     setPostalError(null);
@@ -121,9 +109,8 @@ export function YouScreen() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        // Postal code wins when given (N5); otherwise the picked neighbourhood.
         body: JSON.stringify({
-          ...(hasPostal ? { postalCode: postal.trim() } : neighbourhoodId ? { neighbourhoodId } : {}),
+          ...(hasPostal ? { postalCode: postal.trim() } : {}),
           interests: [...interests],
         }),
       });
@@ -143,7 +130,6 @@ export function YouScreen() {
       if (hasPostal) {
         // The server keeps only the first 3 characters (the area); show what was saved.
         setSavedArea(postal.trim().slice(0, 3));
-        setNeighbourhoodId(null);
         setPostal("");
       }
       setStatus("saved");
@@ -206,8 +192,6 @@ export function YouScreen() {
           )}
         </div>
         <PostalCodeField id="you-postal" value={postal} onChange={typePostal} error={postalError} />
-        <p className="pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
-        <NeighbourhoodPicker value={neighbourhoodId} onChange={pickNeighbourhood} />
       </section>
 
       <section aria-labelledby="you-interests" className="space-y-3">

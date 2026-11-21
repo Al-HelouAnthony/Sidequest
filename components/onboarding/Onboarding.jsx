@@ -3,11 +3,11 @@
  * Onboarding (PLAN.md F9). Owner: Oscar. Four quick steps, clickable in ~20 s on stage:
  *   1. Calendar: status from the sign-in redirect (?calendar=synced|failed|skipped). Sync only happens at sign-in
  *      (team decision), so failed/skipped offer "Sign in again" → /login?next=/onboarding, not a retry call.
- *   2. Home: postal code (N5, server keeps "H2T" and looks up its centre); neighbourhood picker as fallback
+ *   2. Home: postal code, full or just the first 3 characters (N5, server keeps "H2T" and looks up its centre)
  *   3. Interests: tags from PLAN.md §6.3, at least MIN_INTERESTS
  *   4. Friends: PeopleList (GET /api/users → POST /api/friends; falls back to GET /api/friends)
  * The pickers live in ./pickers.jsx (shared with the You screen).
- * Finish → PATCH /api/me { neighbourhoodId, interests } → router.replace(?next, default /feed).
+ * Finish → PATCH /api/me { postalCode, interests } → router.replace(?next, default /feed).
  * Endpoints that aren't live yet (404/405) are skipped so onboarding never gets stuck during the build.
  * Must render inside <Suspense> (useSearchParams with cacheComponents).
  */
@@ -20,9 +20,9 @@ import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
 import { INTERESTS, MIN_INTERESTS } from "./options";
-import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "./pickers";
+import { InterestPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "./pickers";
 
-const STEPS = ["Calendar", "Neighbourhood", "Interests", "Friends"];
+const STEPS = ["Calendar", "Home", "Interests", "Friends"];
 
 /** Only same-site paths, so ?next= can't send people to another site after sign-in. */
 function safeNext(/** @type {string | null} */ next) {
@@ -46,8 +46,7 @@ export function Onboarding() {
   const [step, setStep] = useState(0);
   /** @type {CalendarState} */
   const calendar = fromRedirect === "synced" || fromRedirect === "failed" ? fromRedirect : "skipped";
-  const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
-  /** N5: home postal code (main way); neighbourhood stays as the fallback. */
+  /** N5: home postal code ("H2T" or "H2T 1S6"); the only way to set home. */
   const [postal, setPostal] = useState("");
   const [postalError, setPostalError] = useState(/** @type {string | null} */ (null));
   const hasPostal = isPostalCode(postal);
@@ -85,10 +84,7 @@ export function Onboarding() {
       const res = await fetch("/api/me", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        // Postal code wins when given (one home only); otherwise the picked neighbourhood.
-        body: JSON.stringify(
-          hasPostal ? { postalCode: postal.trim(), interests: [...interests] } : { neighbourhoodId, interests: [...interests] },
-        ),
+        body: JSON.stringify({ postalCode: postal.trim(), interests: [...interests] }),
       });
       if (hasPostal) {
         const msg = await postalErrorFrom(res);
@@ -111,13 +107,13 @@ export function Onboarding() {
   };
 
   const canContinue =
-    step === 0 ? true : step === 1 ? hasPostal || Boolean(neighbourhoodId) : step === 2 ? interests.size >= MIN_INTERESTS : true;
+    step === 0 ? true : step === 1 ? hasPostal : step === 2 ? interests.size >= MIN_INTERESTS : true;
   const isLast = step === STEPS.length - 1;
   const ctaLabel =
     step === 2 && interests.size < MIN_INTERESTS
       ? `Pick ${MIN_INTERESTS - interests.size} more`
-      : step === 1 && !hasPostal && !neighbourhoodId
-        ? "Add a postal code or pick an area"
+      : step === 1 && !hasPostal
+        ? "Add your postal code"
         : isLast
           ? "Start exploring"
           : "Continue";
@@ -155,9 +151,7 @@ export function Onboarding() {
       <div key={step} className="flex flex-1 flex-col gap-4 motion-safe:animate-rise">
         {step === 0 && <CalendarStep state={calendar} />}
         {step === 1 && (
-          <NeighbourhoodStep
-            value={neighbourhoodId}
-            onChange={setNeighbourhoodId}
+          <HomeStep
             postal={postal}
             onPostal={(v) => {
               setPostal(v);
@@ -240,15 +234,13 @@ function CalendarStep({ state }) {
 }
 
 /**
- * @param {{ value: string | null, onChange: (id: string) => void, postal: string, onPostal: (v: string) => void, postalError: string | null }} props
+ * @param {{ postal: string, onPostal: (v: string) => void, postalError: string | null }} props
  */
-function NeighbourhoodStep({ value, onChange, postal, onPostal, postalError }) {
+function HomeStep({ postal, onPostal, postalError }) {
   return (
     <>
       <StepTitle title="Where do you live?" body="Your postal code gives everyone their real travel times." />
       <PostalCodeField value={postal} onChange={onPostal} error={postalError} />
-      <p className="pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
-      <NeighbourhoodPicker value={value} onChange={onChange} />
     </>
   );
 }
