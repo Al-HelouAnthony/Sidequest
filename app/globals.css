@@ -37,15 +37,17 @@
   --color-ink-muted: #525d62;
 
   /* Brand */
-  --color-accent: #e8673f; /* orange: the main action on every screen */
+  --color-accent: #ff6633; /* orange: the main action on every screen */
   --color-on-accent: #181f24;
-  --color-teal: #a3b8b1; /* selected, confirmed, "free now" */
+  --color-teal: #8fc1b5; /* selected, confirmed, "free now" */
   --color-on-teal: #181f24;
-  --color-peach: #ffb39c; /* soft tint for illustrations and avatars */
+  --color-peach: #ffb39c;
+  --color-bar: #1f2a31; /* bottom tab bar island */
+  --color-on-bar: #edf2f1; /* soft tint for illustrations and avatars */
 
   /* Meaning */
-  --color-love: #e8673f;
-  --color-success: #a3b8b1;
+  --color-love: #ff6633;
+  --color-success: #8fc1b5;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -205,13 +207,15 @@
     --color-shade: #0b1013;
     --color-ink: #edf2f1;
     --color-ink-muted: #a9b4b8;
-    --color-accent: #e46c47;
+    --color-accent: #ff6a3d;
     --color-on-accent: #151c21;
-    --color-teal: #a9bfb8;
+    --color-teal: #93c7bb;
     --color-on-teal: #151c21;
     --color-peach: #f2a38a;
-    --color-love: #e46c47;
-    --color-success: #a9bfb8;
+  --color-bar: #2a3a43;
+    --color-bar: #2a3a43;
+    --color-love: #ff6a3d;
+    --color-success: #93c7bb;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -226,13 +230,13 @@
   --color-shade: #0b1013;
   --color-ink: #edf2f1;
   --color-ink-muted: #a9b4b8;
-  --color-accent: #e46c47;
+  --color-accent: #ff6a3d;
   --color-on-accent: #151c21;
-  --color-teal: #a9bfb8;
+  --color-teal: #93c7bb;
   --color-on-teal: #151c21;
   --color-peach: #f2a38a;
-  --color-love: #e46c47;
-  --color-success: #a9bfb8;
+  --color-love: #ff6a3d;
+  --color-success: #93c7bb;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -281,9 +285,16 @@
 
 /* Glossy teal pill under the active tab of the glass tab bar. */
 @utility tab-pill {
-  background-color: var(--color-teal);
+  background-color: var(--color-accent);
   border: 1.5px solid var(--color-line);
   box-shadow: 0 2px 0 var(--color-shade);
+}
+
+/* Bottom tab bar: deep slate cel island, so it stands apart from the content above it. */
+@utility tab-bar {
+  background-color: var(--color-bar);
+  border: 1.5px solid var(--color-line);
+  box-shadow: var(--shadow-cel);
 }
 
 /* Dark frost for badges, chips and icon buttons sitting on a place photo. */
