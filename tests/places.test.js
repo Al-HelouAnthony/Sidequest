@@ -7,25 +7,11 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { Category, Place } from "@/types/domain";
 import places from "@/data/places.json";
+import { INTEREST_LABELS, INTEREST_TAGS } from "@/lib/interests";
+import { NEIGHBOURHOODS } from "@/lib/neighbourhoods";
 
-/** Shared tag vocabulary (PLAN.md §6.3). Onboarding interest chips use the same list. */
-const TAG_VOCABULARY = [
-  "coffee",
-  "cheap-eats",
-  "views",
-  "outdoors",
-  "bars",
-  "live-music",
-  "art",
-  "museums",
-  "markets",
-  "brunch",
-  "iconic",
-  "free",
-  "late-night",
-  "cocktails",
-  "nature",
-];
+/** Shared tag vocabulary (PLAN.md §6.3): one source, lib/interests.js. Onboarding chips use the same list. */
+const TAG_VOCABULARY = INTEREST_TAGS;
 
 /** Greater Montréal, generous box. Catches swapped lat/lng and typos. */
 const BBOX = { minLat: 45.4, maxLat: 45.71, minLng: -73.98, maxLng: -73.47 };
@@ -75,6 +61,22 @@ describe("data/places.json", () => {
       return intervals.filter((i) => i.open === i.close).map((i) => `${p.name}: ${i.open}-${i.close}`);
     });
     expect(problems).toEqual([]);
+  });
+});
+
+describe("lib/interests.js and lib/neighbourhoods.js", () => {
+  it("every interest tag has a label, and every tag is used by at least one place", () => {
+    expect(Object.keys(INTEREST_LABELS).sort()).toEqual([...INTEREST_TAGS].sort());
+    const used = new Set(places.flatMap((p) => p.tags));
+    expect(INTEREST_TAGS.filter((t) => !used.has(t))).toEqual([]);
+  });
+
+  it("neighbourhoods have unique slug ids and sit inside Montréal", () => {
+    expect(new Set(NEIGHBOURHOODS.map((n) => n.id)).size).toBe(NEIGHBOURHOODS.length);
+    for (const n of NEIGHBOURHOODS) {
+      expect(n.id).toMatch(/^[a-z]+(-[a-z]+)*$/);
+      expect(n.lat > BBOX.minLat && n.lat < BBOX.maxLat && n.lng > BBOX.minLng && n.lng < BBOX.maxLng).toBe(true);
+    }
   });
 });
 
