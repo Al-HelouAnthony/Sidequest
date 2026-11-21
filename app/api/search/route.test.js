@@ -8,7 +8,8 @@ vi.mock("@/lib/ai/captions", () => ({ captionCards: async () => new Map() }));
 // Adel's real registry search (mock mode: a real 30-restaurant sample around McGill), watched.
 vi.mock("@/lib/data", async (importOriginal) => {
   const real = await importOriginal();
-  return { ...real, searchRegistry: vi.fn(real.searchRegistry) };
+  // searchRegistryByName: Adel is adding it; stand-in that finds nothing until then.
+  return { ...real, searchRegistry: vi.fn(real.searchRegistry), searchRegistryByName: real.searchRegistryByName ?? vi.fn(async () => []) };
 });
 const { searchRegistry, getUser } = await import("@/lib/data");
 
@@ -66,6 +67,32 @@ describe("POST /api/search", () => {
     const res = await post({ query: "pizza" });
     expect(res.status).toBe(200);
     SearchResponse.parse(await res.json());
+  });
+
+  it("load more: a plain search returns Anthony's 'pass:offset' cursor when there are more cards", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "this weekend" })).json());
+    if (body.cards.length === 10) expect(body.nextCursor).toMatch(/^\d+:\d+$/);
+    else expect(body.nextCursor === null || /^\d+:\d+$/.test(body.nextCursor)).toBe(true);
+  });
+
+  it("cuisine search keeps filters.cuisine so GET /api/feed can rebuild it for 'load more'", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "pizza" })).json());
+    if (!body.summary.startsWith("No ")) expect(body.filters.cuisine).toBe("pizza");
+    expect(body.nextCursor === null || /^\d+:\d+$/.test(body.nextCursor)).toBe(true);
+  });
+
+  it("name search: 'kazu' only returns Kazu (one page)", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "kazu" })).json());
+    if (body.summary.startsWith("Nothing called")) return; // nobody free at Kazu this week in the mock schedules
+    expect(body.summary).toBe("“kazu”");
+    for (const card of body.cards) expect(card.place.name).toBe("Kazu");
+    expect(body.nextCursor).toBeNull();
+  });
+
+  it("a word nothing is called ('hotel'): honest chip, other suggestions still shown", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "hotel" })).json());
+    expect(body.summary).toBe("Nothing called “hotel” nearby · showing all suggestions");
+    expect(body.cards.length).toBeGreaterThan(0);
   });
 
   it("empty query gives 400", async () => {
