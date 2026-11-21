@@ -64,6 +64,21 @@ async function fetchFeed(cursor, signal, filters, visit) {
   return parsed.data;
 }
 
+/** Cards ahead of the end of the list at which the next page starts loading (N3). */
+const PREFETCH_AHEAD = 5;
+
+/**
+ * Warm the browser cache with a page's photos so each card arrives with its image (N3).
+ * @param {import("@/types/feed").FeedCardT[]} cards
+ */
+function preloadPhotos(cards) {
+  for (const c of cards) {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = c.place.photoUrl;
+  }
+}
+
 /**
  * Fire-and-forget interaction (the engine learns from these). The UI never waits for it.
  * @param {import("@/types/feed").FeedCardT} card
@@ -142,6 +157,7 @@ function Feed() {
     fetchFeed(null, ctrl.signal, filtersRef.current, getVisit())
       .then((d) => {
         setCards(d.cards);
+        preloadPhotos(d.cards.slice(1));
         setNextCursor(d.nextCursor);
         setStatus("ready");
       })
@@ -166,7 +182,9 @@ function Feed() {
       const d = await fetchFeed(nextCursor, undefined, filtersRef.current, getVisit());
       setCards((list) => {
         const seen = new Set(list.map((c) => c.id));
-        return [...list, ...d.cards.filter((c) => !seen.has(c.id))];
+        const fresh = d.cards.filter((c) => !seen.has(c.id));
+        preloadPhotos(fresh);
+        return [...list, ...fresh];
       });
       setNextCursor(d.nextCursor);
     } catch (e) {
@@ -178,7 +196,7 @@ function Feed() {
     }
   }, [nextCursor, loadingMore]);
 
-  // Load the next page when the second-to-last card comes into view.
+  // Load the next page early: when the card PREFETCH_AHEAD from the end comes into view (N3).
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el || !nextCursor || moreFailed) return;
@@ -412,7 +430,7 @@ function Feed() {
                 onDetails={() => setDetailsCard(card)}
                 onWeather={() => setWeatherCard(card)}
               />
-              {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
+              {i === Math.max(0, cards.length - PREFETCH_AHEAD) && <div ref={sentinelRef} aria-hidden="true" />}
             </Page>
           ))}
 
@@ -427,6 +445,20 @@ function Feed() {
           <Page>
             <StateIsland title="Couldn't load more" body="Something went wrong fetching the next ideas.">
               <Button onClick={loadMore}>Try again</Button>
+            </StateIsland>
+          </Page>
+        )}
+
+        {/* N3: never a dead end. The server loops (Anthony), but if it ever has nothing more, offer a refresh. */}
+        {status === "ready" && cards.length > 0 && !nextCursor && !loadingMore && !moreFailed && (
+          <Page>
+            <StateIsland
+              title={search ? "That's every match" : "You're all caught up"}
+              body={search ? `Those are all the ideas for “${search.query}”.` : "Fresh ideas show up as free time and plans change."}
+            >
+              <Button variant="secondary" onClick={search ? clearSearch : refresh}>
+                {search ? "Back to the feed" : "Refresh"}
+              </Button>
             </StateIsland>
           </Page>
         )}
