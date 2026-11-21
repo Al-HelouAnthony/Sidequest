@@ -1907,9 +1907,9 @@
       "cheap-eats",
       "middle-eastern"
     ],
-    "lat": 45.536452,
-    "lng": -73.616165,
-    "address": "199 Rue Jean-Talon E",
+    "lat": 45.53652,
+    "lng": -73.61636,
+    "address": "191 Rue Jean-Talon E",
     "priceLevel": 2,
     "photoUrl": "/fallback/restaurant.svg",
     "hours": {
