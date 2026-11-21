@@ -24,30 +24,28 @@
  * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
 @theme {
-  /* Palette "Ocean Mono" (light). The dark theme overrides these below. */
+  /* Palette "Cream court" (light): cream, teal, slate, orange. The dark theme (Slate classic) overrides below. */
   /* Surfaces */
-  --color-canvas: #eef3f2; /* page */
-  --color-surface: #fcfefe; /* island fill */
-  --color-raised: #dce5e5; /* sunken wells, skeletons, inactive */
-  --color-line: #181f24; /* outlines */
-  --color-shade: #181f24; /* hard drop shadows */
+  --color-canvas: #efe8dd; /* cream page */
+  --color-surface: #faf6f0; /* island fill */
+  --color-raised: #e2d9cb; /* sunken wells, skeletons, inactive */
+  --color-line: #303841; /* outlines */
+  --color-shade: #303841; /* hard drop shadows */
 
-  /* Text: ink ≥ 13:1 and ink-muted ≥ 6:1 on canvas and surface in both themes */
-  --color-ink: #181f24;
-  --color-ink-muted: #525d62;
+  /* Text */
+  --color-ink: #303841;
+  --color-ink-muted: #5c656e;
 
   /* Brand */
-  --color-accent: #ff6633; /* orange: the main action on every screen */
-  --color-on-accent: #181f24;
-  --color-teal: #4fc3b3; /* selected, confirmed, "free now" */
-  --color-on-teal: #181f24;
-  --color-peach: #ffb39c;
-  --color-bar: #1f2a31; /* bottom tab bar island */
-  --color-on-bar: #edf2f1; /* soft tint for illustrations and avatars */
+  --color-accent: #ff5722; /* orange: the main action on every screen */
+  --color-on-accent: #22282e;
+  --color-teal: #76abae; /* selected, confirmed, "free now" */
+  --color-on-teal: #22282e;
+  --color-peach: #ffb199; /* soft tint for illustrations and avatars */
 
   /* Meaning */
-  --color-love: #ff6633;
-  --color-success: #4fc3b3;
+  --color-love: #ff5722;
+  --color-success: #76abae;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -236,24 +234,16 @@
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Dark theme ("Ocean Mono" dark): system preference, or forced with data-theme="dark". */
+/* Dark theme ("Slate classic"): system preference, or forced with data-theme="dark". */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas: #0f171c;
-    --color-surface: #22323b;
-    --color-raised: #1a262d;
-    --color-line: #04080a;
-    --color-shade: #000000;
-    --color-ink: #f2f6f5;
-    --color-ink-muted: #b3bec2;
-    --color-accent: #ff6a3d;
-    --color-on-accent: #10171b;
-    --color-teal: #5fd0c0;
-    --color-on-teal: #0f171c;
-    --color-peach: #ffab8f;
-    --color-bar: #2c414c;
-    --color-love: #ff6a3d;
-    --color-success: #5fd0c0;
+    --color-canvas: #303841;
+    --color-surface: #3b444e;
+    --color-raised: #252c33;
+    --color-line: #efe8dd;
+    --color-shade: #1a1f25;
+    --color-ink: #efe8dd;
+    --color-ink-muted: #b8bec3;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -261,21 +251,13 @@
   }
 }
 :root[data-theme="dark"] {
-  --color-canvas: #0f171c;
-  --color-surface: #22323b;
-  --color-raised: #1a262d;
-  --color-line: #04080a;
-  --color-shade: #000000;
-  --color-ink: #f2f6f5;
-  --color-ink-muted: #b3bec2;
-  --color-accent: #ff6a3d;
-  --color-on-accent: #10171b;
-  --color-teal: #5fd0c0;
-  --color-on-teal: #0f171c;
-  --color-peach: #ffab8f;
-  --color-bar: #2c414c;
-  --color-love: #ff6a3d;
-  --color-success: #5fd0c0;
+  --color-canvas: #303841;
+  --color-surface: #3b444e;
+  --color-raised: #252c33;
+  --color-line: #efe8dd;
+  --color-shade: #1a1f25;
+  --color-ink: #efe8dd;
+  --color-ink-muted: #b8bec3;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -317,24 +299,30 @@
 /* Strength comes from --glass-hi / --glass-lo / --glass-edge (toned down in the dark theme, see above),
    per design-reference/components/GlassTabBar. */
 @utility glass {
-  background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / var(--glass-hi, 0.5)), rgb(255 255 255 / var(--glass-lo, 0.12))),
+    color-mix(in srgb, var(--color-surface) 28%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.9);
+  backdrop-filter: blur(22px) saturate(1.9);
+  border: 1px solid rgb(255 255 255 / var(--glass-edge, 0.75));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / var(--glass-edge, 0.75)),
+    inset 0 -10px 18px rgb(255 255 255 / var(--glass-lo, 0.12)),
+    0 18px 36px rgb(48 56 65 / 0.22),
+    0 2px 6px rgb(48 56 65 / 0.12);
 }
 
 /* Glossy teal pill under the active tab of the glass tab bar. */
 @utility tab-pill {
-  background-color: var(--color-accent);
-  border: 1.5px solid var(--color-line);
-  box-shadow: 0 2px 0 var(--color-shade);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.38), rgb(255 255 255 / 0) 60%),
+    color-mix(in srgb, var(--color-teal) 92%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 6px 14px color-mix(in srgb, var(--color-teal) 45%, transparent);
 }
 
-/* Bottom tab bar: deep slate cel island, so it stands apart from the content above it. */
-@utility tab-bar {
-  background-color: var(--color-bar);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
-}
 
 /* Dark frost for badges, chips and icon buttons sitting on a place photo. */
 @utility glass-photo {

@@ -14,8 +14,8 @@ export default function manifest() {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#eef3f2",
-    theme_color: "#eef3f2",
+    background_color: "#efe8dd",
+    theme_color: "#efe8dd",
     categories: ["social", "lifestyle"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
