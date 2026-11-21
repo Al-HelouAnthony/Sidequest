@@ -199,7 +199,7 @@ export function YouScreen() {
         <h2 id="you-friends" className="font-display text-xl font-extrabold">
           Friends
         </h2>
-        <PeopleList />
+        <PeopleList canRemove />
       </section>
 
       <DataCredits />

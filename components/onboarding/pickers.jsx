@@ -3,15 +3,19 @@
  * Profile pickers shared by onboarding (F9) and the You screen (/me). Owner: Oscar.
  *  - NeighbourhoodPicker: one of NEIGHBOURHOODS (only the id goes to the server)
  *  - InterestPicker: tag chips from PLAN.md §6.3
- *  - PeopleList: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends
+ *  - PeopleList: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends.
+ *    With `canRemove` (You tab): ✕ on a friend → ConfirmSheet → DELETE /api/friends/[id] (proposed endpoint;
+ *    404/405 = not live yet → says so, nothing changes) → row back to "Add" with an inline Undo for a few seconds.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FriendsResponse, UsersResponse } from "@/types/api";
 import { Avatar } from "@/components/ui/Avatar";
+import { IconButton } from "@/components/ui/Button";
+import { ConfirmSheet } from "@/components/ui/ConfirmSheet";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { cn, focusRing } from "@/components/ui/classes";
+import { cn, focusRing, pressable } from "@/components/ui/classes";
 import { INTERESTS, NEIGHBOURHOODS } from "./options";
 
 /** @param {{ value: string | null, onChange: (id: string) => void }} props */
@@ -77,13 +81,27 @@ function parseUsers(json) {
   return parsed.data.users;
 }
 
-/** People to add as friends, with an Add button. Shows existing friends only until GET /api/users is live. */
-export function PeopleList() {
+/** How long the inline "Undo" stays after removing a friend. */
+const UNDO_MS = 6000;
+
+/**
+ * People to add as friends, with an Add button. Shows existing friends only until GET /api/users is live.
+ * @param {{ canRemove?: boolean }} props `canRemove`: friends get a ✕ to remove them (You tab only).
+ */
+export function PeopleList({ canRemove = false }) {
   const [people, setPeople] = useState(/** @type {Person[] | null} */ (null));
   /** true when GET /api/users isn't live yet and we only show existing friends. */
   const [friendsOnly, setFriendsOnly] = useState(false);
   const [busy, setBusy] = useState(/** @type {string | null} */ (null));
   const [error, setError] = useState(/** @type {string | null} */ (null));
+  /** Friend the "Remove?" sheet is open for. */
+  const [confirmFor, setConfirmFor] = useState(/** @type {Person | null} */ (null));
+  const [removing, setRemoving] = useState(false);
+  const [removeError, setRemoveError] = useState(/** @type {string | null} */ (null));
+  /** Just-removed friend: their row shows "Undo" for UNDO_MS. */
+  const [undoFor, setUndoFor] = useState(/** @type {string | null} */ (null));
+  const undoTimer = useRef(/** @type {ReturnType<typeof setTimeout> | undefined} */ (undefined));
+  useEffect(() => () => clearTimeout(undoTimer.current), []);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -129,6 +147,37 @@ export function PeopleList() {
     }
   };
 
+  const remove = async () => {
+    const p = confirmFor;
+    if (!p || removing) return;
+    setRemoving(true);
+    setRemoveError(null);
+    try {
+      const res = await fetch(`/api/friends/${encodeURIComponent(p.id)}`, { method: "DELETE" });
+      if (res.status === 404 || res.status === 405) {
+        setRemoveError("Removing friends isn't available yet.");
+        return;
+      }
+      if (!res.ok) throw new Error(`DELETE /api/friends/${p.id} ${res.status}`);
+      setPeople((list) => list?.map((x) => (x.id === p.id ? { ...x, isFriend: false } : x)) ?? null);
+      setConfirmFor(null);
+      clearTimeout(undoTimer.current);
+      setUndoFor(p.id);
+      undoTimer.current = setTimeout(() => setUndoFor(null), UNDO_MS);
+    } catch (e) {
+      console.error("[people] remove friend", e);
+      setRemoveError(`Couldn't remove ${p.name}. Try again.`);
+    } finally {
+      setRemoving(false);
+    }
+  };
+
+  const undo = (/** @type {Person} */ p) => {
+    clearTimeout(undoTimer.current);
+    setUndoFor(null);
+    add(p);
+  };
+
   if (people === null) {
     return (
       <div className="space-y-2">
@@ -152,9 +201,38 @@ export function PeopleList() {
             <Avatar src={p.avatarUrl} name={p.name} size="md" decorative />
             <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
             {p.isFriend ? (
-              <span className="inline-flex h-9 items-center gap-1 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal">
-                <Icon name="check" strokeWidth={3} className="size-4" />
-                Friends
+              <>
+                <span className="inline-flex h-9 items-center gap-1 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal">
+                  <Icon name="check" strokeWidth={3} className="size-4" />
+                  Friends
+                </span>
+                {canRemove && (
+                  <IconButton
+                    variant="ghost"
+                    label={`Remove ${p.name} as a friend`}
+                    icon={<Icon name="x" strokeWidth={2.5} className="size-4" />}
+                    onClick={() => {
+                      setRemoveError(null);
+                      setConfirmFor(p);
+                    }}
+                    className="-mr-1"
+                  />
+                )}
+              </>
+            ) : undoFor === p.id ? (
+              <span className="inline-flex items-center gap-1 text-sm motion-safe:animate-pop">
+                <span className="text-ink-muted">Removed</span>
+                <button
+                  type="button"
+                  onClick={() => undo(p)}
+                  className={cn(
+                    "min-h-11 rounded-full px-3 font-bold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:bg-ink/5",
+                    pressable,
+                    focusRing,
+                  )}
+                >
+                  Undo
+                </button>
               </span>
             ) : (
               <button
@@ -183,6 +261,26 @@ export function PeopleList() {
         {friendCount} {friendCount === 1 ? "friend" : "friends"}
         {friendsOnly && " · adding new people opens soon"}
       </p>
+
+      {canRemove && (
+        <ConfirmSheet
+          open={confirmFor !== null}
+          title={confirmFor ? `Remove ${confirmFor.name}?` : "Remove friend?"}
+          body={
+            confirmFor && (
+              <>
+                You won&apos;t see suggestions or plans with {confirmFor.name} anymore, and {confirmFor.name} won&apos;t see you as free.
+                Plans you already made together stay. You can add {confirmFor.name} again anytime.
+              </>
+            )
+          }
+          confirmLabel="Remove"
+          busy={removing}
+          error={removeError}
+          onConfirm={remove}
+          onClose={() => setConfirmFor(null)}
+        />
+      )}
     </div>
   );
 }
