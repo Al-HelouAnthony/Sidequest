@@ -12,6 +12,7 @@ import { usePlan } from "@/hooks/usePlan";
 import { useMeId } from "@/components/plans/useMeId";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { ConfirmSheet } from "@/components/ui/ConfirmSheet";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, focusRing } from "@/components/ui/classes";
@@ -41,6 +42,12 @@ export function PlanScreen({ planId, back = BACK.feed }) {
   const meId = useMeId();
   const [sending, setSending] = useState(/** @type {"in" | "out" | null} */ (null));
   const [rsvpError, setRsvpError] = useState(/** @type {string | null} */ (null));
+  // Cancel (organizer): POST /api/plans/[id]/cancel (proposed endpoint; 404/405 = not live yet → says so).
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState(/** @type {string | null} */ (null));
+  /** Cancelled from this screen: shown right away, before usePlan's next refresh confirms it. */
+  const [cancelledHere, setCancelledHere] = useState(false);
 
   // Confetti when the status flips to confirmed while the screen is open (not when it loads confirmed).
   const [lastStatus, setLastStatus] = useState(/** @type {string | null} */ (null));
@@ -60,6 +67,26 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       setRsvpError("Couldn't save your answer. Try again.");
     } finally {
       setSending(null);
+    }
+  };
+
+  const cancelPlan = async () => {
+    setCancelling(true);
+    setCancelError(null);
+    try {
+      const res = await fetch(`/api/plans/${encodeURIComponent(planId)}/cancel`, { method: "POST" });
+      if (res.status === 404 || res.status === 405) {
+        setCancelError("Cancelling plans isn't available yet.");
+        return;
+      }
+      if (!res.ok) throw new Error(`cancel ${res.status}`);
+      setCancelledHere(true);
+      setCancelOpen(false);
+    } catch (e) {
+      console.error("[plan] cancel", e);
+      setCancelError("Couldn't cancel the plan. Try again.");
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -85,7 +112,9 @@ export function PlanScreen({ planId, back = BACK.feed }) {
   const isInvitee = Boolean(me && !me.isCreator);
   const members = [...plan.members].sort((a, b) => Number(b.isCreator) - Number(a.isCreator));
   const inCount = plan.members.filter((m) => m.rsvp === "in").length;
-  const status = STATUS[plan.status];
+  const planStatus = cancelledHere ? "cancelled" : plan.status;
+  const status = STATUS[planStatus];
+  const invitedCount = plan.members.filter((m) => !m.isCreator).length;
 
   return (
     <Shell>
@@ -103,13 +132,13 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <Icon name="back" strokeWidth={2.5} />
         </Link>
         <span
-          key={plan.status}
+          key={planStatus}
           className={cn(
             "inline-flex h-8 items-center gap-1.5 rounded-full border-[1.5px] border-line px-3 text-sm font-bold motion-safe:animate-pop",
             status.className,
           )}
         >
-          {plan.status === "confirmed" && <Icon name="check" strokeWidth={3} className="size-4" />}
+          {planStatus === "confirmed" && <Icon name="check" strokeWidth={3} className="size-4" />}
           {status.label}
         </span>
       </div>
@@ -174,7 +203,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       </section>
 
       {/* Your answer */}
-      {isInvitee && me && plan.status !== "cancelled" && (
+      {isInvitee && me && planStatus !== "cancelled" && (
         <div className="space-y-2">
           {rsvpError && (
             <p role="alert" className="text-center text-sm font-semibold text-danger">
@@ -205,9 +234,57 @@ export function PlanScreen({ planId, back = BACK.feed }) {
         </div>
       )}
 
-      {me?.isCreator && plan.status === "pending" && (
+      {me?.isCreator && planStatus === "pending" && (
         <p className="text-center text-sm text-ink-muted">Invites sent. This updates live when friends answer.</p>
       )}
+
+      {/* Cancelled: one clear card for everyone, with a way back to ideas */}
+      {planStatus === "cancelled" && (
+        <div role="status" className="cel space-y-2 rounded-tile p-4 text-center motion-safe:animate-rise">
+          <p className="font-display text-xl font-extrabold">This plan is off</p>
+          <p className="text-sm text-ink-muted">
+            {me?.isCreator ? "Everyone you invited sees it's cancelled." : "Nobody's going anymore."} Find something else to do
+            together.
+          </p>
+          <Link href="/feed" className={cn("press mt-1 inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-bold text-on-accent", focusRing)}>
+            Find something else
+          </Link>
+        </div>
+      )}
+
+      {/* Organizer: cancel the whole plan (invitees use "Can't make it" instead) */}
+      {me?.isCreator && planStatus !== "cancelled" && (
+        <Button
+          variant="ghost"
+          fullWidth
+          onClick={() => {
+            setCancelError(null);
+            setCancelOpen(true);
+          }}
+          leadingIcon={<Icon name="x" strokeWidth={2.6} className="size-4 text-danger" />}
+          className="text-ink-muted"
+        >
+          Cancel plan
+        </Button>
+      )}
+
+      <ConfirmSheet
+        open={cancelOpen}
+        title="Cancel this plan?"
+        body={
+          <>
+            {plan.place.name}, {formatSlot(plan.startAt, plan.endAt)}.{" "}
+            {invitedCount === 1 ? "The friend you invited" : `The ${invitedCount} friends you invited`} will see it&apos;s off. This
+            can&apos;t be undone, but you can always make a new plan.
+          </>
+        }
+        confirmLabel="Cancel plan"
+        cancelLabel="Keep plan"
+        busy={cancelling}
+        error={cancelError}
+        onConfirm={cancelPlan}
+        onClose={() => setCancelOpen(false)}
+      />
     </Shell>
   );
 }
