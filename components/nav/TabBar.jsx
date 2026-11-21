@@ -50,7 +50,7 @@ export function TabBar({ active }) {
       className="pointer-events-none fixed inset-x-0 z-40 mx-auto w-full max-w-md px-3"
       style={{ bottom: "calc(12px + env(safe-area-inset-bottom))" }}
     >
-      <div className="tab-bar pointer-events-auto relative grid grid-cols-3 rounded-[30px] p-1.5">
+      <div className="glass pointer-events-auto relative grid grid-cols-3 rounded-[30px] p-1.5">
         <span
           aria-hidden="true"
           className="tab-pill absolute inset-y-1.5 left-1.5 w-[calc((100%-12px)/3)] rounded-[24px] transition-transform duration-500 motion-reduce:transition-none"
@@ -67,7 +67,7 @@ export function TabBar({ active }) {
               aria-label={badge ? `${tab.label}, ${inviteCount} new ${inviteCount === 1 ? "invite" : "invites"}` : undefined}
               className={cn(
                 "relative z-10 flex min-h-[52px] flex-col items-center justify-center gap-0.5 rounded-[24px] text-[11px] font-bold transition-colors duration-300",
-                on ? "text-on-accent" : "text-on-bar/70 hover:text-on-bar",
+                on ? "text-on-teal" : "text-ink/75 hover:text-ink",
                 focusRing,
               )}
             >
@@ -76,7 +76,7 @@ export function TabBar({ active }) {
                 {badge && (
                   <span
                     aria-hidden="true"
-                    className="absolute -top-1.5 -right-2.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-[1.5px] border-line bg-peach px-1 text-[10px] leading-none font-bold text-on-accent tabular-nums motion-safe:animate-pop"
+                    className="absolute -top-1.5 -right-2.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-[1.5px] border-line bg-accent px-1 text-[10px] leading-none font-bold text-on-accent tabular-nums motion-safe:animate-pop"
                   >
                     {inviteCount}
                   </span>

@@ -68,7 +68,7 @@ export function MyPlans() {
     <>
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
-      <h1 className="halo flex min-h-11 items-center font-display text-3xl font-extrabold">My plans</h1>
+      <h1 className="flex min-h-11 items-center font-display text-3xl font-extrabold">My plans</h1>
 
       {plans === null && !failed && <ListSkeleton />}
 
@@ -112,7 +112,7 @@ function Section({ title, plans, meId, highlight = false }) {
   const id = `section-${title.toLowerCase().replace(/\W+/g, "-")}`;
   return (
     <section aria-labelledby={id} className="space-y-2.5">
-      <h2 id={id} className="halo flex items-center gap-2 text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id={id} className="flex items-center gap-2 text-sm font-bold tracking-wide text-ink-muted uppercase">
         {title}
         <span
           className={cn(

@@ -150,7 +150,7 @@ export function Onboarding() {
             />
           ))}
         </div>
-        <span className="halo w-11 shrink-0 text-right text-sm font-semibold text-ink-muted tabular-nums">
+        <span className="w-11 shrink-0 text-right text-sm font-semibold text-ink-muted tabular-nums">
           {step + 1}/{STEPS.length}
         </span>
       </div>
@@ -199,8 +199,8 @@ export function Onboarding() {
 function StepTitle({ title, body }) {
   return (
     <div className="space-y-1.5">
-      <h1 className="halo font-display text-[2rem] leading-[1.02] font-extrabold">{title}</h1>
-      {body && <p className="halo text-ink-muted">{body}</p>}
+      <h1 className="font-display text-[2rem] leading-[1.02] font-extrabold">{title}</h1>
+      {body && <p className="text-ink-muted">{body}</p>}
     </div>
   );
 }
@@ -266,7 +266,7 @@ function InterestsStep({ selected, onToggle }) {
         body={`Pick at least ${MIN_INTERESTS}. Your feed learns the rest from your swipes.`}
       />
       <InterestPicker selected={selected} onToggle={onToggle} />
-      <p className="halo text-sm font-semibold text-ink-muted" aria-live="polite">
+      <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
         {selected.size} selected
       </p>
     </>

@@ -37,7 +37,7 @@ export function WeatherBadge({ icon, tempC, rainProb, variant = "glass", classNa
     <span
       className={cn(
         "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-bold tabular-nums",
-        variant === "glass" ? "glass-photo" : "border-[1.5px] border-line bg-surface text-ink",
+        variant === "glass" ? "glass-photo text-white" : "border-[1.5px] border-line bg-surface text-ink",
         className,
       )}
     >

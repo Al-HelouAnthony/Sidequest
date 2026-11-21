@@ -340,7 +340,7 @@ export function PeopleList({ canRemove = false }) {
           {error}
         </p>
       )}
-      <p className="halo text-sm font-semibold text-ink-muted" aria-live="polite">
+      <p className="text-sm font-semibold text-ink-muted" aria-live="polite">
         {friendCount} {friendCount === 1 ? "friend" : "friends"}
         {friendsOnly && " · adding new people opens soon"}
       </p>

@@ -153,7 +153,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <span className="glass-photo inline-flex h-7 w-fit items-center rounded-full px-3 text-xs font-semibold">
             {CATEGORY_LABELS[/** @type {keyof typeof CATEGORY_LABELS} */ (plan.place.category)] ?? plan.place.category}
           </span>
-          <h1 className="ink-pop font-display text-[2rem] leading-[0.95] font-extrabold break-words">{plan.place.name}</h1>
+          <h1 className="font-display text-[2rem] leading-[0.95] font-extrabold break-words">{plan.place.name}</h1>
         </div>
       </div>
 

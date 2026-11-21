@@ -37,17 +37,15 @@
   --color-ink-muted: #525d62;
 
   /* Brand */
-  --color-accent: #ff6633; /* orange: the main action on every screen */
+  --color-accent: #ff6333; /* orange: the main action on every screen */
   --color-on-accent: #181f24;
-  --color-teal: #4fc3b3; /* selected, confirmed, "free now" */
+  --color-teal: #67b3b0; /* selected, confirmed, "free now" */
   --color-on-teal: #181f24;
-  --color-peach: #ffb39c;
-  --color-bar: #1f2a31; /* bottom tab bar island */
-  --color-on-bar: #edf2f1; /* soft tint for illustrations and avatars */
+  --color-peach: #ffb39c; /* soft tint for illustrations and avatars */
 
   /* Meaning */
-  --color-love: #ff6633;
-  --color-success: #4fc3b3;
+  --color-love: #ff6333;
+  --color-success: #67b3b0;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -87,10 +85,6 @@
   --animate-confetti: confetti 1.9s cubic-bezier(0.25, 0.6, 0.45, 1) both;
   --animate-shake-once: shake 70ms linear 5;
   --animate-scan: scan 0.9s ease-in-out infinite;
-  --animate-stripes: stripes 0.9s linear infinite;
-  --animate-shine: shine 2.8s ease-in-out 0.6s infinite;
-  --animate-knob-hint: knob-hint 2.8s cubic-bezier(0.3, 1.4, 0.5, 1) 0.6s infinite;
-  --animate-tick-on: tick-on 380ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -178,25 +172,6 @@
     85% { opacity: 1; }
     100% { transform: translate(var(--drift, 0px), 105vh) rotate(var(--spin, 360deg)); opacity: 0; }
   }
-  @keyframes stripes {
-    to { background-position: 28px 0; }
-  }
-  @keyframes shine {
-    0%, 55% { transform: translateX(-120%) skewX(-20deg); }
-    100% { transform: translateX(420%) skewX(-20deg); }
-  }
-  @keyframes knob-hint {
-    0%, 60%, 100% { transform: translateX(0); }
-    70% { transform: translateX(16px); }
-    80% { transform: translateX(2px); }
-    88% { transform: translateX(8px); }
-    95% { transform: translateX(0); }
-  }
-  @keyframes tick-on {
-    0% { transform: scale(0.4); }
-    60% { transform: scale(1.8); }
-    100% { transform: scale(1.25); }
-  }
   @keyframes scan {
     0%, 100% { transform: translate(0, 0) rotate(0); }
     25% { transform: translate(-2px, -1px) rotate(-10deg); }
@@ -206,26 +181,26 @@
 
 /* SwipeToGo track: glossy, saturated orange. Colours derive from the accent token. */
 @utility swipe-rail {
-  background-color: var(--color-accent);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgb(255 255 255 / 0.16) 0 7px,
-    transparent 7px 14px
-  );
-  background-size: 28px 28px;
-  border: 2px solid var(--color-line);
-}
-/* Pulled-through strip: hot gradient from ocean teal to sunny yellow, with its own stripes. */
-@utility swipe-heat {
-  background-image:
-    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.25) 0 7px, transparent 7px 14px),
-    linear-gradient(90deg, var(--color-teal), var(--color-warning));
-  background-size: 28px 28px, 100% 100%;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.08) 34%, rgb(255 255 255 / 0) 50%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent), white 22%) 0%,
+      var(--color-accent) 52%,
+      color-mix(in srgb, var(--color-accent), black 10%) 100%
+    );
+  border: 1.5px solid rgb(255 255 255 / 0.75);
 }
 /* Shatter pieces: same fill as the track. */
 @utility swipe-shard {
-  background-color: var(--color-accent);
-  border: 1.5px solid var(--color-line);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0) 60%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-accent), white 22%),
+      var(--color-accent) 55%,
+      color-mix(in srgb, var(--color-accent), black 10%)
+    );
 }
 
 /* Fonts come from next/font in app/layout.jsx. */
@@ -237,21 +212,20 @@
 /* Dark theme ("Ocean Mono" dark): system preference, or forced with data-theme="dark". */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas: #0f171c;
-    --color-surface: #22323b;
-    --color-raised: #1a262d;
-    --color-line: #04080a;
-    --color-shade: #000000;
-    --color-ink: #f2f6f5;
-    --color-ink-muted: #b3bec2;
-    --color-accent: #ff6a3d;
-    --color-on-accent: #10171b;
-    --color-teal: #5fd0c0;
-    --color-on-teal: #0f171c;
-    --color-peach: #ffab8f;
-    --color-bar: #2c414c;
-    --color-love: #ff6a3d;
-    --color-success: #5fd0c0;
+    --color-canvas: #151c21;
+    --color-surface: #1f292f;
+    --color-raised: #1a272f;
+    --color-line: #3a4a54;
+    --color-shade: #0b1013;
+    --color-ink: #edf2f1;
+    --color-ink-muted: #a9b4b8;
+    --color-accent: #ff6537;
+    --color-on-accent: #151c21;
+    --color-teal: #86ccc9;
+    --color-on-teal: #151c21;
+    --color-peach: #f2a38a;
+    --color-love: #ff6537;
+    --color-success: #86ccc9;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -259,21 +233,20 @@
   }
 }
 :root[data-theme="dark"] {
-  --color-canvas: #0f171c;
-  --color-surface: #22323b;
-  --color-raised: #1a262d;
-  --color-line: #04080a;
-  --color-shade: #000000;
-  --color-ink: #f2f6f5;
-  --color-ink-muted: #b3bec2;
-  --color-accent: #ff6a3d;
-  --color-on-accent: #10171b;
-  --color-teal: #5fd0c0;
-  --color-on-teal: #0f171c;
-  --color-peach: #ffab8f;
-  --color-bar: #2c414c;
-  --color-love: #ff6a3d;
-  --color-success: #5fd0c0;
+  --color-canvas: #151c21;
+  --color-surface: #1f292f;
+  --color-raised: #1a272f;
+  --color-line: #3a4a54;
+  --color-shade: #0b1013;
+  --color-ink: #edf2f1;
+  --color-ink-muted: #a9b4b8;
+  --color-accent: #ff6537;
+  --color-on-accent: #151c21;
+  --color-teal: #86ccc9;
+  --color-on-teal: #151c21;
+  --color-peach: #f2a38a;
+  --color-love: #ff6537;
+  --color-success: #86ccc9;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -315,36 +288,36 @@
 /* Strength comes from --glass-hi / --glass-lo / --glass-edge (toned down in the dark theme, see above),
    per design-reference/components/GlassTabBar. */
 @utility glass {
-  background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / var(--glass-hi, 0.5)), rgb(255 255 255 / var(--glass-lo, 0.12))),
+    color-mix(in srgb, var(--color-surface) 28%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.9);
+  backdrop-filter: blur(22px) saturate(1.9);
+  border: 1px solid rgb(255 255 255 / var(--glass-edge, 0.75));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / var(--glass-edge, 0.75)),
+    inset 0 -10px 18px rgb(255 255 255 / var(--glass-lo, 0.12)),
+    0 18px 36px rgb(48 56 65 / 0.22),
+    0 2px 6px rgb(48 56 65 / 0.12);
 }
 
 /* Glossy teal pill under the active tab of the glass tab bar. */
 @utility tab-pill {
-  background-color: var(--color-accent);
-  border: 1.5px solid var(--color-line);
-  box-shadow: 0 2px 0 var(--color-shade);
-}
-
-/* Bottom tab bar: deep slate cel island, so it stands apart from the content above it. */
-@utility tab-bar {
-  background-color: var(--color-bar);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.38), rgb(255 255 255 / 0) 60%),
+    color-mix(in srgb, var(--color-teal) 92%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 6px 14px color-mix(in srgb, var(--color-teal) 45%, transparent);
 }
 
 /* Dark frost for badges, chips and icon buttons sitting on a place photo. */
 @utility glass-photo {
-  background-color: var(--color-surface);
-  color: var(--color-ink);
-  border: 1.5px solid var(--color-line);
-  box-shadow: 0 2px 0 var(--color-shade);
-}
-
-/* Cel outline for big white type on photos: hard offset shadow, no blur. */
-@utility ink-pop {
-  text-shadow: 0 2px 0 rgb(0 0 0 / 0.7), 0 0 1px rgb(0 0 0 / 0.8);
+  background-color: rgb(34 40 46 / 0.45);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border: 1.5px solid rgb(255 255 255 / 0.35);
 }
 
 /* Safe-area padding (iPhone notch / home bar). Never less than 1rem. */
@@ -390,19 +363,9 @@
   }
 }
 
-/* Text sitting straight on the animated background: a canvas-coloured halo so dots/rings fade out right
-   at the letters instead of cutting through them. Use on headings and notes that aren't inside a card. */
-@utility halo {
-  text-shadow:
-    0 0 1px var(--color-canvas),
-    0 0 3px var(--color-canvas),
-    0 0 8px var(--color-canvas),
-    0 0 14px var(--color-canvas);
-}
-
 /* Animated backgrounds (components/ui/AppBackground.jsx). Decorative only; motion stops under reduced motion. */
 @keyframes sq-bg-pulse { 0%, 100% { opacity: var(--lo, 0.1); } 50% { opacity: var(--hi, 0.6); } }
-@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.45; } to { transform: scale(1.7); opacity: 0; } }
+@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.7; } to { transform: scale(1.7); opacity: 0; } }
 .sq-bg-pulse { animation: sq-bg-pulse 3s ease-in-out infinite; }
 .sq-bg-ring { transform-box: fill-box; transform-origin: center; animation: sq-bg-ring 6s ease-out infinite; }
 @media (prefers-reduced-motion: reduce) {

@@ -71,7 +71,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
       aria-labelledby={titleId}
       inert={leaving || undefined}
       className={cn(
-        "relative isolate h-full overflow-hidden rounded-card border-2 border-line bg-ink shadow-cel",
+        "relative isolate h-full overflow-hidden rounded-card border-[1.5px] border-line bg-ink shadow-cel",
         leaving && "pointer-events-none motion-safe:animate-skip-out",
         className,
       )}
@@ -144,7 +144,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
         {/* Bottom: what · when · who, caption, actions */}
         <div className="space-y-3 text-white">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal tabular-nums shadow-[0_2px_0_var(--color-shade)]">
+            <p className="glass-photo inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-bold tabular-nums">
               <Icon name="clock" cel strokeWidth={1.9} className="size-[18px]" />
               {formatSlot(slot.start, slot.end)}
             </p>
@@ -152,7 +152,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
           </div>
 
           <div>
-            <h2 id={titleId} className="ink-pop line-clamp-2 font-display text-[2rem] leading-[0.95] font-extrabold break-words">
+            <h2 id={titleId} className="line-clamp-2 font-display text-[2rem] leading-[0.95] font-extrabold break-words">
               {place.name}
             </h2>
             <p className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-white/85">

@@ -32,10 +32,10 @@ const CREDITS = [
 function DataCredits() {
   return (
     <section aria-labelledby="you-about" className="space-y-1.5 border-t-[1.5px] border-line/15 pt-4">
-      <h2 id="you-about" className="halo text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id="you-about" className="text-sm font-bold tracking-wide text-ink-muted uppercase">
         About
       </h2>
-      <p className="halo text-xs leading-relaxed text-ink-muted">
+      <p className="text-xs leading-relaxed text-ink-muted">
         Data:{" "}
         {CREDITS.map((c, i) => (
           <span key={c.href}>
@@ -176,8 +176,8 @@ export function YouScreen() {
           <Skeleton className="size-16 rounded-full" />
         )}
         <div className="min-w-0">
-          <h1 className="halo font-display text-3xl font-extrabold">You</h1>
-          <p className="halo truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
+          <h1 className="font-display text-3xl font-extrabold">You</h1>
+          <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
         </div>
       </div>
 
@@ -215,17 +215,17 @@ export function YouScreen() {
 
       <section aria-labelledby="you-interests" className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h2 id="you-interests" className="halo font-display text-xl font-extrabold">
+          <h2 id="you-interests" className="font-display text-xl font-extrabold">
             Interests
           </h2>
-          <span className="halo text-sm font-semibold text-ink-muted">{interests.size} selected</span>
+          <span className="text-sm font-semibold text-ink-muted">{interests.size} selected</span>
         </div>
         <InterestPicker selected={interests} onToggle={toggleInterest} />
       </section>
 
       <div className="space-y-2">
         {note && (
-          <p role="status" className={`halo text-center text-sm font-semibold ${note.className}`}>
+          <p role="status" className={`text-center text-sm font-semibold ${note.className}`}>
             {note.text}
           </p>
         )}
@@ -242,7 +242,7 @@ export function YouScreen() {
       </div>
 
       <section aria-labelledby="you-friends" className="space-y-3">
-        <h2 id="you-friends" className="halo font-display text-xl font-extrabold">
+        <h2 id="you-friends" className="font-display text-xl font-extrabold">
           Friends
         </h2>
         <PeopleList canRemove />

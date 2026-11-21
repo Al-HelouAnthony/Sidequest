@@ -18,7 +18,7 @@ export function FeedHeader({ onSearch }) {
         paddingTop: "env(safe-area-inset-top)",
       }}
     >
-      <h1 className="halo font-display text-2xl leading-none font-extrabold tracking-tight">
+      <h1 className="font-display text-2xl leading-none font-extrabold tracking-tight">
         Side<span className="text-accent">quest</span>
       </h1>
       {onSearch && (
