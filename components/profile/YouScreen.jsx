@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "@/components/onboarding/options";
 import { InterestPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
@@ -151,7 +152,9 @@ export function YouScreen() {
   }[status];
 
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
+    <>
+    <AppBackground />
+    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <div className="flex items-center gap-3">
         {me ? (
           <Avatar src={me.avatarUrl} name={me.name} size="xl" decorative />
@@ -233,5 +236,6 @@ export function YouScreen() {
 
       <TabBar active="/me" />
     </main>
+    </>
   );
 }

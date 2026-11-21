@@ -12,6 +12,8 @@ const VARIANTS = {
   secondary: "press bg-surface text-ink",
   /** Slate, for a strong selected state (e.g. the picked time slot). */
   dark: "press bg-ink text-canvas",
+  /** Deep slate in BOTH themes (dark doesn't flip to light like `dark`): serious / destructive actions. */
+  night: "press bg-on-accent text-white",
   /** No outline: low-priority actions ("Not now"). */
   ghost: cn("bg-transparent text-ink hover:bg-ink/5", pressable),
 };
@@ -49,7 +51,7 @@ function Spinner() {
 
 /**
  * @param {React.ButtonHTMLAttributes<HTMLButtonElement> & {
- *   variant?: "primary" | "secondary" | "dark" | "ghost",
+ *   variant?: "primary" | "secondary" | "dark" | "night" | "ghost",
  *   size?: "md" | "lg",
  *   fullWidth?: boolean,
  *   loading?: boolean,

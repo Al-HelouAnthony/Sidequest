@@ -24,27 +24,30 @@
  * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
 @theme {
-  /* Surfaces (light). The dark theme overrides these below. */
-  --color-canvas: #efe8dd; /* cream page */
-  --color-surface: #faf6f0; /* island fill */
-  --color-raised: #e2d9cb; /* sunken wells, skeletons, inactive */
-  --color-line: #303841; /* outlines */
-  --color-shade: #303841; /* hard drop shadows */
+  /* Palette "Ocean Mono" (light). The dark theme overrides these below. */
+  /* Surfaces */
+  --color-canvas: #eef3f2; /* page */
+  --color-surface: #fcfefe; /* island fill */
+  --color-raised: #dce5e5; /* sunken wells, skeletons, inactive */
+  --color-line: #181f24; /* outlines */
+  --color-shade: #181f24; /* hard drop shadows */
 
-  /* Text: ink-muted passes 4.5:1 on canvas and surface in both themes */
-  --color-ink: #303841;
-  --color-ink-muted: #5c656e;
+  /* Text: ink ≥ 13:1 and ink-muted ≥ 6:1 on canvas and surface in both themes */
+  --color-ink: #181f24;
+  --color-ink-muted: #525d62;
 
   /* Brand */
-  --color-accent: #ff5722; /* orange: the main action on every screen */
-  --color-on-accent: #22282e;
-  --color-teal: #76abae; /* selected, confirmed, "free now" */
-  --color-on-teal: #22282e;
-  --color-peach: #ffb199; /* soft tint for illustrations and avatars */
+  --color-accent: #ff6633; /* orange: the main action on every screen */
+  --color-on-accent: #181f24;
+  --color-teal: #4fc3b3; /* selected, confirmed, "free now" */
+  --color-on-teal: #181f24;
+  --color-peach: #ffb39c;
+  --color-bar: #1f2a31; /* bottom tab bar island */
+  --color-on-bar: #edf2f1; /* soft tint for illustrations and avatars */
 
   /* Meaning */
-  --color-love: #ff5722;
-  --color-success: #76abae;
+  --color-love: #ff6633;
+  --color-success: #4fc3b3;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -88,6 +91,7 @@
   --animate-shine: shine 2.8s ease-in-out 0.6s infinite;
   --animate-knob-hint: knob-hint 2.8s cubic-bezier(0.3, 1.4, 0.5, 1) 0.6s infinite;
   --animate-tick-on: tick-on 380ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  --animate-spark: spark 700ms cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -176,7 +180,7 @@
     100% { transform: translate(var(--drift, 0px), 105vh) rotate(var(--spin, 360deg)); opacity: 0; }
   }
   @keyframes stripes {
-    to { background-position: 28px 0; }
+    to { background-position: 20px 0; }
   }
   @keyframes shine {
     0%, 55% { transform: translateX(-120%) skewX(-20deg); }
@@ -188,6 +192,11 @@
     80% { transform: translateX(2px); }
     88% { transform: translateX(8px); }
     95% { transform: translateX(0); }
+  }
+  @keyframes spark {
+    0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+    40% { transform: translate(calc(-50% + var(--sx, 0px)), calc(-50% + var(--sy, -8px))) scale(1.2); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--sx, 0px) * 2.4), calc(-50% + var(--sy, -8px) * 2.4)) scale(0.2); opacity: 0; }
   }
   @keyframes tick-on {
     0% { transform: scale(0.4); }
@@ -204,16 +213,16 @@
 /* SwipeToGo track: glossy, saturated orange. Colours derive from the accent token. */
 @utility swipe-rail {
   background-color: var(--color-accent);
-  background-image: repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.2) 0 7px, transparent 7px 14px);
-  background-size: 28px 28px;
+  background-image: repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.14) 0 7.071px, transparent 7.071px 14.142px);
+  background-size: 20px 20px;
   border: 2px solid var(--color-line);
 }
-/* Pulled-through strip: hot gradient from teal to sunny yellow, with its own stripes. */
+/* Pulled-through strip: hot gradient from ocean teal to sunny yellow, with its own stripes. */
 @utility swipe-heat {
   background-image:
-    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.28) 0 7px, transparent 7px 14px),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.3) 0 7.071px, transparent 7.071px 14.142px),
     linear-gradient(90deg, var(--color-teal), var(--color-warning));
-  background-size: 28px 28px, 100% 100%;
+  background-size: 20px 20px, 100% 100%;
 }
 /* Shatter pieces: same fill as the track. */
 @utility swipe-shard {
@@ -227,16 +236,24 @@
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Dark theme ("Slate classic" from the demo): system preference, or forced with data-theme="dark". */
+/* Dark theme ("Ocean Mono" dark): system preference, or forced with data-theme="dark". */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas: #303841;
-    --color-surface: #3b444e;
-    --color-raised: #252c33;
-    --color-line: #efe8dd;
-    --color-shade: #1a1f25;
-    --color-ink: #efe8dd;
-    --color-ink-muted: #b8bec3;
+    --color-canvas: #0f171c;
+    --color-surface: #22323b;
+    --color-raised: #1a262d;
+    --color-line: #04080a;
+    --color-shade: #000000;
+    --color-ink: #f2f6f5;
+    --color-ink-muted: #b3bec2;
+    --color-accent: #ff6a3d;
+    --color-on-accent: #10171b;
+    --color-teal: #5fd0c0;
+    --color-on-teal: #0f171c;
+    --color-peach: #ffab8f;
+    --color-bar: #2c414c;
+    --color-love: #ff6a3d;
+    --color-success: #5fd0c0;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -244,13 +261,21 @@
   }
 }
 :root[data-theme="dark"] {
-  --color-canvas: #303841;
-  --color-surface: #3b444e;
-  --color-raised: #252c33;
-  --color-line: #efe8dd;
-  --color-shade: #1a1f25;
-  --color-ink: #efe8dd;
-  --color-ink-muted: #b8bec3;
+  --color-canvas: #0f171c;
+  --color-surface: #22323b;
+  --color-raised: #1a262d;
+  --color-line: #04080a;
+  --color-shade: #000000;
+  --color-ink: #f2f6f5;
+  --color-ink-muted: #b3bec2;
+  --color-accent: #ff6a3d;
+  --color-on-accent: #10171b;
+  --color-teal: #5fd0c0;
+  --color-on-teal: #0f171c;
+  --color-peach: #ffab8f;
+  --color-bar: #2c414c;
+  --color-love: #ff6a3d;
+  --color-success: #5fd0c0;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -299,9 +324,16 @@
 
 /* Glossy teal pill under the active tab of the glass tab bar. */
 @utility tab-pill {
-  background-color: var(--color-teal);
+  background-color: var(--color-accent);
   border: 1.5px solid var(--color-line);
   box-shadow: 0 2px 0 var(--color-shade);
+}
+
+/* Bottom tab bar: deep slate cel island, so it stands apart from the content above it. */
+@utility tab-bar {
+  background-color: var(--color-bar);
+  border: 1.5px solid var(--color-line);
+  box-shadow: var(--shadow-cel);
 }
 
 /* Dark frost for badges, chips and icon buttons sitting on a place photo. */
@@ -358,4 +390,26 @@
     background-color: var(--color-accent);
     color: var(--color-on-accent);
   }
+}
+
+/* Text sitting straight on the animated background: a canvas-coloured halo so dots/rings fade out right
+   at the letters instead of cutting through them. Use on headings and notes that aren't inside a card. */
+@utility halo {
+  text-shadow:
+    0 0 1px var(--color-canvas),
+    0 0 3px var(--color-canvas),
+    0 0 8px var(--color-canvas),
+    0 0 14px var(--color-canvas);
+}
+
+/* Animated backgrounds (components/ui/AppBackground.jsx). Decorative only; motion stops under reduced motion. */
+@keyframes sq-bg-pulse { 0%, 100% { opacity: var(--lo, 0.1); } 50% { opacity: var(--hi, 0.6); } }
+@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.45; } to { transform: scale(1.7); opacity: 0; } }
+.sq-bg-pulse { animation: sq-bg-pulse 3s ease-in-out infinite; }
+.sq-bg-ring { transform-box: fill-box; transform-origin: center; animation: sq-bg-ring 6s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .sq-bg-pulse, .sq-bg-ring { animation: none; }
+  /* Without the animation the dots would sit at opacity 1: rest halfway between their low and high instead. */
+  .sq-bg-pulse { opacity: calc((var(--lo, 0.1) + var(--hi, 0.6)) / 2); }
+  .sq-bg-ring { opacity: 0.25; transform: scale(0.8); }
 }
