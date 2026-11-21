@@ -1,7 +1,8 @@
 "use client";
 /**
  * Onboarding (PLAN.md F9). Owner: Oscar. Four quick steps, clickable in ~20 s on stage:
- *   1. Calendar: status from the sign-in redirect (?calendar=synced|failed|skipped), retry via POST /api/calendar/sync
+ *   1. Calendar: status from the sign-in redirect (?calendar=synced|failed|skipped). Sync only happens at sign-in
+ *      (team decision), so failed/skipped offer "Sign in again" → /login?next=/onboarding, not a retry call.
  *   2. Neighbourhood: one of NEIGHBOURHOODS; only the id is sent (coords are looked up server-side)
  *   3. Interests: tags from PLAN.md §6.3, at least MIN_INTERESTS
  *   4. Friends: PeopleList (GET /api/users → POST /api/friends; falls back to GET /api/friends)
@@ -11,9 +12,10 @@
  * Must render inside <Suspense> (useSearchParams with cacheComponents).
  */
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CalendarSyncResponse, MeResponse } from "@/types/api";
-import { Button, IconButton } from "@/components/ui/Button";
+import { MeResponse } from "@/types/api";
+import { Button, IconButton, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
@@ -30,7 +32,10 @@ function safeNext(/** @type {string | null} */ next) {
 /** An endpoint that doesn't exist yet (teammate's PR not merged): treat as "skip", not as a failure. */
 const notLiveYet = (/** @type {number} */ status) => status === 404 || status === 405;
 
-/** @typedef {"synced" | "failed" | "skipped" | "sample" | "syncing"} CalendarState */
+/** @typedef {"synced" | "failed" | "skipped"} CalendarState */
+
+/** Calendar sync runs during Google sign-in only, so "try again" = sign in again (Anthony's callback). */
+const SIGN_IN_AGAIN = "/login?next=/onboarding";
 
 export function Onboarding() {
   const router = useRouter();
@@ -39,10 +44,8 @@ export function Onboarding() {
   const fromRedirect = params.get("calendar");
 
   const [step, setStep] = useState(0);
-  const [calendar, setCalendar] = useState(
-    /** @type {CalendarState} */ (fromRedirect === "synced" || fromRedirect === "failed" ? fromRedirect : "skipped"),
-  );
-  const [calendarNote, setCalendarNote] = useState(/** @type {string | null} */ (null));
+  /** @type {CalendarState} */
+  const calendar = fromRedirect === "synced" || fromRedirect === "failed" ? fromRedirect : "skipped";
   const [neighbourhoodId, setNeighbourhoodId] = useState(/** @type {string | null} */ (null));
   const [interests, setInterests] = useState(() => new Set(/** @type {string[]} */ ([])));
   const [saving, setSaving] = useState(false);
@@ -62,25 +65,6 @@ export function Onboarding() {
       .catch((e) => !ctrl.signal.aborted && console.warn("[onboarding] /api/me", e));
     return () => ctrl.abort();
   }, []);
-
-  const syncCalendar = async () => {
-    setCalendar("syncing");
-    setCalendarNote(null);
-    try {
-      const res = await fetch("/api/calendar/sync", { method: "POST" });
-      if (res.status === 501) {
-        setCalendar("sample");
-        return;
-      }
-      if (!res.ok) throw new Error(`sync ${res.status}`);
-      const { imported } = CalendarSyncResponse.parse(await res.json());
-      setCalendar("synced");
-      setCalendarNote(`Imported ${imported} busy ${imported === 1 ? "time" : "times"} for the next week.`);
-    } catch (e) {
-      console.error("[onboarding] calendar sync", e);
-      setCalendar("failed");
-    }
-  };
 
   const toggleInterest = (/** @type {string} */ id) =>
     setInterests((s) => {
@@ -110,7 +94,7 @@ export function Onboarding() {
   };
 
   const canContinue =
-    step === 0 ? calendar !== "syncing" : step === 1 ? Boolean(neighbourhoodId) : step === 2 ? interests.size >= MIN_INTERESTS : true;
+    step === 0 ? true : step === 1 ? Boolean(neighbourhoodId) : step === 2 ? interests.size >= MIN_INTERESTS : true;
   const isLast = step === STEPS.length - 1;
   const ctaLabel =
     step === 2 && interests.size < MIN_INTERESTS
@@ -152,7 +136,7 @@ export function Onboarding() {
       </div>
 
       <div key={step} className="flex flex-1 flex-col gap-4 motion-safe:animate-rise">
-        {step === 0 && <CalendarStep state={calendar} note={calendarNote} onSync={syncCalendar} />}
+        {step === 0 && <CalendarStep state={calendar} />}
         {step === 1 && <NeighbourhoodStep value={neighbourhoodId} onChange={setNeighbourhoodId} />}
         {step === 2 && <InterestsStep selected={interests} onToggle={toggleInterest} />}
         {step === 3 && <FriendsStep />}
@@ -189,15 +173,13 @@ function StepTitle({ title, body }) {
   );
 }
 
-/** @param {{ state: CalendarState, note: string | null, onSync: () => void }} props */
-function CalendarStep({ state, note, onSync }) {
+/** @param {{ state: CalendarState }} props */
+function CalendarStep({ state }) {
   const connected = state === "synced";
   const copy = {
-    synced: { title: "Calendar connected", body: "We'll only suggest times when you and your friends are actually free." },
-    failed: { title: "We couldn't read your calendar", body: "No worries: we'll use a sample schedule until it works." },
-    skipped: { title: "Connect your calendar", body: "So suggestions fit your real free time. Until then we use a sample schedule." },
-    sample: { title: "Using a sample schedule", body: "Calendar sync isn't available yet, so we'll use a typical student week for now." },
-    syncing: { title: "Reading your calendar…", body: "This takes a second." },
+    synced: { title: "Calendar connected ✓", body: "We'll only suggest times when you and your friends are actually free." },
+    failed: { title: "We couldn't read your calendar", body: "Sign in again to retry. Until then we use a sample schedule." },
+    skipped: { title: "Connect your calendar", body: "Sign in with Google so suggestions fit your real free time. Until then we use a sample schedule." },
   }[state];
 
   return (
@@ -213,16 +195,17 @@ function CalendarStep({ state, note, onSync }) {
             <Icon name="check" strokeWidth={3} className="size-14" />
           </span>
         ) : (
-          <Icon name="calendar" cel strokeWidth={1.6} className={cn("size-14", state === "syncing" && "motion-safe:animate-pulse")} />
+          <Icon name="calendar" cel strokeWidth={1.6} className="size-14" />
         )}
       </div>
       <div className="text-center" role="status">
-        <StepTitle title={connected ? "Calendar connected ✓" : copy.title} body={note ?? copy.body} />
+        <StepTitle title={copy.title} body={copy.body} />
       </div>
       {(state === "failed" || state === "skipped") && (
-        <Button variant="secondary" className="mx-auto" onClick={onSync} leadingIcon={<Icon name="refresh" strokeWidth={2.5} className="size-4" />}>
-          {state === "failed" ? "Try again" : "Connect calendar"}
-        </Button>
+        <Link href={SIGN_IN_AGAIN} className={buttonClasses({ variant: "secondary", className: "mx-auto" })}>
+          <Icon name="refresh" strokeWidth={2.5} className="size-4" />
+          {state === "failed" ? "Sign in again" : "Sign in with Google"}
+        </Link>
       )}
     </>
   );
