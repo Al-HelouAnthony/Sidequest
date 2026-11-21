@@ -472,7 +472,7 @@
         }
       ]
     },
-    "typicalDurationMin": 120,
+    "typicalDurationMin": 150,
     "indoor": true
   },
   {
@@ -873,7 +873,7 @@
         }
       ]
     },
-    "typicalDurationMin": 120,
+    "typicalDurationMin": 150,
     "indoor": true
   },
   {
@@ -1055,7 +1055,7 @@
         }
       ]
     },
-    "typicalDurationMin": 60,
+    "typicalDurationMin": 90,
     "indoor": false
   },
   {
@@ -1114,7 +1114,7 @@
         }
       ]
     },
-    "typicalDurationMin": 120,
+    "typicalDurationMin": 150,
     "indoor": true
   },
   {
@@ -3079,7 +3079,7 @@
         }
       ]
     },
-    "typicalDurationMin": 120,
+    "typicalDurationMin": 180,
     "indoor": true
   },
   {
@@ -3133,7 +3133,7 @@
         }
       ]
     },
-    "typicalDurationMin": 90,
+    "typicalDurationMin": 120,
     "indoor": true
   },
   {
@@ -3240,7 +3240,7 @@
         }
       ]
     },
-    "typicalDurationMin": 75,
+    "typicalDurationMin": 90,
     "indoor": true
   },
   {
