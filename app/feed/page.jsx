@@ -220,7 +220,7 @@ function Feed() {
   /** The swipe bar broke: open the invite sheet for this card. */
   const go = (/** @type {import("@/types/feed").FeedCardT} */ card) => setInviteCard(card);
 
-  /** Sheet dismissed without sending: put that card's swipe bar back. */
+  /** Close the invite sheet and put that card's swipe bar back. */
   const closeInvite = () => {
     if (inviteCard) {
       const id = inviteCard.id;
@@ -229,9 +229,14 @@ function Feed() {
     setInviteCard(null);
   };
 
-  /** Plan created: count it as a "go" for the engine (boosts that category), then open the plan. */
+  /**
+   * Plan created: count it as a "go" for the engine (boosts that category), close the sheet, open the plan.
+   * Closing first matters: Next keeps this page alive (hidden) after navigating, so a sheet left open
+   * would reopen on Back, and its modal would block taps on the plan page.
+   */
   const planCreated = (/** @type {import("@/types/api").PlanViewT} */ plan) => {
     if (inviteCard) sendInteraction(inviteCard, "go");
+    closeInvite();
     router.push(`/plans/${plan.id}`);
   };
 
