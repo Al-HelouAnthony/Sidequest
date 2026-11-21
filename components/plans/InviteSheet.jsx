@@ -49,6 +49,12 @@ export function InviteSheet({ card, onClose, onCreated }) {
         body: JSON.stringify({ placeId: place.id, start: slot.start, end: slot.end, inviteeIds: [...selected] }),
       });
       const json = await res.json().catch(() => ({}));
+      // 409 (Mhammad): someone ticked is busy at that time, e.g. "Maya isn't free then". Say who; nothing was sent.
+      if (res.status === 409) {
+        setError(`${json.error ?? "Someone isn't free then"}. Untick them to invite the others.`);
+        setSending(false);
+        return;
+      }
       if (!res.ok) throw new Error(json.error ?? `Couldn't send (${res.status})`);
       onCreated(PlanResponse.parse(json).plan);
     } catch (e) {
