@@ -94,5 +94,15 @@ export const UsersResponse = z.object({ users: z.array(UserListItem) });
 // ---- GET /api/me ----
 export const MeResponse = z.object({ user: User });
 
+// ---- PATCH /api/me (onboarding: neighbourhood + interests) → MeResponse ----
+export const UpdateMeRequest = z.object({
+  neighbourhoodId: z.string().optional(), // id from lib/neighbourhoods.js, e.g. "plateau"
+  interests: z.array(z.string()).optional(), // tags from lib/interests.js (checked by updateProfile)
+});
+/** @typedef {z.infer<typeof UpdateMeRequest>} UpdateMeRequestT */
+
+// ---- POST /api/friends { friendId } → { ok: true } ----
+export const OkResponse = z.object({ ok: z.literal(true) });
+
 // ---- POST /api/calendar/sync ----
 export const CalendarSyncResponse = z.object({ imported: z.number().int().nonnegative() });
