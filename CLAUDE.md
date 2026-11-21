@@ -24,3 +24,10 @@ The team chose plain JavaScript (`.js` / `.jsx`). This overrides the "TypeScript
 - Secrets stay server-side. Never commit `.env.local`.
 - Run `npm run build` before saying something works.
 - Use the matching skill in `.claude/skills/` for each task.
+
+## Team sync points (PLAN.md §6.6), stop and tell the person every time
+- **CHECK:** before building on a fact owned by a teammate, say who to ask and the exact question. Don't guess their answer.
+- **APPROVE:** before merging a change to a contract (`types/*`), a shared file, or a product rule another person relies on, say who must 👍 it.
+- **COMMIT + NOTIFY:** as soon as the person finishes something a teammate needs, tell them to commit + push + merge, and write the ready-to-paste notify message (template in PLAN.md §6.6) naming who must pull and what they should change.
+- Anthony's per-part sync points are listed in `docs/engine-parts.md`. Follow that table when helping him.
+- Commits: author is the teammate. **Never add a Claude `Co-Authored-By` line** (team decision).

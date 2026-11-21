@@ -130,6 +130,8 @@ Each task has a **Done when** check. Don't call it done until you've actually ru
 
 ### 6.1 Anthony: Engine, part A (`feature/feed-engine`)
 
+> **Detailed breakdown:** [docs/engine-parts.md](docs/engine-parts.md) splits this section into 15 small parts (Part 0–14), each with its own tests and a table of **what Anthony will ask you, and when**. Mhammad, Adel and Oscar: skim the "Per-part sync points" table there so you know what's coming your way.
+
 **Mission:** turn (users, busy blocks, places, weather, travel times, tag weights) into a ranked, diversified `FeedCard[]`. Pure functions in `lib/engine/`, unit-tested, all numbers from `config.js`.
 **You consume:** `lib/data/*` (mocks now, real later), `timingScore()` from Mhammad, `captionCards()` from Mhammad.
 **You produce:** `GET /api/feed` → `FeedResponse`, `POST /api/interactions`.
@@ -230,6 +232,23 @@ Done **last** on purpose. The demo already works without it (§1). Goal: make it
 | S4 | **Google login** with Supabase Auth (Google provider configured with Anthony's OAuth client; redirect URLs for localhost + Vercel). `/login` page, `app/auth/callback/route.js` (exchange code for session), session refresh in `proxy.js` (Next 16 renamed middleware to *proxy*; read `node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md`). `getSessionUserId()`: Supabase user first, demo cookie as fallback when `DEMO_MODE=true`. On first login, insert a `users` row. | Anthony + Mhammad | `app/(auth)/login/`, `app/auth/callback/`, `proxy.js`, `lib/auth.js` | Demo user signs in with Google on the live URL; friends still use login-as. |
 | S5 | **Calendar sync.** Request the Calendar read-only scope at sign-in (verify the exact scope string in Google's docs). The Google `provider_token` is only available right after the callback, so **sync busy times during the callback**: call Google Calendar `freeBusy` for the next 7 days and write `busy_blocks` with `source='google'`. `/api/calendar/sync` re-syncs if a token is still available, else 501. | Anthony | `lib/calendar/google.js`, `app/api/calendar/sync/route.js` | Demo user's real events block out feed slots. **Cut if it fights back; seeded schedules are fine.** |
 | S6 | **Add to calendar on confirm** (stretch): `.ics` download link on the confirmed plan screen. | Mhammad | — | Stretch only. |
+
+---
+
+## 6.6 Team sync protocol (everyone)
+
+When your work touches someone else's, there are three kinds of sync point. Claude is told (in CLAUDE.md) to **stop and tell you** at each one:
+
+| Type | When | What you do |
+|---|---|---|
+| **CHECK** | You need a fact from a teammate that could change your code | Ask them in the team chat *before* building on an assumption |
+| **APPROVE** | Your decision affects someone else (contract, shared file, product rule) | Get a 👍 in the chat *before* merging |
+| **COMMIT + NOTIFY** | You produced something a teammate depends on | Commit → push → merge the PR → post the message below |
+
+**Notify message template:**
+> `[<area>] <what> is on main (PR #n). @<who>: <what to change on your side>. Contract: <file / signature>. Questions → reply here.`
+
+**Always:** pull `main` before starting a task · commit and push at least hourly · any change to `types/*` needs 👍 from every consumer before merging · if `npm test` fails because of your change, stop and tell the team.
 
 ---
 
