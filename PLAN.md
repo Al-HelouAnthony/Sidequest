@@ -1,8 +1,25 @@
 # PLAN: Sidequest @ CodeJam 16
 
+> ## ✅ Status (Sat Nov 21, ~3 PM): the original plan is COMPLETE
+> Everything in §1–§11 below is built, tested together and merged. **Live:** https://sidequest-two-smoky.vercel.app (final checkpoint `9981fb1`).
+> **New work for tonight is in [§12: New tasks (N1–N5)](#12-new-tasks-for-tonight-n1n5).** Start there.
+
 > **Read this first.** It tells you what you own, what you can rely on from others, and what "done" means.
 > Product, schema and API details live in [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md). This file is *who does what, when*.
 > If something here is unclear, fix this file (small PR) instead of asking in DMs, so everyone sees the answer.
+
+---
+
+## 0. Status: what's done
+
+| Person | Done (tested together at the checkpoints) | Owner: please confirm |
+|---|---|---|
+| **Anthony** | A1–A9: feed engine (time grid, hard rules, 7-factor scoring, variety, swipe learning), search filters, Claude captions (with Vercel fix), demo tuning. S4 Google login, S5 Google Calendar sync (live: real timetables). First-time redirect + login protection. `docs/engine.md`, `docs/demo.md`. Vercel deploy | — |
+| **Mhammad** | B1 timing score, B2–B3 Claude client + captions, B4–B5 search (**plain code word lists, not Claude**). S1 plans in Supabase, S2 live updates (Broadcast, < 1 s), S3 friends API + `/api/users` (real vs demo split), 409 for busy invitees | — |
+| **Adel** | D1–D3 schema + RLS + 60 places, D5–D8 weather, travel times, seed/reset route, Supabase data layer. `ensureUser`, `replaceBusyBlocks`, `updateProfile`, `addFriendship`, neighbourhoods, interest tags | D4 real photos? · D9 Devpost draft? |
+| **Oscar** | F1–F9: design system, feed + skip/save animations, Why sheet, invite sheet, plan screen, invite banner, My Plans, onboarding, You screen, tab bar, place/weather sheets, PWA | F10 search bar? · F11 polish? |
+
+Verified at C4.5 / final: 345 tests, 0 calendar conflicts across all 4 real accounts, invites + RSVPs live in < 1 s.
 
 ---
 
@@ -307,6 +324,63 @@ When your work touches someone else's, there are three kinds of sync point. Clau
 
 ## 11. Still open
 
-- [ ] Exact challenge descriptions and prize structure (ask organizers Friday night). Confirm "Touch Grass" / "People First" / "Agent Solution" fit.
-- [ ] Which real Google account is the demo user?
+- [ ] Exact challenge descriptions and prize structure (ask organizers Friday night). Confirm "Touch Grass" / "People First" / "Agent Solution" fit. *(Note: Claude is now used only for captions, so "Agent Solution" is a weak fit; focus Touch Grass + People First.)*
+- [x] Which real Google account is the demo user? → real accounts for all 4 of us (backup: anthonythehelou@gmail.com → Sam)
 - [ ] App name: keep "Sidequest"?
+
+---
+
+## 12. New tasks for tonight (N1–N5)
+
+> These are **new** (added Sat ~3 PM after using the live app), not leftovers. **Order: N5 → N2 → N3 → N1 → N4 (if time).**
+> **C5 checkpoint: trial merge + full test at ~11 PM**, then merge, then **feature freeze at 1 AM**.
+> Every contract change (`types/*`) still needs a 👍 from its consumers first (§6.6).
+
+### N5: Per-person travel times from postal codes (bug fix, do FIRST, ~1 h)
+**Problem:** the postal-code home never saves. `updateProfile`'s input schema is `.strict()` without `home` (`lib/data/index.js` ~271), so `PATCH /api/me {postalCode}` returns 400. No screen sends a postal code yet; the `HOME_AREA` check doesn't exist; mock `getTravelTimes` ignores edited homes (uses `mockUsers`, not `allMockUsers()`, ~172). Result: all 4 of us are "Downtown", with near-identical travel times.
+
+| Owner | Task | Done when |
+|---|---|---|
+| **Adel** | `updateProfile` accepts a server-only `home {lat, lng}` (the route passes it, never the client body); add a `HOME_AREA` check (Greater-Montréal bounding box → 400 outside); recompute that user's travel times (existing `recomputeTravelTimes`, `lib/data/db.js` ~134); fix mock `getTravelTimes` to use `allMockUsers()` | Un-mocked test: PATCH `{postalCode: "H2T 1S6"}` → home saved + 60 travel rows recomputed |
+| **Mhammad** | Merge `cc2c5c6` (Québec codes); add a route test that does NOT mock `updateProfile` | Test passes end to end |
+| **Oscar** | Postal-code field in onboarding + You screen (neighbourhood stays as fallback); show the 400 message | Entering a code updates the You screen |
+| **Everyone** | Enter your real postal code | — |
+| **Anthony** | Audit the 4 feeds: different per-person travel on cards, fairness varies, still 0 conflicts | Audit shows different travel times |
+
+### N2: Variety on every visit (weighted shuffle, Anthony, ~45 min)
+**Problem:** ranking is fully deterministic, so every visit shows the same cards in the same order.
+- `GET /api/feed?seed=<n>`: the feed picks a **random seed per visit** and reuses it for every page of that session (pages stay consistent).
+- Engine: before variety, add a small seeded jitter to each score (`ENGINE.shuffleJitter`, ~±0.08). Close scores reshuffle per visit; the best stay near the top; hard rules untouched.
+- Places shown in your last sessions drop a little: the client sends recently-seen place ids (localStorage, last ~30) as `seen=`; scoring applies a small penalty.
+- **Contract:** `FeedQuery` gets `seed?`, `seen?` → 👍 Oscar + Mhammad (search uses `buildFeed`). **Oscar:** generate the seed + send `seen`.
+- **Done when:** same seed → same order; different seeds → different top-10 orders; the top 3 stay within the best ~6; all existing tests pass.
+
+### N3: Endless feed, prefetched (Anthony server + Oscar client, ~1.5 h)
+**Problem:** the next page loads only when card 9 of 10 is visible (no prefetch), and the feed just stops after one card per place (~57 cards).
+- **Server (Anthony):** cursor becomes `pass:offset`. Pass 1 = best slot per place (today). Pass 2 = each place's **other** good time (another day). Pass 3+ = loop, reshuffled with `seed + pass`. Only empty when there are truly 0 places. Loop cards get the pass in their id (`${placeId}:${slot}:${pass}`) → contract note on `FeedCard.id` → 👍 Oscar.
+- **Client (Oscar):** fetch the next page as soon as card ~5 of the current page is visible (sentinel at `cards.length - 5`), preload its photos (`new Image().src`), never show a dead end, keep dedupe by id.
+- **Done when:** scrolling 40+ cards never waits on a skeleton on normal Wi-Fi, and never ends.
+
+### N1: Cuisine search over the whole business list (Adel + Mhammad + Anthony + Oscar, ~2–3 h)
+**Problem:** "indian food" → all 11 curated restaurants (none Indian). The full list (`public.businesses`, ~55k health-registry rows) has only name, address, lat/lng, French type and status: **no cuisine, hours, price or photo**. Cuisine can only be guessed from names.
+
+| Owner | Task |
+|---|---|
+| **Adel** | `lib/cuisines.js` (pure data, client-safe): cuisine → name keywords (indian: indien/indienne/tandoori/curry/masala/punjab/biryani…; ~15 cuisines). `searchRegistry({ cuisine, near: {lat, lng}, radiusKm: 6, limit: 40 })` in `lib/data`: open (`statut = 'Ouvert'`) `Restaurant*` rows with lat/lng whose name matches the keywords (exclude Épicerie etc.) → Place objects: deterministic UUID from `business_id`, `category: "restaurant"`, `tags: [cuisine]`, **assumed hours 11:30–22:00 daily**, `typicalDurationMin: 60`, `indoor: true`, `priceLevel: 2`, placeholder photo, `source: "registry"`, `hoursVerified: false`. Also tag curated places with their cuisine. `ensurePlaceFromRegistry(place)` upserts into `places` when a plan is created (plans need a real place row). |
+| **Mhammad** | `parseSearch`: cuisine words → `filters.cuisine` (from `lib/cuisines.js`), summary "Indian"; `/api/search` adds registry places to the engine context when `cuisine` is set. |
+| **Anthony** | `FeedFilters.cuisine` → the engine keeps only places tagged with that cuisine; registry places get straight-line travel estimates ("~"); `hoursVerified: false` passes through to the card. **Contract:** `FeedFilters.cuisine`, optional `Place.source` / `hoursVerified` → 👍 everyone. |
+| **Oscar** | Card badge **"Hours not verified · call ahead"** when `hoursVerified === false`. |
+
+**Done when:** "indian food tonight" returns only Indian places (curated or registry), each with real friends and time slots, unverified ones clearly labelled; "pizza" → only pizza places.
+
+### N4: Book-it assistant (PLANNED now; build only after N5/N2/N3/N1 are merged)
+On a **confirmed** plan, the organizer taps **Book it**:
+- **Data (Adel):** places get optional `phone`, `website`, `bookingUrl`, `bookingType` (`online | phone | walk-in`), filled in for the 60 curated places. Registry places → unknown → "walk-in / search the name".
+- **API (Mhammad):** `POST /api/plans/[id]/booking` (creator only, confirmed only) → checks the place is open for the whole slot (reuse Anthony's hours check: export `isOpenDuring(place, startIso, endIso)` from `lib/engine/candidates.js`) and party size = members "in" → returns a pre-filled message ("Table for 3, Sun 17:30, under Anthony") and stores `booking_status: requested` on the plan (new column + migration).
+- **UI (Oscar):** a button on the plan screen after the RSVP block (creator + confirmed only) → sheet with party size, time, **Open booking page / Call / Copy message**, then **Mark as requested** → the plan shows "Reservation requested".
+- No fake real reservations: honest on stage. **Contract:** Place fields + `PlanView` booking → 👍 everyone.
+
+### If we're behind (cut in this order)
+1. N4 → keep as documented post-hackathon work.
+2. N1 registry part → keep cuisine tags on the curated places only.
+3. N3 loop passes → keep the early prefetch.
