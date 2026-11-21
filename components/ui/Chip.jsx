@@ -10,7 +10,7 @@ import { Icon } from "./Icon";
 const TONES = {
   default: "border-[1.5px] border-line bg-surface text-ink",
   /** Frosted, for chips on top of a photo. */
-  glass: "glass-photo text-white",
+  glass: "glass-photo",
 };
 
 /**

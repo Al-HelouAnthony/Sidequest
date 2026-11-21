@@ -407,7 +407,7 @@ export function SwipeToGo({
             height: KNOB,
             transform:
               phase === "drag" ? `scale(${(1.03 + x * 0.04 + tension * 0.03).toFixed(3)})` : undefined,
-            boxShadow: `0 2px 0 color-mix(in srgb, var(--color-on-accent), black 25%), 0 4px 10px rgb(0 0 0 / 0.25), 0 0 0 ${(x * 3).toFixed(1)}px rgb(255 255 255 / 0.4)`,
+            boxShadow: `0 3px 0 var(--color-shade), 0 0 0 ${(x * 3).toFixed(1)}px rgb(255 255 255 / 0.4)`,
           }}
         >
           {phase === "done" ? (

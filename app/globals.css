@@ -39,7 +39,7 @@
   /* Brand */
   --color-accent: #ff6633; /* orange: the main action on every screen */
   --color-on-accent: #181f24;
-  --color-teal: #8fc1b5; /* selected, confirmed, "free now" */
+  --color-teal: #4fc3b3; /* selected, confirmed, "free now" */
   --color-on-teal: #181f24;
   --color-peach: #ffb39c;
   --color-bar: #1f2a31; /* bottom tab bar island */
@@ -47,7 +47,7 @@
 
   /* Meaning */
   --color-love: #ff6633;
-  --color-success: #8fc1b5;
+  --color-success: #4fc3b3;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -200,22 +200,21 @@
 /* Dark theme ("Ocean Mono" dark): system preference, or forced with data-theme="dark". */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas: #151c21;
-    --color-surface: #1f292f;
-    --color-raised: #1a272f;
-    --color-line: #3a4a54;
-    --color-shade: #0b1013;
-    --color-ink: #edf2f1;
-    --color-ink-muted: #a9b4b8;
+    --color-canvas: #0f171c;
+    --color-surface: #22323b;
+    --color-raised: #1a262d;
+    --color-line: #04080a;
+    --color-shade: #000000;
+    --color-ink: #f2f6f5;
+    --color-ink-muted: #b3bec2;
     --color-accent: #ff6a3d;
-    --color-on-accent: #151c21;
-    --color-teal: #93c7bb;
-    --color-on-teal: #151c21;
-    --color-peach: #f2a38a;
-  --color-bar: #2a3a43;
-    --color-bar: #2a3a43;
+    --color-on-accent: #10171b;
+    --color-teal: #5fd0c0;
+    --color-on-teal: #0f171c;
+    --color-peach: #ffab8f;
+    --color-bar: #2c414c;
     --color-love: #ff6a3d;
-    --color-success: #93c7bb;
+    --color-success: #5fd0c0;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -223,20 +222,21 @@
   }
 }
 :root[data-theme="dark"] {
-  --color-canvas: #151c21;
-  --color-surface: #1f292f;
-  --color-raised: #1a272f;
-  --color-line: #3a4a54;
-  --color-shade: #0b1013;
-  --color-ink: #edf2f1;
-  --color-ink-muted: #a9b4b8;
+  --color-canvas: #0f171c;
+  --color-surface: #22323b;
+  --color-raised: #1a262d;
+  --color-line: #04080a;
+  --color-shade: #000000;
+  --color-ink: #f2f6f5;
+  --color-ink-muted: #b3bec2;
   --color-accent: #ff6a3d;
-  --color-on-accent: #151c21;
-  --color-teal: #93c7bb;
-  --color-on-teal: #151c21;
-  --color-peach: #f2a38a;
+  --color-on-accent: #10171b;
+  --color-teal: #5fd0c0;
+  --color-on-teal: #0f171c;
+  --color-peach: #ffab8f;
+  --color-bar: #2c414c;
   --color-love: #ff6a3d;
-  --color-success: #93c7bb;
+  --color-success: #5fd0c0;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -299,10 +299,15 @@
 
 /* Dark frost for badges, chips and icon buttons sitting on a place photo. */
 @utility glass-photo {
-  background-color: rgb(21 28 33 / 0.78);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border: 1.5px solid rgb(255 255 255 / 0.16);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-line);
+  box-shadow: 0 2px 0 var(--color-shade);
+}
+
+/* Cel outline for big white type on photos: hard offset shadow, no blur. */
+@utility ink-pop {
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.7), 0 0 1px rgb(0 0 0 / 0.8);
 }
 
 /* Safe-area padding (iPhone notch / home bar). Never less than 1rem. */
