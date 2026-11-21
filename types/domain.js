@@ -47,6 +47,10 @@ export const Place = z.object({
   hours: OpeningHours,
   typicalDurationMin: z.number().int().positive(),
   indoor: z.boolean(),
+  /** N1: where the place comes from. Missing = "curated" (data/places.json). "registry" = city health registry. */
+  source: z.enum(["curated", "registry"]).optional(),
+  /** N1: false = opening hours are ASSUMED (registry places, 11:30–22:00). Missing = verified. */
+  hoursVerified: z.boolean().optional(),
 });
 /** @typedef {z.infer<typeof Place>} PlaceT */
 

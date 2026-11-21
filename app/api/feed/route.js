@@ -45,7 +45,7 @@ export async function GET(request) {
   if (!visit.success) return jsonError(400, "Invalid seed/seen");
   const { seed, seen } = visit.data;
 
-  const ctx = await loadContext(userId, nowLocal());
+  const ctx = await loadContext(userId, nowLocal(), { cuisine: filters.cuisine });
   if (!ctx) return jsonError(404, "User not found");
 
   const debug = params.get("debug") === "1";

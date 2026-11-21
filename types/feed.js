@@ -41,6 +41,10 @@ export const FeedCard = z.object({
     lng: z.number(),
     address: z.string(),
     tags: z.array(z.string()),
+    /** N1: copied from Place. "registry" places have assumed hours. */
+    source: z.enum(["curated", "registry"]).optional(),
+    /** N1: false → show "Hours not verified · call ahead". Missing = verified. */
+    hoursVerified: z.boolean().optional(),
   }),
   /** The suggested visit window (ISO UTC), already trimmed to the place's typical duration. */
   slot: z.object({ start: IsoDateTime, end: IsoDateTime }),
@@ -69,5 +73,10 @@ export const FeedFilters = z.object({
   priceMax: PriceLevel.optional(),
   categories: z.array(Category).optional(),
   indoorOnly: z.boolean().optional(),
+  /**
+   * N1: a cuisine id from lib/cuisines.js (e.g. "indian", "pizza"). Only places tagged with it are kept,
+   * and registry restaurants of that cuisine near the user are added (hours not verified).
+   */
+  cuisine: z.string().regex(/^[a-z-]{2,30}$/).optional(),
 });
 /** @typedef {z.infer<typeof FeedFilters>} FeedFiltersT */
