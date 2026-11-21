@@ -54,7 +54,7 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
   const hint = error ?? (invalid ? "Format: H2T 1S6 (or just H2T)" : null);
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="halo block text-sm font-bold">
+      <label htmlFor={id} className="block text-sm font-bold">
         Postal code
       </label>
       <span
@@ -93,7 +93,7 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
       <p
         id={`${id}-help`}
         role={error ? "alert" : undefined}
-        className={cn("halo text-sm", error ? "font-semibold text-danger" : "text-ink-muted")}
+        className={cn("text-sm", error ? "font-semibold text-danger" : "text-ink-muted")}
       >
         {hint ?? "Only the first 3 characters are kept, so your exact address is never stored."}
       </p>

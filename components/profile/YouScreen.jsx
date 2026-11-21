@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
-import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS, NEIGHBOURHOODS } from "@/components/onboarding/options";
 import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
@@ -166,9 +165,7 @@ export function YouScreen() {
   }[status];
 
   return (
-    <>
-    <AppBackground variant="radar" />
-    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
+    <main className="mx-auto min-h-dvh w-full max-w-md space-y-6 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <div className="flex items-center gap-3">
         {me ? (
           <Avatar src={me.avatarUrl} name={me.name} size="xl" decorative />
@@ -198,18 +195,18 @@ export function YouScreen() {
 
       <section aria-labelledby="you-area" className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 id="you-area" className="halo font-display text-xl font-extrabold">
+          <h2 id="you-area" className="font-display text-xl font-extrabold">
             Home
           </h2>
           {savedArea && (
-            <span className="halo inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-ink-muted motion-safe:animate-pop">
               <Icon name="check" strokeWidth={3} className="size-4 text-teal" />
               Home set to {savedArea}
             </span>
           )}
         </div>
         <PostalCodeField id="you-postal" value={postal} onChange={typePostal} error={postalError} />
-        <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
+        <p className="pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
         <NeighbourhoodPicker value={neighbourhoodId} onChange={pickNeighbourhood} />
       </section>
 
@@ -252,6 +249,5 @@ export function YouScreen() {
 
       <TabBar active="/me" />
     </main>
-    </>
   );
 }

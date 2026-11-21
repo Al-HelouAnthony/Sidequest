@@ -19,7 +19,6 @@ import { Button, IconButton, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/components/ui/classes";
-import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "./options";
 import { InterestPicker, NeighbourhoodPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "./pickers";
 
@@ -124,9 +123,7 @@ export function Onboarding() {
           : "Continue";
 
   return (
-    <>
-    <AppBackground />
-    <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-4 pt-safe pb-safe">
       {/* Progress */}
       <div className="flex items-center gap-3">
         {step > 0 ? (
@@ -191,7 +188,6 @@ export function Onboarding() {
         </Button>
       </div>
     </main>
-    </>
   );
 }
 
@@ -251,7 +247,7 @@ function NeighbourhoodStep({ value, onChange, postal, onPostal, postalError }) {
     <>
       <StepTitle title="Where do you live?" body="Your postal code gives everyone their real travel times." />
       <PostalCodeField value={postal} onChange={onPostal} error={postalError} />
-      <p className="halo pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
+      <p className="pt-1 text-sm font-bold text-ink-muted">Or pick your area</p>
       <NeighbourhoodPicker value={value} onChange={onChange} />
     </>
   );
@@ -285,14 +281,11 @@ function FriendsStep() {
 /** Suspense fallback for /onboarding. */
 export function OnboardingLoading() {
   return (
-    <>
-    <AppBackground />
-    <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
+    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
       <span className="sr-only">Loading…</span>
       <Skeleton className="h-11 rounded-full" />
       <Skeleton className="mx-auto mt-4 size-28 rounded-full" />
       <Skeleton className="h-20 rounded-tile" />
     </main>
-    </>
   );
 }

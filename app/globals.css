@@ -24,28 +24,27 @@
  * Swipe bar: swipe-rail (glossy orange track), swipe-shard (same fill, for the shatter pieces).
  */
 @theme {
-  /* Palette "Ocean Mono" (light). The dark theme overrides these below. */
-  /* Surfaces */
-  --color-canvas: #eef3f2; /* page */
-  --color-surface: #fcfefe; /* island fill */
-  --color-raised: #dce5e5; /* sunken wells, skeletons, inactive */
-  --color-line: #181f24; /* outlines */
-  --color-shade: #181f24; /* hard drop shadows */
+  /* Surfaces (light). The dark theme overrides these below. */
+  --color-canvas: #efe8dd; /* cream page */
+  --color-surface: #faf6f0; /* island fill */
+  --color-raised: #e2d9cb; /* sunken wells, skeletons, inactive */
+  --color-line: #303841; /* outlines */
+  --color-shade: #303841; /* hard drop shadows */
 
-  /* Text: ink ≥ 13:1 and ink-muted ≥ 6:1 on canvas and surface in both themes */
-  --color-ink: #181f24;
-  --color-ink-muted: #525d62;
+  /* Text: ink-muted passes 4.5:1 on canvas and surface in both themes */
+  --color-ink: #303841;
+  --color-ink-muted: #5c656e;
 
   /* Brand */
-  --color-accent: #ff6333; /* orange: the main action on every screen */
-  --color-on-accent: #181f24;
-  --color-teal: #67b3b0; /* selected, confirmed, "free now" */
-  --color-on-teal: #181f24;
-  --color-peach: #ffb39c; /* soft tint for illustrations and avatars */
+  --color-accent: #ff5722; /* orange: the main action on every screen */
+  --color-on-accent: #22282e;
+  --color-teal: #76abae; /* selected, confirmed, "free now" */
+  --color-on-teal: #22282e;
+  --color-peach: #ffb199; /* soft tint for illustrations and avatars */
 
   /* Meaning */
-  --color-love: #ff6333;
-  --color-success: #67b3b0;
+  --color-love: #ff5722;
+  --color-success: #76abae;
   --color-warning: #f2a93b;
   --color-danger: #d9432b;
 
@@ -209,23 +208,16 @@
   --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Dark theme ("Ocean Mono" dark): system preference, or forced with data-theme="dark". */
+/* Dark theme ("Slate classic" from the demo): system preference, or forced with data-theme="dark". */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas: #151c21;
-    --color-surface: #1f292f;
-    --color-raised: #1a272f;
-    --color-line: #3a4a54;
-    --color-shade: #0b1013;
-    --color-ink: #edf2f1;
-    --color-ink-muted: #a9b4b8;
-    --color-accent: #ff6537;
-    --color-on-accent: #151c21;
-    --color-teal: #86ccc9;
-    --color-on-teal: #151c21;
-    --color-peach: #f2a38a;
-    --color-love: #ff6537;
-    --color-success: #86ccc9;
+    --color-canvas: #303841;
+    --color-surface: #3b444e;
+    --color-raised: #252c33;
+    --color-line: #efe8dd;
+    --color-shade: #1a1f25;
+    --color-ink: #efe8dd;
+    --color-ink-muted: #b8bec3;
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
@@ -233,20 +225,13 @@
   }
 }
 :root[data-theme="dark"] {
-  --color-canvas: #151c21;
-  --color-surface: #1f292f;
-  --color-raised: #1a272f;
-  --color-line: #3a4a54;
-  --color-shade: #0b1013;
-  --color-ink: #edf2f1;
-  --color-ink-muted: #a9b4b8;
-  --color-accent: #ff6537;
-  --color-on-accent: #151c21;
-  --color-teal: #86ccc9;
-  --color-on-teal: #151c21;
-  --color-peach: #f2a38a;
-  --color-love: #ff6537;
-  --color-success: #86ccc9;
+  --color-canvas: #303841;
+  --color-surface: #3b444e;
+  --color-raised: #252c33;
+  --color-line: #efe8dd;
+  --color-shade: #1a1f25;
+  --color-ink: #efe8dd;
+  --color-ink-muted: #b8bec3;
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
@@ -361,16 +346,4 @@
     background-color: var(--color-accent);
     color: var(--color-on-accent);
   }
-}
-
-/* Animated backgrounds (components/ui/AppBackground.jsx). Decorative only; motion stops under reduced motion. */
-@keyframes sq-bg-pulse { 0%, 100% { opacity: var(--lo, 0.1); } 50% { opacity: var(--hi, 0.6); } }
-@keyframes sq-bg-ring { from { transform: scale(0.15); opacity: 0.7; } to { transform: scale(1.7); opacity: 0; } }
-.sq-bg-pulse { animation: sq-bg-pulse 3s ease-in-out infinite; }
-.sq-bg-ring { transform-box: fill-box; transform-origin: center; animation: sq-bg-ring 6s ease-out infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .sq-bg-pulse, .sq-bg-ring { animation: none; }
-  /* Without the animation the dots would sit at opacity 1: rest halfway between their low and high instead. */
-  .sq-bg-pulse { opacity: calc((var(--lo, 0.1) + var(--hi, 0.6)) / 2); }
-  .sq-bg-ring { opacity: 0.25; transform: scale(0.8); }
 }
