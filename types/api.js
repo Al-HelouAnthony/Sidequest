@@ -85,6 +85,12 @@ export const FriendView = User.pick({ id: true, name: true, avatarUrl: true }).e
 export const FriendsResponse = z.object({ friends: z.array(FriendView) });
 export const AddFriendRequest = z.object({ friendId: Id, closeness: Closeness.default(2) });
 
+// ---- GET /api/users (people I can add as friends: everyone except me) ----
+export const UserListItem = User.pick({ id: true, name: true, avatarUrl: true }).extend({ isFriend: z.boolean() });
+/** @typedef {z.infer<typeof UserListItem>} UserListItemT */
+export const UsersResponse = z.object({ users: z.array(UserListItem) });
+/** @typedef {z.infer<typeof UsersResponse>} UsersResponseT */
+
 // ---- GET /api/me ----
 export const MeResponse = z.object({ user: User });
 
