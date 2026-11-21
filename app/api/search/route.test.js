@@ -20,6 +20,24 @@ describe("POST /api/search", () => {
     for (const card of body.cards) expect(card.place.priceLevel).toBeLessThanOrEqual(1);
   });
 
+  it("specific search: 'museum' only returns museums", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "museum" })).json());
+    expect(body.summary).toBe("Museums");
+    expect(body.cards.length).toBeGreaterThan(0);
+    for (const card of body.cards) {
+      const hay = `${card.place.name} ${card.place.tags.join(" ")}`.toLowerCase();
+      expect(hay).toMatch(/museum|musée|biodôme|planétarium|sciences|calli/);
+    }
+    expect(body.nextCursor).toBeNull();
+  });
+
+  it("nothing matches 'bowling': falls back to activities and says so", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "bowling" })).json());
+    expect(body.summary).toBe("No bowling nearby · showing Activities");
+    expect(body.filters.categories).toEqual(["activity"]);
+    for (const card of body.cards) expect(card.place.category).toBe("activity");
+  });
+
   it("empty query gives 400", async () => {
     const res = await post({ query: "" });
     expect(res.status).toBe(400);
