@@ -3,7 +3,7 @@
  * Feed screen. Owner: Oscar (PLAN.md F2/F3).
  * Full-screen snap scroll of FeedCards from GET /api/feed, more pages as you reach the end.
  * Skip and Save are optimistic (UI first, then POST /api/interactions).
- * Let's go (SwipeToGo) → InviteSheet → POST /api/plans → /plans/[id]. TODO(F4): WhySheet.
+ * Let's go (SwipeToGo) → InviteSheet → POST /api/plans → /plans/[id]. ⓘ → WhySheet (score breakdown).
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
+import { WhySheet } from "@/components/feed/WhySheet";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -80,6 +81,8 @@ function Feed() {
   const [reloadKey, setReloadKey] = useState(0);
   /** Card whose invite sheet is open (after its swipe bar broke), or null. */
   const [inviteCard, setInviteCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
+  /** Card whose "Why am I seeing this?" sheet is open, or null. */
+  const [whyCard, setWhyCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   const router = useRouter();
   /** Invites from friends that I haven't answered (polling GET /api/plans). */
   const { invites, dismiss: dismissInvite } = useInvites();
@@ -302,6 +305,7 @@ function Feed() {
               onSkip={() => skip(card)}
               onSave={() => toggleSave(card)}
               onGo={() => go(card)}
+              onWhy={() => setWhyCard(card)}
             />
             {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
           </Page>
@@ -321,6 +325,8 @@ function Feed() {
           </StateIsland>
         </Page>
       )}
+
+      {whyCard && <WhySheet key={whyCard.id} card={whyCard} onClose={() => setWhyCard(null)} />}
 
       {inviteCard && (
         <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
