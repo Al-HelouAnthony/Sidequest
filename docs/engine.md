@@ -106,7 +106,7 @@ Every **Skip / Save / Let's go** updates your personal taste profile:
 |---|---|
 | Finding free time, checking hours/travel/weather, scoring, learning, variety | **No.** Deterministic code, fully tested. |
 | **Card captions** (*"Lunch at Arepera du Plateau Sunday noon, with Karim, Antoine and Léa"*) | **Yes, Claude** (`claude-haiku-5-5`), but only from the card's own facts. It never ranks, never sees calendars, never invents prices or events. If Claude is slow (> 2.5 s) or unavailable, a template caption is shown instantly. |
-| **Natural-language search** (*"something cheap with Maya tomorrow night"*) | **Yes, Claude** turns your words into filters; the engine above does the actual finding. |
+| **Search** (*"something cheap with Maya tomorrow night"*) | **No.** Plain code with agreed word lists turns your words into filters (*cheap* → budget, a friend's name → must be free, *tomorrow night* → 18:00–23:00), then the engine above does the actual finding. Instant, free, and it can't misread a request into something you didn't say; unknown words simply add no filter. |
 
 ---
 

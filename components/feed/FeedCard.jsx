@@ -14,7 +14,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { PriceLevel } from "@/components/ui/PriceLevel";
 import { WeatherBadge } from "@/components/ui/WeatherBadge";
-import { cn } from "@/components/ui/classes";
+import { cn, focusRing, pressable } from "@/components/ui/classes";
 
 /** @type {Record<import("@/types/domain").CategoryT, string>} */
 export const CATEGORY_LABELS = {
@@ -40,6 +40,8 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  *   onSave?: () => void,
  *   onGo?: () => void,
  *   onWhy?: () => void,
+ *   onDetails?: () => void,
+ *   onWeather?: () => void,
  *   priority?: boolean,
  *   leaving?: boolean,
  *   goResetKey?: string | number,
@@ -49,7 +51,7 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
  * `leaving` plays the skip-out animation and blocks further taps (the parent removes the card after it).
  */
-export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, leaving = false, goResetKey = 0, className }) {
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onDetails, onWeather, priority = false, leaving = false, goResetKey = 0, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
   const [photoFailed, setPhotoFailed] = useState(false);
   // Bumped on every save so the burst replays (new key = new animation).
@@ -100,10 +102,38 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
         {/* Top: category + weather, info button */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <Chip tone="glass" className="h-8 px-3 text-sm">
-              {CATEGORY_LABELS[place.category] ?? place.category}
-            </Chip>
-            <WeatherBadge {...weather} />
+            {onDetails ? (
+              // Tap the category for the place's details (hours, weather around the visit, map).
+              // before: extends the 32px chip to a 44px tap target without changing its look.
+              <button
+                type="button"
+                onClick={onDetails}
+                aria-label={`Details about ${place.name}`}
+                className={cn("relative rounded-full before:absolute before:-inset-1.5 before:content-['']", pressable, focusRing)}
+              >
+                <Chip tone="glass" className="h-8 gap-1 px-3 text-sm">
+                  {CATEGORY_LABELS[place.category] ?? place.category}
+                  <Icon name="info" strokeWidth={2.2} className="size-3.5 opacity-80" />
+                </Chip>
+              </button>
+            ) : (
+              <Chip tone="glass" className="h-8 px-3 text-sm">
+                {CATEGORY_LABELS[place.category] ?? place.category}
+              </Chip>
+            )}
+            {onWeather ? (
+              // Tap the weather for the hour-by-hour chart around the visit (same 44px hit-area trick as the chip).
+              <button
+                type="button"
+                onClick={onWeather}
+                aria-label={`Weather for ${place.name}: ${Math.round(weather.tempC)}°C, ${weather.rainProb}% chance of rain. Show hour by hour`}
+                className={cn("relative rounded-full before:absolute before:-inset-1.5 before:content-['']", pressable, focusRing)}
+              >
+                <WeatherBadge {...weather} />
+              </button>
+            ) : (
+              <WeatherBadge {...weather} />
+            )}
           </div>
           {onWhy && <IconButton label="Why am I seeing this?" icon={<Icon name="info" />} onClick={onWhy} />}
         </div>

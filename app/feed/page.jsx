@@ -14,6 +14,8 @@ import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
 import { WhySheet } from "@/components/feed/WhySheet";
 import { SearchSheet, SearchSummary } from "@/components/feed/SearchSheet";
+import { PlaceSheet } from "@/components/feed/PlaceSheet";
+import { WeatherSheet } from "@/components/feed/WeatherSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { useInvites } from "@/hooks/useInvites";
@@ -96,6 +98,10 @@ function Feed() {
   const [inviteCard, setInviteCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   /** Card whose "Why am I seeing this?" sheet is open, or null. */
   const [whyCard, setWhyCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
+  /** Card whose place-details sheet is open (tap the category chip), or null. */
+  const [detailsCard, setDetailsCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
+  /** Card whose weather sheet is open (tap the weather badge), or null. */
+  const [weatherCard, setWeatherCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   /** Active search (F10): what was typed + Claude's summary. null = the normal feed. */
   const [search, setSearch] = useState(/** @type {{ query: string, summary: string } | null} */ (null));
   const [searchOpen, setSearchOpen] = useState(0);
@@ -366,6 +372,8 @@ function Feed() {
                 onSave={() => toggleSave(card)}
                 onGo={() => go(card)}
                 onWhy={() => setWhyCard(card)}
+                onDetails={() => setDetailsCard(card)}
+                onWeather={() => setWeatherCard(card)}
               />
               {i === Math.max(0, cards.length - 2) && <div ref={sentinelRef} aria-hidden="true" />}
             </Page>
@@ -387,6 +395,10 @@ function Feed() {
         )}
 
         {whyCard && <WhySheet key={whyCard.id} card={whyCard} onClose={() => setWhyCard(null)} />}
+
+        {detailsCard && <PlaceSheet key={detailsCard.id} card={detailsCard} onClose={() => setDetailsCard(null)} />}
+
+        {weatherCard && <WeatherSheet key={weatherCard.id} card={weatherCard} onClose={() => setWeatherCard(null)} />}
 
         {searchOpen > 0 && (
           <SearchSheet
