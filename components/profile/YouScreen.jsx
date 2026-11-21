@@ -32,7 +32,7 @@ const CREDITS = [
 function DataCredits() {
   return (
     <section aria-labelledby="you-about" className="space-y-1.5 border-t-[1.5px] border-line/15 pt-4">
-      <h2 id="you-about" className="text-sm font-bold tracking-wide text-ink-muted uppercase">
+      <h2 id="you-about" className="text-label font-bold text-ink-muted">
         About
       </h2>
       <p className="text-xs leading-relaxed text-ink-muted">
@@ -162,7 +162,7 @@ export function YouScreen() {
           <Skeleton className="size-16 rounded-full" />
         )}
         <div className="min-w-0">
-          <h1 className="font-display text-3xl font-extrabold">You</h1>
+          <h1 className="font-display text-heading font-extrabold">You</h1>
           <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
         </div>
       </div>

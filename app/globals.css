@@ -51,10 +51,28 @@
 
   /* Fonts are wired to next/font variables in the @theme inline block below. */
 
+  /* Type scale (design-reference/tokens.json): display sizes only from this list. */
+  --text-title: 2.625rem; /* 42 · big numbers, the free-time headline */
+  --text-title--line-height: 1;
+  --text-heading: 2.125rem; /* 34 · screen titles and hero cards */
+  --text-heading--line-height: 1;
+  --text-card-title: 1.75rem; /* 28 · titles inside islands and sheets */
+  --text-card-title--line-height: 1.02;
+  --text-bar-label: 1.25rem; /* 20 · swipe bar label */
+  --text-bar-label--line-height: 1;
+  --text-body: 0.9375rem; /* 15 / 22 · running text */
+  --text-body--line-height: 1.375rem;
+  --text-label: 0.8125rem; /* 13 / 18 · section labels and chips, sentence case */
+  --text-label--line-height: 1.125rem;
+  --text-caption: 0.75rem; /* 12 / 16 · metadata */
+  --text-caption--line-height: 1rem;
+  --text-micro: 0.6875rem; /* 11 / 14 · tab labels and tiny tags */
+  --text-micro--line-height: 0.875rem;
+
   /* Shape */
   --radius-card: 1.875rem; /* 30px islands */
   --radius-tile: 1.375rem; /* 22px small islands, list rows */
-  --radius-button: 1.25rem; /* 20px main CTAs */
+  --radius-button: 1rem; /* 16px buttons and time chips (tokens.json radius-btn) */
   --radius-sheet: 1.875rem;
 
   /* Depth (hard, flat, no blur: the cel look) */

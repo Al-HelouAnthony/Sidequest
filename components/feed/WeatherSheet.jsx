@@ -85,7 +85,7 @@ function WeatherSheetBody({ card, onClose }) {
             <Icon name={weather.icon} cel strokeWidth={1.7} className="size-10" />
           </span>
           <div className="min-w-0">
-            <p className="font-display text-3xl leading-none font-extrabold tabular-nums">{Math.round(weather.tempC)}°C</p>
+            <p className="font-display text-heading font-extrabold tabular-nums">{Math.round(weather.tempC)}°C</p>
             <p className="mt-1 font-semibold">{WEATHER_WORDS[weather.icon] ?? "Weather"}</p>
             <p className="text-sm text-ink-muted">
               {weather.rainProb < 5 ? "No rain expected" : `${weather.rainProb}% chance of rain`} for your visit
@@ -101,7 +101,7 @@ function WeatherSheetBody({ card, onClose }) {
               Hour by hour
             </h3>
             {forecast === undefined ? (
-              <Skeleton className="h-40 rounded-xl" />
+              <Skeleton className="h-40 rounded-tile" />
             ) : (
               <WeatherChart hours={forecast} slotStart={slot.start} slotEnd={slot.end} cardRain={weather.rainProb} />
             )}

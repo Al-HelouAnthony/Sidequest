@@ -8,7 +8,7 @@ import { useState } from "react";
 import { cn } from "./classes";
 
 const SIZES = {
-  sm: "size-7 text-[11px]",
+  sm: "size-7 text-micro",
   md: "size-9 text-xs",
   lg: "size-12 text-sm",
   xl: "size-16 text-lg",

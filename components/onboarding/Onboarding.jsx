@@ -193,7 +193,7 @@ export function Onboarding() {
 function StepTitle({ title, body }) {
   return (
     <div className="space-y-1.5">
-      <h1 className="font-display text-[2rem] leading-[1.02] font-extrabold">{title}</h1>
+      <h1 className="font-display text-heading font-extrabold">{title}</h1>
       {body && <p className="text-ink-muted">{body}</p>}
     </div>
   );

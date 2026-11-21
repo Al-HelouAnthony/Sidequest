@@ -124,7 +124,7 @@ export function WhySheet({ card, onClose }) {
       <AboutPlace card={card} />
 
       <div className="flex items-baseline gap-2 pb-4">
-        <span className="font-display text-5xl leading-none font-extrabold tabular-nums">{match}%</span>
+        <span className="font-display text-title font-extrabold tabular-nums">{match}%</span>
         <span className="font-semibold text-ink-muted">match for you</span>
       </div>
 
@@ -135,7 +135,7 @@ export function WhySheet({ card, onClose }) {
               <span className="font-bold">
                 {r.label}
                 {i === 0 && (
-                  <span className="ml-2 inline-flex h-5 items-center rounded-full border-[1.5px] border-line bg-accent px-2 align-middle text-[11px] font-bold text-on-accent">
+                  <span className="ml-2 inline-flex h-5 items-center rounded-full border-[1.5px] border-line bg-teal px-2 align-middle text-micro font-bold text-on-teal">
                     Top reason
                   </span>
                 )}
@@ -152,7 +152,7 @@ export function WhySheet({ card, onClose }) {
               className="mt-1.5 h-2.5 overflow-hidden rounded-full border-[1.5px] border-line bg-raised"
             >
               <div
-                className={cn("h-full rounded-full", i < 3 ? "bg-accent" : "bg-teal")}
+                className={cn("h-full rounded-full", i < 3 ? "bg-ink" : "bg-teal")}
                 style={{ width: `${Math.round(r.value * 100)}%` }}
               />
             </div>

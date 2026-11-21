@@ -137,7 +137,7 @@ export function BottomSheet({ open, onClose, title, description, children, foote
       className={cn(
         "mx-auto mt-auto mb-0 max-h-[88dvh] w-full max-w-md overflow-hidden rounded-t-sheet border-[1.5px] border-b-0 border-line bg-surface p-0 text-ink shadow-float",
         "open:flex open:flex-col motion-safe:open:animate-sheet-up",
-        "backdrop:bg-[#22282e]/55 motion-safe:backdrop:animate-fade-in",
+        "backdrop:bg-on-accent/55 motion-safe:backdrop:animate-fade-in",
         className,
       )}
     >
@@ -155,7 +155,7 @@ export function BottomSheet({ open, onClose, title, description, children, foote
 
         <header className="flex items-start gap-3 px-5 pt-1 pb-3">
           <div className="min-w-0 flex-1 pt-1">
-            <h2 id={titleId} className="font-display text-2xl leading-[1.05] font-extrabold">
+            <h2 id={titleId} className="font-display text-card-title font-extrabold">
               {title}
             </h2>
             {description && (

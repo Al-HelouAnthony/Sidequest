@@ -154,7 +154,7 @@ function PlaceSheetBody({ card, onClose }) {
               <HoursNotVerified />
             </div>
           )}
-          {extras === undefined && !hoursUnverified && <Skeleton className="mt-2 h-24 rounded-xl" />}
+          {extras === undefined && !hoursUnverified && <Skeleton className="mt-2 h-24 rounded-tile" />}
           {extras && (
             <>
               {todays.length > 0 && (

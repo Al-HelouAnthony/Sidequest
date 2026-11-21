@@ -375,7 +375,7 @@ export function SwipeToGo({
       {phase === "done" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold text-white drop-shadow-[0_2px_0_rgb(34_40_46/0.6)] motion-safe:animate-rise"
+          className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold text-white drop-shadow-[0_2px_0_var(--color-shade)] motion-safe:animate-rise"
           style={{ right: KNOB + PAD * 2, animationDelay: "250ms" }}
         >
           {doneLabel}
