@@ -1,0 +1,1184 @@
+[
+  {
+    "id": "10000000-0000-4000-8000-000000000001",
+    "name": "Café Olimpico",
+    "category": "cafe",
+    "tags": [
+      "coffee",
+      "cheap-eats"
+    ],
+    "lat": 45.5229,
+    "lng": -73.6018,
+    "address": "124 Rue Saint-Viateur O",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/olimpico/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "07:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000002",
+    "name": "Kondiaronk Lookout",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.504,
+    "lng": -73.5874,
+    "address": "1196 Voie Camillien-Houde",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/kondiaronk/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000003",
+    "name": "Schwartz's Deli",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats",
+      "iconic"
+    ],
+    "lat": 45.5165,
+    "lng": -73.5779,
+    "address": "3895 Boul. Saint-Laurent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/schwartz/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000004",
+    "name": "Marché Jean-Talon",
+    "category": "activity",
+    "tags": [
+      "markets",
+      "cheap-eats"
+    ],
+    "lat": 45.5363,
+    "lng": -73.6147,
+    "address": "7070 Av. Henri-Julien",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/jeantalon/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000005",
+    "name": "Parc La Fontaine",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.527,
+    "lng": -73.569,
+    "address": "3933 Av. du Parc-La Fontaine",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/lafontaine/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000006",
+    "name": "Bily Kun",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "live-music"
+    ],
+    "lat": 45.5248,
+    "lng": -73.581,
+    "address": "354 Av. du Mont-Royal E",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/bilykun/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "15:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000007",
+    "name": "St-Viateur Bagel",
+    "category": "cafe",
+    "tags": [
+      "cheap-eats",
+      "iconic"
+    ],
+    "lat": 45.5226,
+    "lng": -73.6008,
+    "address": "263 Rue Saint-Viateur O",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/stviateur/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 45,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000008",
+    "name": "Musée des beaux-arts",
+    "category": "activity",
+    "tags": [
+      "art",
+      "museums"
+    ],
+    "lat": 45.4986,
+    "lng": -73.5794,
+    "address": "1380 Rue Sherbrooke O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/mbam/800/1400",
+    "hours": {
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000009",
+    "name": "Old Port Clock Tower",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.51,
+    "lng": -73.547,
+    "address": "1 Quai de l'Horloge",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/clocktower/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "21:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000010",
+    "name": "Le Mal Nécessaire",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "cocktails"
+    ],
+    "lat": 45.5076,
+    "lng": -73.5603,
+    "address": "1106 Boul. Saint-Laurent",
+    "priceLevel": 3,
+    "photoUrl": "https://picsum.photos/seed/malnecessaire/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "16:00",
+          "close": "02:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000011",
+    "name": "Kazu",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats"
+    ],
+    "lat": 45.4949,
+    "lng": -73.5797,
+    "address": "1862 Rue Sainte-Catherine O",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/kazu/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "12:00",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "12:00",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "12:00",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "12:00",
+          "close": "22:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "12:00",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000012",
+    "name": "Parc Jarry",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.534,
+    "lng": -73.628,
+    "address": "285 Rue Faillon O",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/jarry/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000013",
+    "name": "Marché Atwater",
+    "category": "activity",
+    "tags": [
+      "markets"
+    ],
+    "lat": 45.481,
+    "lng": -73.577,
+    "address": "138 Av. Atwater",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/atwater/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000014",
+    "name": "Pikolo Espresso Bar",
+    "category": "cafe",
+    "tags": [
+      "coffee"
+    ],
+    "lat": 45.51,
+    "lng": -73.573,
+    "address": "3418 Av. du Parc",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/pikolo/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000015",
+    "name": "Biodôme",
+    "category": "activity",
+    "tags": [
+      "museums",
+      "nature"
+    ],
+    "lat": 45.5597,
+    "lng": -73.5499,
+    "address": "4777 Av. Pierre-De Coubertin",
+    "priceLevel": 3,
+    "photoUrl": "https://picsum.photos/seed/biodome/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000016",
+    "name": "La Banquise",
+    "category": "restaurant",
+    "tags": [
+      "cheap-eats",
+      "iconic",
+      "late-night"
+    ],
+    "lat": 45.5255,
+    "lng": -73.5751,
+    "address": "994 Rue Rachel E",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/banquise/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "23:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000017",
+    "name": "Lachine Canal path",
+    "category": "park",
+    "tags": [
+      "outdoors",
+      "free"
+    ],
+    "lat": 45.485,
+    "lng": -73.57,
+    "address": "Canal de Lachine",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/lachine/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "22:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000018",
+    "name": "Oratoire Saint-Joseph",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "free"
+    ],
+    "lat": 45.4925,
+    "lng": -73.618,
+    "address": "3800 Chem. Queen Mary",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/oratoire/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "09:00",
+          "close": "21:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000019",
+    "name": "Centre des sciences",
+    "category": "activity",
+    "tags": [
+      "museums"
+    ],
+    "lat": 45.5054,
+    "lng": -73.5513,
+    "address": "2 Rue de la Commune O",
+    "priceLevel": 3,
+    "photoUrl": "https://picsum.photos/seed/sciences/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "17:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 120,
+    "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000020",
+    "name": "Le Darling",
+    "category": "bar",
+    "tags": [
+      "bars",
+      "coffee",
+      "brunch"
+    ],
+    "lat": 45.5187,
+    "lng": -73.5879,
+    "address": "4328 Boul. Saint-Laurent",
+    "priceLevel": 2,
+    "photoUrl": "https://picsum.photos/seed/darling/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ],
+      "sun": [
+        {
+          "open": "08:00",
+          "close": "03:00"
+        }
+      ]
+    },
+    "typicalDurationMin": 90,
+    "indoor": true
+  }
+]
