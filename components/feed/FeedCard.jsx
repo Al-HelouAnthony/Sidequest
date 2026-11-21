@@ -1,0 +1,186 @@
+"use client";
+/**
+ * One feed suggestion (PLAN.md F2). Owner: Oscar.
+ * Full-height photo island: what (name, category, price) · when (slot) · who (free friends + travel),
+ * weather, caption, and the Skip / Save / Let's go actions.
+ * Presentational: the parent (the feed screen) owns saved state and what each action does.
+ */
+import { useState } from "react";
+import { formatSlot } from "@/lib/time";
+import { AvatarStack } from "@/components/ui/Avatar";
+import { Button, IconButton } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
+import { Icon } from "@/components/ui/Icon";
+import { PriceLevel } from "@/components/ui/PriceLevel";
+import { WeatherBadge } from "@/components/ui/WeatherBadge";
+import { cn } from "@/components/ui/classes";
+
+/** @type {Record<import("@/types/domain").CategoryT, string>} */
+export const CATEGORY_LABELS = {
+  cafe: "Café",
+  restaurant: "Restaurant",
+  bar: "Bar",
+  park: "Park",
+  viewpoint: "Viewpoint",
+  activity: "Activity",
+  event: "Event",
+};
+
+/** "12 min", or "~12 min" when the travel time is a haversine estimate. */
+function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
+  return `${estimate ? "~" : ""}${min} min`;
+}
+
+/**
+ * @param {{
+ *   card: import("@/types/feed").FeedCardT,
+ *   saved?: boolean,
+ *   onSkip?: () => void,
+ *   onSave?: () => void,
+ *   onGo?: () => void,
+ *   onWhy?: () => void,
+ *   priority?: boolean,
+ *   className?: string,
+ * }} props
+ * `priority` loads the photo eagerly (first card on screen). `onWhy` hides the info button when missing.
+ */
+export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, priority = false, className }) {
+  const { place, slot, friends, weather, caption, myTravelMin } = card;
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const titleId = `card-${card.id}-title`;
+
+  return (
+    <article
+      aria-labelledby={titleId}
+      className={cn(
+        "relative isolate h-full overflow-hidden rounded-card border-[1.5px] border-line bg-ink shadow-cel",
+        className,
+      )}
+    >
+      {!photoFailed && (
+        // eslint-disable-next-line @next/next/no-img-element -- remote place photos, no next.config change needed
+        <img
+          src={place.photoUrl}
+          alt=""
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
+          draggable={false}
+          onError={() => setPhotoFailed(true)}
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+      )}
+      {/* Readable text on any photo: dark at the bottom, a light veil at the top for the badges. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-black/90 via-black/25 to-black/35" />
+
+      <div className="flex h-full flex-col justify-between p-4">
+        {/* Top: category + weather, info button */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <Chip tone="glass" className="h-8 px-3 text-sm">
+              {CATEGORY_LABELS[place.category] ?? place.category}
+            </Chip>
+            <WeatherBadge {...weather} />
+          </div>
+          {onWhy && <IconButton label="Why am I seeing this?" icon={<Icon name="info" />} onClick={onWhy} />}
+        </div>
+
+        {/* Bottom: what · when · who, caption, actions */}
+        <div className="space-y-3 text-white">
+          <p className="glass-photo inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-bold tabular-nums">
+            <Icon name="clock" cel strokeWidth={1.9} className="size-[18px]" />
+            {formatSlot(slot.start, slot.end)}
+          </p>
+
+          <div>
+            <h2 id={titleId} className="line-clamp-2 font-display text-[2rem] leading-[0.95] font-extrabold break-words">
+              {place.name}
+            </h2>
+            <p className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-white/85">
+              <PriceLevel level={place.priceLevel} />
+              <span aria-hidden="true">·</span>
+              <span className="inline-flex items-center gap-1">
+                <Icon name="walk" strokeWidth={1.9} className="size-4" />
+                You {myTravelMin} min
+              </span>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {friends.length > 0 ? (
+              <>
+                <AvatarStack people={friends} size="sm" tone="photo" />
+                <p className="min-w-0 text-sm font-semibold text-white/90">
+                  {friends.map((f, i) => (
+                    <span key={f.id} className="whitespace-nowrap">
+                      {i > 0 && <span aria-hidden="true"> · </span>}
+                      {f.name} {travel(f.travelMin, f.travelIsEstimate)}
+                    </span>
+                  ))}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm font-semibold text-white/90">Just you this time</p>
+            )}
+          </div>
+
+          <p className="line-clamp-2 text-[15px] leading-snug text-white/90">{caption}</p>
+
+          <div className="flex items-center gap-3 pt-1">
+            <IconButton label={`Skip ${place.name}`} icon={<Icon name="x" strokeWidth={2.5} />} size="lg" onClick={onSkip} />
+            <IconButton
+              label={saved ? `Unsave ${place.name}` : `Save ${place.name}`}
+              size="lg"
+              pressed={saved}
+              onClick={onSave}
+              icon={
+                <span key={saved ? "on" : "off"} className={saved ? "motion-safe:animate-pop" : undefined}>
+                  <Icon name="heart" filled={saved} className={saved ? "text-love" : undefined} />
+                </span>
+              }
+            />
+            <Button
+              size="lg"
+              className="flex-1"
+              onClick={onGo}
+              trailingIcon={<Icon name="arrowRight" strokeWidth={2.5} className="size-4" />}
+            >
+              Let&apos;s go
+            </Button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/**
+ * Same footprint as a FeedCard, for the loading state. Pair with one sr-only "Loading…".
+ * @param {{ className?: string }} props
+ */
+export function FeedCardSkeleton({ className }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn("relative h-full overflow-hidden rounded-card border-[1.5px] border-line bg-raised shadow-cel", className)}
+    >
+      <div className="flex h-full flex-col justify-between p-4">
+        <div className="flex gap-2">
+          <div className="h-8 w-20 rounded-full bg-surface/60" />
+          <div className="h-8 w-16 rounded-full bg-surface/60" />
+        </div>
+        <div className="space-y-3">
+          <div className="h-8 w-40 rounded-full bg-surface/60" />
+          <div className="h-9 w-3/4 rounded-xl bg-surface/60" />
+          <div className="h-4 w-1/2 rounded-full bg-surface/60" />
+          <div className="h-4 w-full rounded-full bg-surface/60" />
+          <div className="flex gap-3 pt-1">
+            <div className="size-14 rounded-full bg-surface/60" />
+            <div className="size-14 rounded-full bg-surface/60" />
+            <div className="h-14 flex-1 rounded-button bg-surface/60" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
