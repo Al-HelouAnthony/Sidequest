@@ -72,7 +72,7 @@
     "lng": -73.5874,
     "address": "1196 Voie Camillien-Houde",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/kondiaronk/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000002.jpg",
     "hours": {
       "mon": [
         {
@@ -132,7 +132,7 @@
     "lng": -73.5779,
     "address": "3895 Boul. Saint-Laurent",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/schwartz/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000003.jpg",
     "hours": {
       "mon": [
         {
@@ -192,7 +192,7 @@
     "lng": -73.6147,
     "address": "7070 Av. Henri-Julien",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/jeantalon/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000004.jpg",
     "hours": {
       "mon": [
         {
@@ -252,7 +252,7 @@
     "lng": -73.569,
     "address": "3933 Av. du Parc-La Fontaine",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/lafontaine/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000005.jpg",
     "hours": {
       "mon": [
         {
@@ -432,7 +432,7 @@
     "lng": -73.5794,
     "address": "1380 Rue Sherbrooke O",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/mbam/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000008.jpg",
     "hours": {
       "tue": [
         {
@@ -487,7 +487,7 @@
     "lng": -73.547,
     "address": "1 Quai de l'Horloge",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/clocktower/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000009.jpg",
     "hours": {
       "mon": [
         {
@@ -654,7 +654,7 @@
     "lng": -73.628,
     "address": "285 Rue Faillon O",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/jarry/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000012.jpg",
     "hours": {
       "mon": [
         {
@@ -713,7 +713,7 @@
     "lng": -73.577,
     "address": "138 Av. Atwater",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/atwater/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000013.jpg",
     "hours": {
       "mon": [
         {
@@ -832,7 +832,7 @@
     "lng": -73.5499,
     "address": "4777 Av. Pierre-De Coubertin",
     "priceLevel": 3,
-    "photoUrl": "https://picsum.photos/seed/biodome/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000015.jpg",
     "hours": {
       "mon": [
         {
@@ -893,7 +893,7 @@
     "lng": -73.5751,
     "address": "994 Rue Rachel E",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/banquise/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000016.jpg",
     "hours": {
       "mon": [
         {
@@ -953,7 +953,7 @@
     "lng": -73.57,
     "address": "Canal de Lachine",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/lachine/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000017.jpg",
     "hours": {
       "mon": [
         {
@@ -1013,7 +1013,7 @@
     "lng": -73.618,
     "address": "3800 Chem. Queen Mary",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/oratoire/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000018.jpg",
     "hours": {
       "mon": [
         {
@@ -1072,7 +1072,7 @@
     "lng": -73.5513,
     "address": "2 Rue de la Commune O",
     "priceLevel": 3,
-    "photoUrl": "https://picsum.photos/seed/sciences/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000019.jpg",
     "hours": {
       "mon": [
         {
@@ -1552,7 +1552,7 @@
     "lng": -73.587392,
     "address": "93 Av. du Mont-Royal O",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/beautys/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000027.jpg",
     "hours": {
       "mon": [
         {
@@ -2490,7 +2490,7 @@
     "lng": -73.5343,
     "address": "1 Circuit Gilles-Villeneuve",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/jeandrapeau/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000043.jpg",
     "hours": {
       "mon": [
         {
@@ -2550,7 +2550,7 @@
     "lng": -73.5878,
     "address": "1115 Av. Laurier E",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/laurier/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000044.jpg",
     "hours": {
       "mon": [
         {
@@ -2611,7 +2611,7 @@
     "lng": -73.5698,
     "address": "Rue Saint-Denis & Av. Laval",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/squarestlouis/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000045.jpg",
     "hours": {
       "mon": [
         {
@@ -2672,7 +2672,7 @@
     "lng": -73.5622,
     "address": "4601 Rue Sherbrooke E",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/maisonneuve/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000046.jpg",
     "hours": {
       "mon": [
         {
@@ -2733,7 +2733,7 @@
     "lng": -73.5958,
     "address": "Boul. LaSalle & 6e Avenue",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/rapides/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000047.jpg",
     "hours": {
       "mon": [
         {
@@ -2855,7 +2855,7 @@
     "lng": -73.6072,
     "address": "Parc Summit, Westmount",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/summit/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000049.jpg",
     "hours": {
       "mon": [
         {
@@ -2976,7 +2976,7 @@
     "lng": -73.5433,
     "address": "Av. Pierre-Dupuy",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/dieppe/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000053.jpg",
     "hours": {
       "mon": [
         {
@@ -3035,7 +3035,7 @@
     "lng": -73.5612,
     "address": "4101 Rue Sherbrooke E",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/jardinbotanique/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000054.jpg",
     "hours": {
       "tue": [
         {
@@ -3089,7 +3089,7 @@
     "lng": -73.5542,
     "address": "350 Place Royale",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/pointeacalliere/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000055.jpg",
     "hours": {
       "tue": [
         {
@@ -3143,7 +3143,7 @@
     "lng": -73.5734,
     "address": "690 Rue Sherbrooke O",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/mccord/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000056.jpg",
     "hours": {
       "tue": [
         {
@@ -3196,7 +3196,7 @@
     "lng": -73.5505,
     "address": "4801 Av. Pierre-De Coubertin",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/planetarium/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000057.jpg",
     "hours": {
       "tue": [
         {
@@ -3250,7 +3250,7 @@
     "lng": -73.556,
     "address": "110 Rue Notre-Dame O",
     "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/notredame/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000058.jpg",
     "hours": {
       "mon": [
         {
@@ -3369,7 +3369,7 @@
     "lng": -73.5515,
     "address": "350 Rue Saint-Paul E",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/bonsecours/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000060.jpg",
     "hours": {
       "sun": [
         {
@@ -3430,7 +3430,7 @@
     "lng": -73.5879,
     "address": "Boucle du Sommet, Parc du Mont-Royal",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/croixmontroyal/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000061.jpg",
     "hours": {
       "mon": [
         {
@@ -3491,7 +3491,7 @@
     "lng": -73.6107,
     "address": "Parc Tiohtià:ke Otsira'kéhne, Outremont",
     "priceLevel": 1,
-    "photoUrl": "https://picsum.photos/seed/troisiemesommet/800/1400",
+    "photoUrl": "https://xhegtvyxxptkjpcupgev.supabase.co/storage/v1/object/public/place-photos/places/10000000-0000-4000-8000-000000000062.jpg",
     "hours": {
       "mon": [
         {
