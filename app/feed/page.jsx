@@ -3,14 +3,16 @@
  * Feed screen. Owner: Oscar (PLAN.md F2/F3).
  * Full-screen snap scroll of FeedCards from GET /api/feed, more pages as you reach the end.
  * Skip and Save are optimistic (UI first, then POST /api/interactions).
- * TODO(F4): WhySheet · TODO(F5): InviteSheet on Let's go.
+ * Let's go (SwipeToGo) → InviteSheet → POST /api/plans → /plans/[id]. TODO(F4): WhySheet.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
+import { InviteSheet } from "@/components/plans/InviteSheet";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { ToastProvider, useToast } from "@/components/ui/Toast";
+import { ToastProvider } from "@/components/ui/Toast";
 
 /** For the Refresh pill: "Showing fewer bars". */
 const CATEGORY_PLURALS = {
@@ -25,8 +27,6 @@ const CATEGORY_PLURALS = {
 
 /** Skip-out animation length. Matches --animate-skip-out in app/globals.css. */
 const SKIP_OUT_MS = 280;
-/** Until F5's InviteSheet exists: how long the broken swipe bar stays before it resets. */
-const GO_RESET_MS = 1200;
 
 /**
  * @param {string | null} cursor
@@ -65,7 +65,6 @@ function Page({ children }) {
 }
 
 function Feed() {
-  const toast = useToast();
   const [cards, setCards] = useState(/** @type {import("@/types/feed").FeedCardT[]} */ ([]));
   const [nextCursor, setNextCursor] = useState(/** @type {string | null} */ (null));
   const [status, setStatus] = useState(/** @type {"loading" | "ready" | "error"} */ ("loading"));
@@ -77,6 +76,9 @@ function Feed() {
   /** Per-card counter; bumping it puts that card's swipe bar back to the start. */
   const [goResets, setGoResets] = useState(() => new Map(/** @type {[string, number][]} */ ([])));
   const [reloadKey, setReloadKey] = useState(0);
+  /** Card whose invite sheet is open (after its swipe bar broke), or null. */
+  const [inviteCard, setInviteCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
+  const router = useRouter();
   /** Text of the Refresh pill, or null when hidden. Shown after 2 skips so the learning is visible. */
   const [refreshHint, setRefreshHint] = useState(/** @type {string | null} */ (null));
   /** Skips per category since the last refresh. */
@@ -207,16 +209,22 @@ function Feed() {
     if (nowSaved) sendInteraction(card, "save");
   };
 
-  /** @param {import("@/types/feed").FeedCardT} card */
-  const go = (card) => {
-    // TODO(F5): open InviteSheet → POST /api/plans → /plans/[id], and send the "go" interaction there.
-    // The sheet will reset the swipe bar when it closes; until then, reset it after the toast.
-    toast.show({ message: `Invites for ${card.place.name} are coming soon` });
-    const t = setTimeout(() => {
-      skipTimers.current.delete(t);
-      setGoResets((m) => new Map(m).set(card.id, (m.get(card.id) ?? 0) + 1));
-    }, GO_RESET_MS);
-    skipTimers.current.add(t);
+  /** The swipe bar broke: open the invite sheet for this card. */
+  const go = (/** @type {import("@/types/feed").FeedCardT} */ card) => setInviteCard(card);
+
+  /** Sheet dismissed without sending: put that card's swipe bar back. */
+  const closeInvite = () => {
+    if (inviteCard) {
+      const id = inviteCard.id;
+      setGoResets((m) => new Map(m).set(id, (m.get(id) ?? 0) + 1));
+    }
+    setInviteCard(null);
+  };
+
+  /** Plan created: count it as a "go" for the engine (boosts that category), then open the plan. */
+  const planCreated = (/** @type {import("@/types/api").PlanViewT} */ plan) => {
+    if (inviteCard) sendInteraction(inviteCard, "go");
+    router.push(`/plans/${plan.id}`);
   };
 
   return (
@@ -298,6 +306,10 @@ function Feed() {
             <Button onClick={loadMore}>Try again</Button>
           </StateIsland>
         </Page>
+      )}
+
+      {inviteCard && (
+        <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
       )}
     </main>
   );
