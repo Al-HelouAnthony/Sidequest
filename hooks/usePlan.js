@@ -1,12 +1,14 @@
 "use client";
 /**
  * Live view of one plan. Owner: Mhammad.
- * TODAY: polls GET /api/plans/[id] every 2s (works with the in-memory store).
- * SOCIAL PHASE: replace polling with Supabase Realtime, keeping this exact
- * return shape so Oscar's screens don't change.
+ * Polls GET /api/plans/[id] every 2 s, AND refetches instantly when the server signals the plan
+ * changed (Supabase Broadcast, PLAN.md S2). Polling stays as the backup if live updates are down.
+ * Same return shape as before, so Oscar's screens don't change.
  */
 import { useCallback, useEffect, useState } from "react";
 import { PlanResponse } from "@/types/api";
+import { onPlanSignal } from "@/lib/social/live";
+import { planChannel } from "@/lib/social/channels";
 
 /**
  * @param {string} planId
@@ -38,6 +40,9 @@ export function usePlan(planId) {
       clearInterval(t);
     };
   }, [load]);
+
+  // Live updates (S2): refetch the moment the server says this plan changed. Polling above stays as backup.
+  useEffect(() => onPlanSignal(planChannel(planId), load), [planId, load]);
 
   const rsvp = useCallback(
     async (value) => {

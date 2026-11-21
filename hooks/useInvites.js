@@ -8,6 +8,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlansResponse } from "@/types/api";
 import { useMeId } from "@/components/plans/useMeId";
+import { onPlanSignal } from "@/lib/social/live";
+import { invitesChannel } from "@/lib/social/channels";
 
 /** Invites the user closed, remembered for this browser tab session. */
 const DISMISSED_KEY = "sidequest:dismissed-invites";
@@ -46,12 +48,15 @@ export function useInvites(intervalMs = 3000) {
     };
     const first = setTimeout(load, 0);
     const timer = setInterval(load, intervalMs);
+    // Live updates (S2, Mhammad): the server pings user:<me>:invites when I'm invited or one of my plans changes.
+    const stopLive = meId ? onPlanSignal(invitesChannel(meId), load) : () => {};
     return () => {
       alive = false;
       clearTimeout(first);
       clearInterval(timer);
+      stopLive();
     };
-  }, [intervalMs]);
+  }, [intervalMs, meId]);
 
   const invites = useMemo(() => {
     if (!meId) return [];
