@@ -5,7 +5,7 @@
  * weather, caption, and the Skip / Save / Let's go actions.
  * Presentational: the parent (the feed screen) owns saved state and what each action does.
  */
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { formatSlot } from "@/lib/time";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { IconButton } from "@/components/ui/Button";
@@ -133,12 +133,15 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, pri
             {friends.length > 0 ? (
               <>
                 <AvatarStack people={friends} size="sm" tone="photo" />
-                <p className="min-w-0 text-sm font-semibold text-white/90">
+                {/* Each "Name 12 min" stays together; the line wraps between friends, never mid-name. */}
+                <p className="min-w-0 text-sm leading-snug font-semibold text-white/90">
                   {friends.map((f, i) => (
-                    <span key={f.id} className="whitespace-nowrap">
+                    <Fragment key={f.id}>
                       {i > 0 && <span aria-hidden="true"> · </span>}
-                      {f.name} {travel(f.travelMin, f.travelIsEstimate)}
-                    </span>
+                      <span className="whitespace-nowrap">
+                        {f.name} {travel(f.travelMin, f.travelIsEstimate)}
+                      </span>
+                    </Fragment>
                   ))}
                 </p>
               </>
