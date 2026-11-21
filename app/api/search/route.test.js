@@ -68,6 +68,18 @@ describe("POST /api/search", () => {
     SearchResponse.parse(await res.json());
   });
 
+  it("load more: a plain search returns Anthony's 'pass:offset' cursor when there are more cards", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "this weekend" })).json());
+    if (body.cards.length === 10) expect(body.nextCursor).toMatch(/^\d+:\d+$/);
+    else expect(body.nextCursor === null || /^\d+:\d+$/.test(body.nextCursor)).toBe(true);
+  });
+
+  it("cuisine search keeps filters.cuisine so GET /api/feed can rebuild it for 'load more'", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "pizza" })).json());
+    if (!body.summary.startsWith("No ")) expect(body.filters.cuisine).toBe("pizza");
+    expect(body.nextCursor === null || /^\d+:\d+$/.test(body.nextCursor)).toBe(true);
+  });
+
   it("empty query gives 400", async () => {
     const res = await post({ query: "" });
     expect(res.status).toBe(400);
