@@ -4,6 +4,7 @@
  * Full-screen snap scroll of FeedCards from GET /api/feed, more pages as you reach the end.
  * Skip and Save are optimistic (UI first, then POST /api/interactions).
  * Let's go (SwipeToGo) → InviteSheet → POST /api/plans → /plans/[id]. ⓘ → WhySheet (score breakdown).
+ * Search pill → SearchSheet → POST /api/search: results replace the feed until "Clear" (F10).
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,9 @@ import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { InviteBanner } from "@/components/plans/InviteBanner";
 import { InviteSheet } from "@/components/plans/InviteSheet";
 import { WhySheet } from "@/components/feed/WhySheet";
+import { SearchSheet, SearchSummary } from "@/components/feed/SearchSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
+import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -35,10 +38,15 @@ const SKIP_OUT_MS = 280;
 /**
  * @param {string | null} cursor
  * @param {AbortSignal} [signal]
+ * @param {import("@/types/feed").FeedFiltersT | null} [filters] active search filters (next pages of a search)
  * @returns {Promise<import("@/types/api").FeedResponseT>}
  */
-async function fetchFeed(cursor, signal) {
-  const url = cursor ? `/api/feed?cursor=${encodeURIComponent(cursor)}` : "/api/feed";
+async function fetchFeed(cursor, signal, filters) {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  if (filters && Object.keys(filters).length) params.set("filters", JSON.stringify(filters));
+  const qs = params.toString();
+  const url = qs ? `/api/feed?${qs}` : "/api/feed";
   const res = await fetch(url, { signal, cache: "no-store" });
   if (!res.ok) throw new Error(`Feed failed (${res.status})`);
   const parsed = FeedResponse.safeParse(await res.json());
@@ -65,7 +73,11 @@ function sendInteraction(card, action) {
 
 /** One full-screen snap page. */
 function Page({ children }) {
-  return <section className="h-full snap-start snap-always px-3 pt-1 pb-safe">{children}</section>;
+  return (
+    <section className="h-full snap-start snap-always px-3 pt-1" style={{ paddingBottom: TAB_BAR_SPACE }}>
+      {children}
+    </section>
+  );
 }
 
 function Feed() {
@@ -84,6 +96,11 @@ function Feed() {
   const [inviteCard, setInviteCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   /** Card whose "Why am I seeing this?" sheet is open, or null. */
   const [whyCard, setWhyCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
+  /** Active search (F10): what was typed + Claude's summary. null = the normal feed. */
+  const [search, setSearch] = useState(/** @type {{ query: string, summary: string } | null} */ (null));
+  const [searchOpen, setSearchOpen] = useState(0);
+  /** Filters of the active search, reused for the next pages and for Refresh. */
+  const filtersRef = useRef(/** @type {import("@/types/feed").FeedFiltersT | null} */ (null));
   const router = useRouter();
   /** Invites from friends that I haven't answered (polling GET /api/plans). */
   const { invites, dismiss: dismissInvite } = useInvites();
@@ -98,7 +115,7 @@ function Feed() {
   // First page (and retries).
   useEffect(() => {
     const ctrl = new AbortController();
-    fetchFeed(null, ctrl.signal)
+    fetchFeed(null, ctrl.signal, filtersRef.current)
       .then((d) => {
         setCards(d.cards);
         setNextCursor(d.nextCursor);
@@ -122,7 +139,7 @@ function Feed() {
     setLoadingMore(true);
     setMoreFailed(false);
     try {
-      const d = await fetchFeed(nextCursor);
+      const d = await fetchFeed(nextCursor, undefined, filtersRef.current);
       setCards((list) => {
         const seen = new Set(list.map((c) => c.id));
         return [...list, ...d.cards.filter((c) => !seen.has(c.id))];
@@ -176,6 +193,30 @@ function Feed() {
     else if (total >= 2) setRefreshHint("Your feed learned");
   };
 
+  /** Search results replace the feed (same cards, same gestures). */
+  const applySearch = (/** @type {import("@/types/api").SearchResponseT} */ result, /** @type {string} */ query) => {
+    filtersRef.current = result.filters;
+    setSearch({ query, summary: result.summary || query });
+    setSearchOpen(0);
+    setCards(result.cards);
+    setNextCursor(result.nextCursor);
+    setMoreFailed(false);
+    setStatus("ready");
+    skipCounts.current = new Map();
+    setRefreshHint(null);
+    scrollerRef.current?.scrollTo({ top: 0 });
+  };
+
+  /** Back to the normal feed. */
+  const clearSearch = () => {
+    filtersRef.current = null;
+    setSearch(null);
+    skipCounts.current = new Map();
+    setRefreshHint(null);
+    scrollerRef.current?.scrollTo({ top: 0 });
+    retry();
+  };
+
   /** Re-ranked first page (the engine has learned from the skips). Back to the top. */
   const refresh = () => {
     skipCounts.current = new Map();
@@ -220,7 +261,7 @@ function Feed() {
   /** The swipe bar broke: open the invite sheet for this card. */
   const go = (/** @type {import("@/types/feed").FeedCardT} */ card) => setInviteCard(card);
 
-  /** Sheet dismissed without sending: put that card's swipe bar back. */
+  /** Close the invite sheet and put that card's swipe bar back. */
   const closeInvite = () => {
     if (inviteCard) {
       const id = inviteCard.id;
@@ -229,15 +270,23 @@ function Feed() {
     setInviteCard(null);
   };
 
-  /** Plan created: count it as a "go" for the engine (boosts that category), then open the plan. */
+  /**
+   * Plan created: count it as a "go" for the engine (boosts that category), close the sheet, open the plan.
+   * Closing first matters: Next keeps this page alive (hidden) after navigating, so a sheet left open
+   * would reopen on Back, and its modal would block taps on the plan page.
+   */
   const planCreated = (/** @type {import("@/types/api").PlanViewT} */ plan) => {
     if (inviteCard) sendInteraction(inviteCard, "go");
+    closeInvite();
     router.push(`/plans/${plan.id}`);
   };
 
   return (
     <div className="mx-auto flex h-dvh w-full max-w-md flex-col">
-      <FeedHeader inviteCount={invites.length} />
+      <FeedHeader onSearch={() => setSearchOpen((n) => n + 1)} />
+      {search && (
+        <SearchSummary summary={search.summary} onClear={clearSearch} onEdit={() => setSearchOpen((n) => n + 1)} />
+      )}
       <main
         ref={scrollerRef}
         aria-label="Suggestions"
@@ -288,11 +337,19 @@ function Feed() {
 
         {status === "ready" && cards.length === 0 && !nextCursor && (
           <Page>
-            <StateIsland title="Everyone's busy" body="No shared free time right now. Try again next week.">
-              <Button variant="secondary" onClick={retry}>
-                Refresh
-              </Button>
-            </StateIsland>
+            {search ? (
+              <StateIsland title="Nothing matches" body={`No free time together for “${search.query}”. Try something broader.`}>
+                <Button variant="secondary" onClick={clearSearch}>
+                  Clear search
+                </Button>
+              </StateIsland>
+            ) : (
+              <StateIsland title="Everyone's busy" body="No shared free time right now. Try again next week.">
+                <Button variant="secondary" onClick={retry}>
+                  Refresh
+                </Button>
+              </StateIsland>
+            )}
           </Page>
         )}
 
@@ -331,10 +388,21 @@ function Feed() {
 
         {whyCard && <WhySheet key={whyCard.id} card={whyCard} onClose={() => setWhyCard(null)} />}
 
+        {searchOpen > 0 && (
+          <SearchSheet
+            key={searchOpen}
+            open
+            initialQuery={search?.query ?? ""}
+            onClose={() => setSearchOpen(0)}
+            onResult={applySearch}
+          />
+        )}
+
         {inviteCard && (
           <InviteSheet key={inviteCard.id} card={inviteCard} onClose={closeInvite} onCreated={planCreated} />
         )}
       </main>
+      <TabBar active="/feed" />
     </div>
   );
 }

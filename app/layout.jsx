@@ -18,6 +18,23 @@ const bricolage = Bricolage_Grotesque({
 export const metadata = {
   title: "Sidequest",
   description: "What you could do together this week.",
+  // Home-screen app on iOS (the manifest in app/manifest.js covers Android/Chrome).
+  appleWebApp: { capable: true, title: "Sidequest", statusBarStyle: "default" },
+};
+
+/**
+ * Full-bleed on notched phones: the screens already pad with env(safe-area-inset-*) (pt-safe, pb-safe, tab bar).
+ * Theme colour = the page background in each theme (globals.css --color-canvas), so the browser chrome blends in.
+ * @type {import("next").Viewport}
+ */
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#efe8dd" },
+    { media: "(prefers-color-scheme: dark)", color: "#303841" },
+  ],
 };
 
 /** @param {{ children: React.ReactNode }} props */

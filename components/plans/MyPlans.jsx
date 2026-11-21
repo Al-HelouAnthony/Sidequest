@@ -13,6 +13,7 @@ import { AvatarStack } from "@/components/ui/Avatar";
 import { buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
 
 const POLL_MS = 5000;
@@ -63,17 +64,8 @@ export function MyPlans() {
   const waiting = visible.filter((p) => p.status === "pending" && mine(p)?.rsvp !== "invited");
 
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe pb-safe">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/feed"
-          aria-label="Back to the feed"
-          className={cn("press inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-ink", focusRing)}
-        >
-          <Icon name="back" strokeWidth={2.5} />
-        </Link>
-        <h1 className="font-display text-3xl font-extrabold">My plans</h1>
-      </div>
+    <main className="mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
+      <h1 className="flex min-h-11 items-center font-display text-3xl font-extrabold">My plans</h1>
 
       {plans === null && !failed && <ListSkeleton />}
 
@@ -101,6 +93,8 @@ export function MyPlans() {
       <Section title="Invites" plans={invites} meId={meId} highlight />
       <Section title="Confirmed" plans={confirmed} meId={meId} />
       <Section title="Waiting for replies" plans={waiting} meId={meId} />
+
+      <TabBar active="/plans" />
     </main>
   );
 }
@@ -148,7 +142,7 @@ function PlanRow({ plan, meId }) {
 
   return (
     <Link
-      href={`/plans/${plan.id}`}
+      href={`/plans/${plan.id}?from=plans`}
       className={cn("cel flex items-center gap-3 rounded-tile p-2.5 pr-3", pressable, focusRing)}
     >
       <span className="relative size-16 shrink-0 overflow-hidden rounded-[14px] border-[1.5px] border-line bg-raised">

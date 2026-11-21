@@ -6,7 +6,7 @@
  */
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { formatSlot } from "@/lib/time";
 import { usePlan } from "@/hooks/usePlan";
 import { useMeId } from "@/components/plans/useMeId";
@@ -29,8 +29,14 @@ const RSVP = {
   out: { label: "Can't make it", className: "bg-raised text-ink-muted" },
 };
 
-/** @param {{ planId: string }} props */
-export function PlanScreen({ planId }) {
+/** Where the plan page's Back goes. */
+const BACK = {
+  feed: { href: "/feed", label: "Back to the feed" },
+  plans: { href: "/plans", label: "Back to my plans" },
+};
+
+/** @param {{ planId: string, back?: { href: string, label: string } }} props */
+export function PlanScreen({ planId, back = BACK.feed }) {
   const { plan, loading, error, rsvp } = usePlan(planId);
   const meId = useMeId();
   const [sending, setSending] = useState(/** @type {"in" | "out" | null} */ (null));
@@ -90,8 +96,8 @@ export function PlanScreen({ planId }) {
 
       <div className="flex items-center justify-between gap-3">
         <Link
-          href="/feed"
-          aria-label="Back to the feed"
+          href={back.href}
+          aria-label={back.label}
           className={cn("press inline-flex size-11 items-center justify-center rounded-full bg-surface text-ink", focusRing)}
         >
           <Icon name="back" strokeWidth={2.5} />
@@ -209,7 +215,8 @@ export function PlanScreen({ planId }) {
 /** Reads the plan id from the URL (/plans/[id]). Must be rendered inside <Suspense>. */
 export function PlanFromUrl() {
   const { id } = useParams();
-  return <PlanScreen key={String(id)} planId={String(id)} />;
+  const fromPlans = useSearchParams().get("from") === "plans";
+  return <PlanScreen key={String(id)} planId={String(id)} back={fromPlans ? BACK.plans : BACK.feed} />;
 }
 
 /** Full-page loading state (also the Suspense fallback). */

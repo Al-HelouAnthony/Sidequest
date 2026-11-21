@@ -31,11 +31,22 @@ export function BottomSheet({ open, onClose, title, description, children, foote
   const descId = useId();
 
   // Sync the `open` prop with the imperative dialog API.
+  // The cleanup closes it when the sheet unmounts OR is hidden: Next 16 (cacheComponents) keeps the
+  // previous page alive but hidden after a navigation, and a modal <dialog> left open in that hidden
+  // page makes every element on the new page untappable (the "back button does nothing" bug).
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      dialog.showModal();
+      // showModal focuses the first button (✕). A field marked data-autofocus gets the caret instead, right away,
+      // so typing + Enter can't land on ✕ and close the sheet.
+      /** @type {HTMLElement | null} */ (dialog.querySelector("[data-autofocus]"))?.focus();
+    }
     if (!open && dialog.open) dialog.close();
+    return () => {
+      if (dialog.open) dialog.close();
+    };
   }, [open]);
 
   return (
