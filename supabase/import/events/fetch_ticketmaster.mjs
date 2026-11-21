@@ -2,12 +2,17 @@
  * Fetch upcoming Montréal events from the Ticketmaster Discovery API v2 and write them as
  * SQL (upserts into public.events, see 00_create_table.sql). Owner: Adel.
  *
- *   node --env-file=.env.local supabase/import/events/fetch_ticketmaster.mjs [--days 30]
+ *   node --env-file=.env.local supabase/import/events/fetch_ticketmaster.mjs [--days 7] [--direct] [--keep-incomplete]
  *
  * Needs TICKETMASTER_API_KEY in .env.local (free "Consumer Key" from developer.ticketmaster.com).
- * Writes supabase/import/events/10_ticketmaster_data.sql. Paste it into the Supabase SQL Editor
- * after 00_create_table.sql. Safe to re-run: rows upsert on (source, source_id), so a fresh
- * fetch refreshes status (canceled/postponed) and prices.
+ * Default: writes supabase/import/events/10_ticketmaster_data.sql. Paste it into the Supabase SQL
+ * Editor after 00_create_table.sql.
+ * --direct: upserts straight into public.events with the service-role key instead (needs
+ * NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY), no copy-paste.
+ * Events without an exact start time or venue coordinates are skipped (the engine needs both:
+ * events have a fixed start, unlike places); --keep-incomplete keeps them.
+ * Safe to re-run: rows upsert on (source, source_id), so a fresh fetch refreshes status
+ * (canceled/postponed) and prices.
  *
  * API facts (from the Discovery API v2 docs): GET https://app.ticketmaster.com/discovery/v2/events.json,
  * key in the `apikey` query param, events in `_embedded.events`, venues in `event._embedded.venues`,
@@ -108,6 +113,24 @@ export function rowsToSql(rows, note = "") {
   );
 }
 
+/** Usable by the feed: exact start + where it is. @param {ReturnType<typeof eventToRow>} row */
+export const isComplete = (row) => !!row && !!row.start_at && row.lat !== null && row.lng !== null;
+
+/** Upsert rows into public.events with the service-role key, 500 at a time. */
+async function upsertDirect(rows) {
+  const { createClient } = await import("@supabase/supabase-js");
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error("--direct needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local");
+  const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  const now = new Date().toISOString();
+  for (let i = 0; i < rows.length; i += 500) {
+    const chunk = rows.slice(i, i + 500).map((r) => ({ ...r, updated_at: now }));
+    const { error } = await db.from("events").upsert(chunk, { onConflict: "source,source_id" });
+    if (error) throw new Error(`events.upsert failed${error.code ? ` (${error.code})` : ""}: ${error.message}`);
+  }
+}
+
 const isoNoMs = (d) => d.toISOString().replace(/\.\d{3}Z$/, "Z");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -118,7 +141,10 @@ async function main() {
     process.exit(1);
   }
   const daysArg = process.argv.indexOf("--days");
-  const days = daysArg > -1 ? Number(process.argv[daysArg + 1]) : 30;
+  const days = daysArg > -1 ? Number(process.argv[daysArg + 1]) : 7; // the feed looks 7 days ahead
+  const direct = process.argv.includes("--direct");
+  const keepIncomplete = process.argv.includes("--keep-incomplete");
+  let skipped = 0;
   const now = new Date();
   const params = {
     city: "Montreal",
@@ -145,7 +171,8 @@ async function main() {
     const events = json._embedded?.events ?? [];
     for (const e of events) {
       const row = eventToRow(e);
-      if (row) byId.set(row.source_id, row);
+      if (row && (keepIncomplete || isComplete(row))) byId.set(row.source_id, row);
+      else skipped++;
     }
     const totalPages = json.page?.totalPages ?? 0;
     console.log(`page ${page + 1}/${Math.max(totalPages, 1)}: ${events.length} events (total available ${json.page?.totalElements ?? 0})`);
@@ -154,8 +181,15 @@ async function main() {
   }
 
   const rows = [...byId.values()];
+  if (skipped) console.log(`Skipped ${skipped} events without an exact start time or venue location${keepIncomplete ? " / usable date" : " (--keep-incomplete keeps them)"}.`);
   if (rows.length === 0) {
     console.log("No events returned, nothing written.");
+    return;
+  }
+  if (direct) {
+    await upsertDirect(rows);
+    const withImage = rows.filter((r) => r.image_url).length;
+    console.log(`Upserted ${rows.length} events into public.events (${withImage} with an image).`);
     return;
   }
   fs.writeFileSync(OUT, rowsToSql(rows, `, next ${days} days, fetched ${now.toISOString()}`));
