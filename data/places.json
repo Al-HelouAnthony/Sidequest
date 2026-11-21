@@ -1494,40 +1494,46 @@
     "priceLevel": 2,
     "photoUrl": "https://picsum.photos/seed/hofkelsten/800/1400",
     "hours": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
       "tue": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ],
       "wed": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ],
       "thu": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ],
       "fri": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ],
       "sat": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ],
       "sun": [
         {
           "open": "08:00",
-          "close": "16:00"
+          "close": "17:00"
         }
       ]
     },
@@ -2131,46 +2137,40 @@
     "priceLevel": 3,
     "photoUrl": "https://picsum.photos/seed/upstairs/800/1400",
     "hours": {
-      "mon": [
-        {
-          "open": "17:30",
-          "close": "01:00"
-        }
-      ],
       "tue": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ],
       "wed": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ],
       "thu": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ],
       "fri": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ],
       "sat": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ],
       "sun": [
         {
           "open": "17:30",
-          "close": "01:00"
+          "close": "00:00"
         }
       ]
     },
@@ -2904,126 +2904,6 @@
     "indoor": false
   },
   {
-    "id": "10000000-0000-4000-8000-000000000050",
-    "name": "Au Sommet Place Ville Marie",
-    "category": "viewpoint",
-    "tags": [
-      "views",
-      "iconic"
-    ],
-    "lat": 45.5013,
-    "lng": -73.5702,
-    "address": "1 Place Ville Marie",
-    "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/ausommet/800/1400",
-    "hours": {
-      "mon": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "tue": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "wed": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "thu": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "fri": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "sat": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ],
-      "sun": [
-        {
-          "open": "10:00",
-          "close": "22:00"
-        }
-      ]
-    },
-    "typicalDurationMin": 60,
-    "indoor": true
-  },
-  {
-    "id": "10000000-0000-4000-8000-000000000051",
-    "name": "Tour de Montréal Observatory",
-    "category": "viewpoint",
-    "tags": [
-      "views",
-      "iconic"
-    ],
-    "lat": 45.5595,
-    "lng": -73.5521,
-    "address": "3200 Rue Viau",
-    "priceLevel": 2,
-    "photoUrl": "https://picsum.photos/seed/tourmontreal/800/1400",
-    "hours": {
-      "mon": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "tue": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "wed": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "thu": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "fri": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "sat": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "sun": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ]
-    },
-    "typicalDurationMin": 60,
-    "indoor": true
-  },
-  {
     "id": "10000000-0000-4000-8000-000000000052",
     "name": "La Grande Roue de Montréal",
     "category": "viewpoint",
@@ -3037,22 +2917,28 @@
     "priceLevel": 2,
     "photoUrl": "https://picsum.photos/seed/granderoue/800/1400",
     "hours": {
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "22:00"
+        }
+      ],
       "mon": [
         {
           "open": "10:00",
-          "close": "23:00"
+          "close": "22:00"
         }
       ],
       "tue": [
         {
           "open": "10:00",
-          "close": "23:00"
+          "close": "22:00"
         }
       ],
       "wed": [
         {
           "open": "10:00",
-          "close": "23:00"
+          "close": "22:00"
         }
       ],
       "thu": [
@@ -3068,12 +2954,6 @@
         }
       ],
       "sat": [
-        {
-          "open": "10:00",
-          "close": "23:00"
-        }
-      ],
-      "sun": [
         {
           "open": "10:00",
           "close": "23:00"
@@ -3268,37 +3148,37 @@
       "tue": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ],
       "wed": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ],
       "thu": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ],
       "fri": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ],
       "sat": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ],
       "sun": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "17:00"
         }
       ]
     },
@@ -3321,37 +3201,37 @@
       "tue": [
         {
           "open": "09:00",
-          "close": "17:00"
+          "close": "17:15"
         }
       ],
       "wed": [
         {
           "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "thu": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "fri": [
-        {
-          "open": "09:00",
-          "close": "17:00"
-        }
-      ],
-      "sat": [
-        {
-          "open": "09:00",
-          "close": "17:00"
+          "close": "17:15"
         }
       ],
       "sun": [
         {
           "open": "09:00",
-          "close": "17:00"
+          "close": "17:15"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "20:45"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "20:45"
+        }
+      ],
+      "sat": [
+        {
+          "open": "09:00",
+          "close": "20:45"
         }
       ]
     },
@@ -3375,43 +3255,43 @@
       "mon": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "tue": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "wed": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "thu": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "fri": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "sat": [
         {
           "open": "09:00",
-          "close": "16:30"
+          "close": "16:00"
         }
       ],
       "sun": [
         {
-          "open": "09:00",
-          "close": "16:30"
+          "open": "12:30",
+          "close": "16:00"
         }
       ]
     },
@@ -3433,44 +3313,44 @@
     "hours": {
       "mon": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "09:00",
+          "close": "00:00"
         }
       ],
       "tue": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "09:00",
+          "close": "00:00"
         }
       ],
       "wed": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "09:00",
+          "close": "00:00"
         }
       ],
       "thu": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "09:00",
+          "close": "00:00"
         }
       ],
       "fri": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "09:00",
+          "close": "00:00"
         }
       ],
       "sat": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "10:00",
+          "close": "00:00"
         }
       ],
       "sun": [
         {
-          "open": "12:00",
-          "close": "23:00"
+          "open": "10:00",
+          "close": "00:00"
         }
       ]
     },
@@ -3491,6 +3371,12 @@
     "priceLevel": 1,
     "photoUrl": "https://picsum.photos/seed/bonsecours/800/1400",
     "hours": {
+      "sun": [
+        {
+          "open": "10:00",
+          "close": "18:00"
+        }
+      ],
       "mon": [
         {
           "open": "10:00",
@@ -3512,29 +3398,145 @@
       "thu": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "19:00"
         }
       ],
       "fri": [
         {
           "open": "10:00",
-          "close": "18:00"
+          "close": "19:00"
         }
       ],
       "sat": [
         {
           "open": "10:00",
-          "close": "18:00"
-        }
-      ],
-      "sun": [
-        {
-          "open": "10:00",
-          "close": "18:00"
+          "close": "19:00"
         }
       ]
     },
     "typicalDurationMin": 60,
     "indoor": true
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000061",
+    "name": "Croix du mont Royal",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "iconic",
+      "free"
+    ],
+    "lat": 45.5088,
+    "lng": -73.5879,
+    "address": "Boucle du Sommet, Parc du Mont-Royal",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/croixmontroyal/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000062",
+    "name": "Parc Tiohtià:ke Otsira'kéhne Lookout",
+    "category": "viewpoint",
+    "tags": [
+      "views",
+      "nature",
+      "free"
+    ],
+    "lat": 45.5072,
+    "lng": -73.6107,
+    "address": "Parc Tiohtià:ke Otsira'kéhne, Outremont",
+    "priceLevel": 1,
+    "photoUrl": "https://picsum.photos/seed/troisiemesommet/800/1400",
+    "hours": {
+      "mon": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "tue": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "wed": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "thu": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "fri": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sat": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ],
+      "sun": [
+        {
+          "open": "06:00",
+          "close": "23:59"
+        }
+      ]
+    },
+    "typicalDurationMin": 60,
+    "indoor": false
   }
 ]
