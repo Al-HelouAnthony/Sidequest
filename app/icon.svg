@@ -1,6 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#ff5722"/>
-      <path d="M0 0H512V200Q256 160 0 200Z" fill="#fff" opacity=".14"/>
-      <rect x="96" y="196" width="320" height="120" rx="60" fill="#ffb199" stroke="#303841" stroke-width="14"/>
-      <g fill="none" stroke="#303841" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" opacity=".45"><path d="M156 234l22 22-22 22"/><path d="M196 234l22 22-22 22"/></g>
-      <circle cx="350" cy="256" r="46" fill="#303841"/>
-      <path d="M328 256h42M352 236l20 20-20 20" fill="none" stroke="#efe8dd" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Sidequest app icon: the swipe bar (the brand gesture) on the accent orange. Full-bleed, content in the maskable safe zone. -->
+  <rect width="512" height="512" fill="#ff5722"/>
+  <rect x="88" y="190" width="336" height="132" rx="66" fill="#ffb199" stroke="#303841" stroke-width="12"/>
+  <g fill="none" stroke="#303841" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.45">
+    <path d="M150 232l24 24-24 24"/>
+    <path d="M192 232l24 24-24 24"/>
+  </g>
+  <circle cx="356" cy="256" r="50" fill="#303841"/>
+  <path d="M332 256h46M358 234l22 22-22 22" fill="none" stroke="#efe8dd" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
