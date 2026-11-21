@@ -87,6 +87,10 @@
   --animate-confetti: confetti 1.9s cubic-bezier(0.25, 0.6, 0.45, 1) both;
   --animate-shake-once: shake 70ms linear 5;
   --animate-scan: scan 0.9s ease-in-out infinite;
+  --animate-stripes: stripes 0.9s linear infinite;
+  --animate-shine: shine 2.8s ease-in-out 0.6s infinite;
+  --animate-knob-hint: knob-hint 2.8s cubic-bezier(0.3, 1.4, 0.5, 1) 0.6s infinite;
+  --animate-tick-on: tick-on 380ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -174,6 +178,25 @@
     85% { opacity: 1; }
     100% { transform: translate(var(--drift, 0px), 105vh) rotate(var(--spin, 360deg)); opacity: 0; }
   }
+  @keyframes stripes {
+    to { background-position: 28px 0; }
+  }
+  @keyframes shine {
+    0%, 55% { transform: translateX(-120%) skewX(-20deg); }
+    100% { transform: translateX(420%) skewX(-20deg); }
+  }
+  @keyframes knob-hint {
+    0%, 60%, 100% { transform: translateX(0); }
+    70% { transform: translateX(16px); }
+    80% { transform: translateX(2px); }
+    88% { transform: translateX(8px); }
+    95% { transform: translateX(0); }
+  }
+  @keyframes tick-on {
+    0% { transform: scale(0.4); }
+    60% { transform: scale(1.8); }
+    100% { transform: scale(1.25); }
+  }
   @keyframes scan {
     0%, 100% { transform: translate(0, 0) rotate(0); }
     25% { transform: translate(-2px, -1px) rotate(-10deg); }
@@ -184,11 +207,25 @@
 /* SwipeToGo track: glossy, saturated orange. Colours derive from the accent token. */
 @utility swipe-rail {
   background-color: var(--color-accent);
-  border: 1.5px solid var(--color-line);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.16) 0 7px,
+    transparent 7px 14px
+  );
+  background-size: 28px 28px;
+  border: 2px solid var(--color-line);
+}
+/* Pulled-through strip: hot gradient from ocean teal to sunny yellow, with its own stripes. */
+@utility swipe-heat {
+  background-image:
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.25) 0 7px, transparent 7px 14px),
+    linear-gradient(90deg, var(--color-teal), var(--color-warning));
+  background-size: 28px 28px, 100% 100%;
 }
 /* Shatter pieces: same fill as the track. */
 @utility swipe-shard {
   background-color: var(--color-accent);
+  border: 1.5px solid var(--color-line);
 }
 
 /* Fonts come from next/font in app/layout.jsx. */
