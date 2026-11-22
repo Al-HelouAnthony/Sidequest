@@ -44,3 +44,7 @@ next-env.d.ts
 # datasets, too large
 businesses.csv
 evenements.csv
+# QA overnight: real-data backup (personal data) and local env, never commit
+/qa/backup/
+/.playwright-mcp/
+/supabase/.temp/
