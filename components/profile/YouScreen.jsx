@@ -234,6 +234,13 @@ export function YouScreen() {
         </Link>
       </p>
 
+      <p className="halo text-sm text-ink-muted">
+        How do calendar, live location and memories work?{" "}
+        <Link href="/plans/preview" className="font-semibold text-ink underline underline-offset-2">
+          See a preview
+        </Link>
+      </p>
+
       {/* Sign out: POST form on purpose (the route refuses GET, so a link or image can't sign anyone out).
           Also how teammates re-grant Google permissions (e.g. calendar.events for G2). */}
       <form action="/auth/signout" method="post">
