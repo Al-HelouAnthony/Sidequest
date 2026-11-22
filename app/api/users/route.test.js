@@ -14,6 +14,7 @@ vi.mock("@/lib/auth", () => ({ getSessionUserId: async () => auth.id }));
 
 const { GET } = await import("./route");
 const list = async () => UsersResponse.parse(await (await GET()).json()).users;
+const search = async (q) => UsersResponse.parse(await (await GET(new Request(`http://localhost/api/users?q=${encodeURIComponent(q)}`))).json()).users;
 
 beforeAll(async () => {
   // Two real Google accounts exist next to the demo world (mock mode keeps them in memory).
@@ -51,7 +52,7 @@ describe("GET /api/users", () => {
     auth.id = SAM;
     const body = await (await GET()).json();
     for (const u of body.users) {
-      expect(Object.keys(u).sort()).toEqual(["avatarUrl", "id", "isFriend", "name"]);
+      expect(Object.keys(u).sort()).toEqual(["avatarUrl", "id", "isFriend", "name", "username"]);
     }
   });
 
@@ -60,5 +61,23 @@ describe("GET /api/users", () => {
     const users = await list();
     const firstFriend = users.findIndex((u) => u.isFriend);
     if (firstFriend >= 0) expect(users.slice(firstFriend).every((u) => u.isFriend)).toBe(true);
+  });
+
+  it("every person has a unique @username (computed from the first name)", async () => {
+    auth.id = SAM;
+    const users = await list();
+    expect(users.every((u) => /^[a-z0-9_]{3,20}$/.test(u.username ?? ""))).toBe(true);
+    expect(new Set(users.map((u) => u.username)).size).toBe(users.length);
+    expect(users.find((u) => u.name.startsWith("Maya"))?.username).toBe("maya");
+  });
+
+  it("?q= searches by @username or name, in my world only", async () => {
+    auth.id = SAM;
+    expect((await search("@ma")).map((u) => u.username)).toEqual(["maya"]);
+    expect((await search("MAYA")).length).toBe(1);
+    expect(await search("zzz")).toEqual([]);
+    expect(await search("real")).toEqual([]); // real accounts are invisible to demo users
+    auth.id = REAL_A;
+    expect((await search("bea")).map((u) => u.id)).toEqual([REAL_B]);
   });
 });

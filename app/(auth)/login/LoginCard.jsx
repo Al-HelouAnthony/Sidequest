@@ -8,7 +8,8 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 
-const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
+// readonly: read busy times at sign-in. calendar.events (G2): add a plan to your calendar on "I'm in".
+const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events";
 
 /** @param {{ demoFriends: { id: string, name: string }[] }} props */
 export function LoginCard({ demoFriends }) {

@@ -16,7 +16,7 @@ import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "@/components/onboarding/options";
 import { InterestPicker, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
-/** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
+/** @typedef {{ id: string, name: string, avatarUrl: string, username?: string }} MeBasics */
 
 /**
  * Data credits required by the licences (CC BY 4.0 for Ville de Montréal, ODbL for OpenStreetMap, plus the
@@ -76,7 +76,7 @@ export function YouScreen() {
       .then((json) => {
         const { user } = MeResponse.parse(json);
         const known = new Set(INTERESTS.map((t) => t.id));
-        setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl });
+        setMe({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, username: user.username });
         setInterests(new Set(user.interests.filter((t) => known.has(t))));
       })
       .catch((e) => {
@@ -165,6 +165,7 @@ export function YouScreen() {
         <div className="min-w-0">
           <h1 className="font-display text-heading font-extrabold">You</h1>
           <p className="truncate text-ink-muted">{me ? me.name : loadFailed ? "Couldn't load your profile" : "Loading…"}</p>
+          {me?.username && <p className="truncate text-sm font-semibold text-ink-muted">@{me.username}</p>}
         </div>
       </div>
 
@@ -232,6 +233,21 @@ export function YouScreen() {
           Open Friends
         </Link>
       </p>
+
+      <p className="halo text-sm text-ink-muted">
+        How do calendar, live location and memories work?{" "}
+        <Link href="/plans/preview" className="font-semibold text-ink underline underline-offset-2">
+          See a preview
+        </Link>
+      </p>
+
+      {/* Sign out: POST form on purpose (the route refuses GET, so a link or image can't sign anyone out).
+          Also how teammates re-grant Google permissions (e.g. calendar.events for G2). */}
+      <form action="/auth/signout" method="post">
+        <Button type="submit" variant="secondary" fullWidth>
+          Sign out
+        </Button>
+      </form>
 
       <DataCredits />
 

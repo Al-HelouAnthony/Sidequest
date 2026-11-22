@@ -23,11 +23,26 @@ import { cn, focusRing, pressable } from "@/components/ui/classes";
  */
 export function InviteSheet({ card, onClose, onCreated }) {
   const [selected, setSelected] = useState(() => new Set(card?.friends.map((f) => f.id) ?? []));
+  /** G3: which time is picked: -1 = the card's own slot, else an index into card.alternatives. */
+  const [choice, setChoice] = useState(-1);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(/** @type {string | null} */ (null));
 
   if (!card) return null;
-  const { place, slot, friends } = card;
+  const alternatives = card.alternatives ?? [];
+  const alt = choice >= 0 ? alternatives[choice] : null;
+  const { place } = card;
+  const slot = alt ? alt.slot : card.slot;
+  const friends = alt ? alt.friends : card.friends;
+  /** For events, another date can be another event id. */
+  const placeId = alt ? alt.placeId : place.id;
+
+  /** Switch time: the friends free then are pre-selected again. @param {number} i */
+  const pick = (i) => {
+    setChoice(i);
+    setSelected(new Set((i >= 0 ? alternatives[i].friends : card.friends).map((f) => f.id)));
+    setError(null);
+  };
   const count = selected.size;
 
   const toggle = (/** @type {string} */ id) =>
@@ -46,7 +61,7 @@ export function InviteSheet({ card, onClose, onCreated }) {
       const res = await fetch("/api/plans", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ placeId: place.id, start: slot.start, end: slot.end, inviteeIds: [...selected] }),
+        body: JSON.stringify({ placeId, start: slot.start, end: slot.end, inviteeIds: [...selected] }),
       });
       const json = await res.json().catch(() => ({}));
       // 409 (Mhammad): someone ticked is busy at that time, e.g. "Maya isn't free then". Say who; nothing was sent.
@@ -94,6 +109,34 @@ export function InviteSheet({ card, onClose, onCreated }) {
         </div>
       }
     >
+      {alternatives.length > 0 && (
+        <div className="pb-3">
+          <p className="pb-2 text-label font-bold text-ink-muted">When</p>
+          <div role="radiogroup" aria-label="Pick a time" className="flex flex-wrap gap-2">
+            {[-1, ...alternatives.map((_, i) => i)].map((i) => {
+              const s = i < 0 ? card.slot : alternatives[i].slot;
+              const on = choice === i;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  disabled={sending}
+                  onClick={() => pick(i)}
+                  className={cn(
+                    "press min-h-11 rounded-full px-3.5 text-sm font-bold tabular-nums disabled:opacity-55",
+                    on ? "bg-teal text-on-teal" : "bg-surface text-ink",
+                    focusRing,
+                  )}
+                >
+                  {i < 0 ? formatSlot(s.start, s.end) : `Also free: ${formatSlot(s.start, s.end)}`}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       {friends.length === 0 ? (
         <p className="py-6 text-center text-ink-muted">Nobody else is free for this slot. Try another card.</p>
       ) : (

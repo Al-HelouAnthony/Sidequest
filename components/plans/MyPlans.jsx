@@ -6,7 +6,8 @@
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { PlansResponse } from "@/types/api";
+import { useRouter } from "next/navigation";
+import { PlanResponse, PlansResponse } from "@/types/api";
 import { formatSlot } from "@/lib/time";
 import { useMeId } from "@/components/plans/useMeId";
 import { AvatarStack } from "@/components/ui/Avatar";
@@ -69,6 +70,8 @@ export function MyPlans() {
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
       <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
+
+      <StartNow />
 
       {plans === null && !failed && <ListSkeleton />}
 
@@ -163,6 +166,57 @@ function PlanRow({ plan, meId }) {
       </span>
       <Icon name="arrowRight" strokeWidth={2.5} className="size-4 shrink-0 text-ink-muted" />
     </Link>
+  );
+}
+
+/**
+ * "Start a sidequest now": POST /api/plans/now picks one of our places + friends free for an hour starting
+ * in ~10 min and creates a real plan (friends get the invite). Live location + memory photos work right away.
+ * @param {{ showPreviewLink?: boolean }} props  false on the preview page itself
+ */
+export function StartNow({ showPreviewLink = true }) {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(/** @type {string | null} */ (null));
+
+  const start = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/plans/now", { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(typeof json.error === "string" ? json.error : "Couldn't start a sidequest. Try again.");
+        return;
+      }
+      const { plan } = PlanResponse.parse(json);
+      router.push(`/plans/${plan.id}?from=plans`);
+    } catch (e) {
+      console.error("[plans] start now", e);
+      setError("Couldn't start a sidequest. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section aria-label="Start a sidequest now" className="cel space-y-2.5 rounded-tile p-4">
+      <p className="font-bold">Free right now?</p>
+      <p className="text-sm text-ink-muted">We pick a spot that&apos;s open and friends who are free for the next hour, starting in 10 min.</p>
+      <button type="button" onClick={start} disabled={busy} aria-busy={busy || undefined} className={buttonClasses({ size: "lg", fullWidth: true })}>
+        {busy ? "Finding a spot…" : "Start a sidequest now"}
+      </button>
+      {error && (
+        <p role="alert" className="text-sm font-semibold text-danger">
+          {error}
+        </p>
+      )}
+      {showPreviewLink && (
+        <Link href="/plans/preview" className={cn("inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-2", focusRing)}>
+          See how memories &amp; live location work
+        </Link>
+      )}
+    </section>
   );
 }
 

@@ -78,10 +78,41 @@ export const PlanView = Plan.extend({
       avatarUrl: z.string(),
       rsvp: Rsvp,
       isCreator: z.boolean(),
+      /** G2: true when this plan is in the member's Google Calendar (added on "I'm in"). */
+      calendarAdded: z.boolean().optional(),
     }),
   ),
 });
 /** @typedef {z.infer<typeof PlanView>} PlanViewT */
+
+// ---- G5 live location: POST /api/plans/[id]/location → OkResponse; GET /api/plans/[id]/locations ----
+/** My position, sent only while I opted in, from 30 min before the start to 30 min after. */
+export const LocationRequest = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  accuracyM: z.number().nonnegative().max(100_000),
+});
+/** @typedef {z.infer<typeof LocationRequest>} LocationRequestT */
+/** Per member: status + distance/ETA to the place. NEVER another member's raw coordinates. */
+export const PlanLocationsResponse = z.object({
+  members: z.array(
+    z.object({
+      userId: Id,
+      status: z.enum(["sharing", "arrived", "late", "not-sharing"]),
+      distanceM: z.number().int().nonnegative().optional(),
+      etaMin: z.number().int().nonnegative().optional(),
+      updatedAt: IsoDateTime.optional(),
+    }),
+  ),
+});
+/** @typedef {z.infer<typeof PlanLocationsResponse>} PlanLocationsResponseT */
+
+// ---- G4 memory photos: POST /api/plans/[id]/photos (multipart "photo") → PlanPhotosResponse; GET same ----
+/** Signed URLs (≈1 h), plan members only. */
+export const PlanPhotosResponse = z.object({
+  photos: z.array(z.object({ id: Id, userId: Id, url: z.string().url(), createdAt: IsoDateTime })),
+});
+/** @typedef {z.infer<typeof PlanPhotosResponse>} PlanPhotosResponseT */
 
 // POST /api/plans
 export const CreatePlanRequest = z.object({
@@ -156,7 +187,12 @@ export const FriendsResponse = z.object({ friends: z.array(FriendView) });
 export const AddFriendRequest = z.object({ friendId: Id, closeness: Closeness.default(2) });
 
 // ---- GET /api/users (people I can add as friends: everyone except me) ----
-export const UserListItem = User.pick({ id: true, name: true, avatarUrl: true }).extend({ isFriend: z.boolean() });
+// GET /api/users?q=<text>: q (optional, ≤ 30 chars) filters by @username prefix or the start of a name word.
+export const UserListItem = User.pick({ id: true, name: true, avatarUrl: true }).extend({
+  isFriend: z.boolean(),
+  /** "anthony" (shown as @anthony). */
+  username: z.string().optional(),
+});
 /** @typedef {z.infer<typeof UserListItem>} UserListItemT */
 export const UsersResponse = z.object({ users: z.array(UserListItem) });
 /** @typedef {z.infer<typeof UsersResponse>} UsersResponseT */
