@@ -76,8 +76,11 @@
   --radius-sheet: 1.875rem;
 
   /* Depth (hard, flat, no blur: the cel look) */
-  --shadow-cel: 0 4px 0 var(--color-shade);
+  --shadow-cel: 0 5px 0 var(--color-shade);
   --shadow-cel-sm: 0 3px 0 var(--color-shade);
+  /* Cel shading, stronger (design-system skill): a flat darker band inside the bottom, a thin light rim on top. */
+  --shadow-band: inset 0 -4px 0 color-mix(in srgb, var(--color-shade) 10%, transparent);
+  --shadow-rim: inset 0 2px 0 rgb(255 255 255 / var(--rim, 0.45));
   --shadow-float: 0 -6px 0 rgb(48 56 65 / 0.12), 0 -18px 40px rgb(48 56 65 / 0.18);
 
   /* Motion */
@@ -269,6 +272,7 @@
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
+    --rim: 0.08;
     color-scheme: dark;
   }
 }
@@ -283,25 +287,26 @@
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
+  --rim: 0.08;
   color-scheme: dark;
 }
 
 /* Island: outlined, big radius, hard shadow. Add rounded-card / rounded-tile yourself. */
 @utility cel {
   background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel);
 }
 @utility cel-sm {
   background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel-sm);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel-sm);
 }
 
 /* Physical button: outline + hard shadow that disappears as the button sinks on tap. */
 @utility press {
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel-sm);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel-sm);
   transition:
     transform 120ms ease,
     box-shadow 120ms ease,
@@ -310,7 +315,7 @@
     opacity 200ms;
   &:active:not(:disabled, [aria-disabled="true"]) {
     transform: translateY(3px);
-    box-shadow: none;
+    box-shadow: var(--shadow-rim), var(--shadow-band);
   }
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -350,7 +355,7 @@
 @utility glass-photo {
   background-color: var(--color-surface);
   color: var(--color-ink);
-  border: 1.5px solid var(--color-line);
+  border: 2px solid var(--color-line);
   box-shadow: 0 2px 0 var(--color-shade);
 }
 

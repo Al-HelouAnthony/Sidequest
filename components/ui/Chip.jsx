@@ -8,7 +8,7 @@ import { cn, focusRing } from "./classes";
 import { Icon } from "./Icon";
 
 const TONES = {
-  default: "border-[1.5px] border-line bg-surface text-ink",
+  default: "border-2 border-line bg-surface text-ink",
   /** Frosted, for chips on top of a photo. */
   glass: "glass-photo",
 };
@@ -67,7 +67,7 @@ export function Chip({ children, selected = false, onClick, onRemove, removeLabe
   }
 
   return (
-    <span className={cn(base, selected ? "border-[1.5px] border-line bg-teal text-on-teal" : TONES[tone], "h-7 px-3 text-xs", className)}>
+    <span className={cn(base, selected ? "border-2 border-line bg-teal text-on-teal" : TONES[tone], "h-7 px-3 text-xs", className)}>
       {icon}
       {children}
     </span>

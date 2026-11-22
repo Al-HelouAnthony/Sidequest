@@ -139,7 +139,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
         <span
           key={planStatus}
           className={cn(
-            "inline-flex h-8 items-center gap-1.5 rounded-full border-[1.5px] border-line px-3 text-sm font-bold motion-safe:animate-pop",
+            "inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-line px-3 text-sm font-bold motion-safe:animate-pop",
             status.className,
           )}
         >
@@ -149,7 +149,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       </div>
 
       {/* Place hero */}
-      <div className="relative isolate h-56 overflow-hidden rounded-card border-[1.5px] border-line bg-ink shadow-cel">
+      <div className="relative isolate h-56 overflow-hidden rounded-card border-2 border-line bg-ink shadow-cel">
         {/* eslint-disable-next-line @next/next/no-img-element -- remote place photos */}
         <img src={plan.place.photoUrl} alt="" className="absolute inset-0 -z-10 size-full object-cover" />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/20 to-transparent" />
@@ -195,7 +195,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
               <span
                 key={m.rsvp}
                 className={cn(
-                  "inline-flex h-7 shrink-0 items-center gap-1 rounded-full border-[1.5px] border-line px-2.5 text-xs font-bold motion-safe:animate-pop",
+                  "inline-flex h-7 shrink-0 items-center gap-1 rounded-full border-2 border-line px-2.5 text-xs font-bold motion-safe:animate-pop",
                   RSVP[m.rsvp].className,
                 )}
               >

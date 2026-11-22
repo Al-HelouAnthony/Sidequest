@@ -149,7 +149,7 @@ function PlanRow({ plan, meId }) {
       href={`/plans/${plan.id}?from=plans`}
       className={cn("cel flex items-center gap-3 rounded-tile p-2.5 pr-3", pressable, focusRing)}
     >
-      <span className="relative size-16 shrink-0 overflow-hidden rounded-[14px] border-[1.5px] border-line bg-raised">
+      <span className="relative size-16 shrink-0 overflow-hidden rounded-[14px] border-2 border-line bg-raised">
         {/* eslint-disable-next-line @next/next/no-img-element -- remote place photos */}
         <img src={plan.place.photoUrl} alt="" loading="lazy" className="size-full object-cover" />
       </span>

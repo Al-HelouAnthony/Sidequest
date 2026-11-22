@@ -81,7 +81,7 @@ function WeatherSheetBody({ card, onClose }) {
       <div className="space-y-4 pb-4">
         {/* What the card plans with */}
         <div className="cel flex items-center gap-4 rounded-tile p-4">
-          <span className="grid size-16 shrink-0 place-items-center rounded-full border-[1.5px] border-line bg-surface">
+          <span className="grid size-16 shrink-0 place-items-center rounded-full border-2 border-line bg-surface">
             <Icon name={weather.icon} cel strokeWidth={1.7} className="size-10" />
           </span>
           <div className="min-w-0">

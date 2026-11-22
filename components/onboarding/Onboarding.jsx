@@ -212,7 +212,7 @@ function CalendarStep({ state }) {
     <>
       <div
         className={cn(
-          "mx-auto mt-4 grid size-28 place-items-center rounded-full border-[1.5px] border-line shadow-cel",
+          "mx-auto mt-4 grid size-28 place-items-center rounded-full border-2 border-line shadow-cel",
           connected ? "bg-teal text-on-teal" : "bg-surface",
         )}
       >

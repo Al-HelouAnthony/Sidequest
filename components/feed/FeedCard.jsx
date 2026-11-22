@@ -144,7 +144,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
         {/* Bottom: what · when · who, caption, actions */}
         <div className="space-y-3 text-white">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal tabular-nums shadow-[0_2px_0_var(--color-shade)]">
+            <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-line bg-teal px-3 text-sm font-bold text-on-teal tabular-nums shadow-[0_2px_0_var(--color-shade)]">
               <Icon name="clock" cel strokeWidth={1.9} className="size-[18px]" />
               {formatSlot(slot.start, slot.end)}
             </p>
@@ -218,7 +218,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
 /** N1 badge: amber cel pill, readable on any photo. Also used in the place details sheet. */
 export function HoursNotVerified() {
   return (
-    <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-[1.5px] border-line bg-warning px-3 text-xs font-bold text-on-accent">
+    <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-line bg-warning px-3 text-xs font-bold text-on-accent">
       <Icon name="info" strokeWidth={2.2} className="size-4" />
       Hours not verified · call ahead
     </p>
@@ -233,7 +233,7 @@ export function FeedCardSkeleton({ className }) {
   return (
     <div
       aria-hidden="true"
-      className={cn("relative h-full overflow-hidden rounded-card border-[1.5px] border-line bg-raised shadow-cel", className)}
+      className={cn("relative h-full overflow-hidden rounded-card border-2 border-line bg-raised shadow-cel", className)}
     >
       <div className="flex h-full flex-col justify-between p-4 motion-safe:animate-pulse">
         <div className="flex gap-2">
