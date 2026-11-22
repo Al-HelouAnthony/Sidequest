@@ -18,6 +18,9 @@ export const TABS = /** @type {const} */ ([
   { href: "/me", label: "You", icon: "user" },
 ]);
 
+/** Fired on window when the Feed tab is tapped while the feed is open (app/feed/page.jsx refreshes). */
+export const FEED_RESELECT_EVENT = "sq:feed-reselect";
+
 /** Bottom space a tabbed screen leaves for the bar: 12px gap + ~64px bar + 12px air, plus the home-bar inset. */
 export const TAB_BAR_SPACE = "calc(5.5rem + env(safe-area-inset-bottom))";
 
@@ -65,6 +68,13 @@ export function TabBar({ active }) {
               key={tab.href}
               href={tab.href}
               aria-current={on ? "page" : undefined}
+              onClick={(e) => {
+                // Already on the feed: tapping Feed again refreshes it (top + fresh ideas), like Instagram.
+                if (on && tab.href === "/feed") {
+                  e.preventDefault();
+                  window.dispatchEvent(new Event(FEED_RESELECT_EVENT));
+                }
+              }}
               aria-label={badge ? `${tab.label}, ${inviteCount} new ${inviteCount === 1 ? "invite" : "invites"}` : undefined}
               className={cn(
                 "relative z-10 flex min-h-[52px] flex-col items-center justify-center gap-0.5 rounded-[24px] text-micro font-bold transition-colors duration-300",

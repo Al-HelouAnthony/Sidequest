@@ -17,7 +17,7 @@ import { SearchSheet, SearchSummary } from "@/components/feed/SearchSheet";
 import { PlaceSheet } from "@/components/feed/PlaceSheet";
 import { WeatherSheet } from "@/components/feed/WeatherSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
-import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
+import { FEED_RESELECT_EVENT, TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { addVisitParams, newSeed, readSeen, rememberSeen } from "@/components/feed/visit";
 import { usePager } from "@/components/feed/usePager";
 import { AppBackground } from "@/components/ui/AppBackground";
@@ -372,6 +372,22 @@ function Feed() {
     scrollerRef.current?.scrollTo({ top: 0 });
     retry();
   };
+
+  // Feed tab tapped while the feed is open: a new visit (new shuffle, places just seen move down), from the top.
+  // With a search on, it goes back to the normal feed.
+  const reselectRef = useRef(() => {});
+  useEffect(() => {
+    reselectRef.current = () => {
+      if (search) return clearSearch();
+      visitRef.current = null;
+      refresh();
+    };
+  });
+  useEffect(() => {
+    const onReselect = () => reselectRef.current();
+    window.addEventListener(FEED_RESELECT_EVENT, onReselect);
+    return () => window.removeEventListener(FEED_RESELECT_EVENT, onReselect);
+  }, []);
 
   /**
    * Optimistic: the interaction goes out on tap, the card flies off, then leaves the list
