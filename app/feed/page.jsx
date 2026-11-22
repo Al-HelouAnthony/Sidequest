@@ -96,17 +96,22 @@ function preloadPhotos(cards) {
   }
 }
 
+/** Interactions go out one after another (the server's weight update is read → change → write). */
+let interactionQueue = Promise.resolve();
+
 /**
  * Fire-and-forget interaction (the engine learns from these). The UI never waits for it.
+ * Queued so quick skips don't overlap and overwrite each other's learning.
  * @param {import("@/types/feed").FeedCardT} card
  * @param {"skip" | "save" | "go"} action
  */
 function sendInteraction(card, action) {
-  fetch("/api/interactions", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ placeId: card.place.id, slotStart: card.slot.start, action }),
-  }).catch((e) => console.warn("[feed] interaction not sent", e));
+  const body = JSON.stringify({ placeId: card.place.id, slotStart: card.slot.start, action });
+  interactionQueue = interactionQueue.then(() =>
+    fetch("/api/interactions", { method: "POST", headers: { "content-type": "application/json" }, body })
+      .then(() => undefined)
+      .catch((e) => console.warn("[feed] interaction not sent", e)),
+  );
 }
 
 /**
