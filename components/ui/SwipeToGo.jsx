@@ -489,7 +489,7 @@ export function SwipeToGo({
             "relative grid touch-pan-y place-items-center rounded-full border-2 border-line",
             broken ? "cursor-default" : "cursor-grab active:cursor-grabbing",
             phase === "done"
-              ? cn("bg-teal text-on-teal", !instant && "animate-land")
+              ? cn("bg-teal text-on-teal", !instant && (intense ? "animate-land-stretch" : "animate-land"))
               : "bg-on-accent text-white",
             focusRing,
           )}
