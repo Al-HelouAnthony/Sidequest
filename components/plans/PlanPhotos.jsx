@@ -109,7 +109,7 @@ export function PlanPhotos({ planId, startAt, endAt, names }) {
 
   return (
     <section aria-labelledby="plan-photos" className="space-y-3">
-      <input ref={inputRef} type="file" accept="image/*" capture="environment" className="sr-only" tabIndex={-1} onChange={onPick} />
+      <input ref={inputRef} type="file" accept="image/*" capture="environment" aria-label="Take a memory photo" className="sr-only" tabIndex={-1} onChange={onPick} />
 
       {nudge && canUpload && (
         <div role="status" className="cel flex items-center gap-3 rounded-tile p-3 motion-safe:animate-toast-in">
