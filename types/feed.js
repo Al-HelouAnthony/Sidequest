@@ -66,6 +66,16 @@ export const FeedCard = z.object({
   breakdown: ScoreBreakdown,
   /** Claude-written one-liner, or the template fallback. Never empty. */
   caption: z.string().min(1),
+  /**
+   * G3: up to 3 OTHER good times for the same place (another day, or ≥ 2 h apart), or another date of
+   * the same event (then `placeId` is that date's event id). Each one passes every hard rule: open,
+   * travel cap, and the listed friends are free for the whole slot. Pick one → POST /api/plans with
+   * its placeId + slot + friends.
+   */
+  alternatives: z
+    .array(z.object({ placeId: Id, slot: z.object({ start: IsoDateTime, end: IsoDateTime }), friends: z.array(FeedFriend) }))
+    .max(3)
+    .optional(),
 });
 /** @typedef {z.infer<typeof FeedCard>} FeedCardT */
 
