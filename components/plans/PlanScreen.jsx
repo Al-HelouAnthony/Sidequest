@@ -18,6 +18,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, focusRing } from "@/components/ui/classes";
 import { CATEGORY_LABELS } from "@/components/feed/FeedCard";
+import { startsLabel } from "@/components/feed/events";
 import { BookItSheet } from "@/components/plans/BookItSheet";
 
 const STATUS = {
@@ -118,6 +119,8 @@ export function PlanScreen({ planId, back = BACK.feed }) {
   const members = [...plan.members].sort((a, b) => Number(b.isCreator) - Number(a.isCreator));
   const inCount = plan.members.filter((m) => m.rsvp === "in").length;
   const planStatus = cancelledHere ? "cancelled" : plan.status;
+  /** Events: exact start (contract: PlanView.place.startsAt, optional). */
+  const startsAt = /** @type {{ startsAt?: string }} */ (plan.place).startsAt;
   const status = STATUS[planStatus];
   const invitedCount = plan.members.filter((m) => !m.isCreator).length;
 
@@ -167,6 +170,12 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <Icon name="clock" cel strokeWidth={1.9} className="size-5" />
           {formatSlot(plan.startAt, plan.endAt)}
         </p>
+        {/* Events: the exact start (the plan's own times snap to 30 min). */}
+        {startsAt && (
+          <p className="flex items-center gap-2 pl-7 text-sm font-semibold">
+            {startsLabel(startsAt)}
+          </p>
+        )}
         <p className="flex items-center gap-2 text-sm text-ink-muted">
           <Icon name="pin" cel strokeWidth={1.9} className="size-5" />
           {plan.place.address}
