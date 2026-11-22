@@ -21,7 +21,7 @@ import { cn, focusRing } from "./classes";
 
 const HEIGHT = 56;
 /** Knob diameter. Kept well inside the track so its border + hard shadow never spill over the edge. */
-const KNOB = 42;
+const KNOB = 44;
 /** Gap around the knob; (HEIGHT - KNOB) / 2 keeps it vertically centred. */
 const PAD = (HEIGHT - KNOB) / 2;
 /** Label lane: starts just right of the resting knob, keeps clear of the rounded end. */
@@ -269,7 +269,7 @@ export function SwipeToGo({
 
         {/* Resting label: its own lane right of the knob; the chevrons always show. */}
         <div
-          className="absolute inset-y-0 flex items-center justify-center gap-1 text-white transition-opacity duration-300 [text-shadow:0_2px_0_var(--color-line)] [&_svg]:drop-shadow-[0_2px_0_var(--color-line)]"
+          className="absolute inset-y-0 flex items-center justify-center gap-1 text-on-accent transition-opacity duration-300"
           style={{ left: LABEL_LEFT, right: LABEL_RIGHT, opacity: phase === "drag" || broken ? 0 : 1 }}
         >
           <span className="font-display text-base leading-none font-extrabold whitespace-nowrap">{label}</span>

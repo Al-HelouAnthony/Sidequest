@@ -384,7 +384,7 @@ function Feed() {
         {status === "loading" && (
           <Page>
             <span className="sr-only">Loading…</span>
-            <FeedCardSkeleton className="motion-safe:animate-pulse" />
+            <FeedCardSkeleton />
           </Page>
         )}
 
@@ -437,7 +437,7 @@ function Feed() {
         {status === "ready" && loadingMore && (
           <Page>
             <span className="sr-only">Loading more…</span>
-            <FeedCardSkeleton className="motion-safe:animate-pulse" />
+            <FeedCardSkeleton />
           </Page>
         )}
 

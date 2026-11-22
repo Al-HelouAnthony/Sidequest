@@ -235,7 +235,7 @@ export function FeedCardSkeleton({ className }) {
       aria-hidden="true"
       className={cn("relative h-full overflow-hidden rounded-card border-[1.5px] border-line bg-raised shadow-cel", className)}
     >
-      <div className="flex h-full flex-col justify-between p-4">
+      <div className="flex h-full flex-col justify-between p-4 motion-safe:animate-pulse">
         <div className="flex gap-2">
           <div className="h-8 w-20 rounded-full bg-surface/60" />
           <div className="h-8 w-16 rounded-full bg-surface/60" />
