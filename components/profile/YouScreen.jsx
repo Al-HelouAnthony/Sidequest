@@ -251,7 +251,7 @@ export function YouScreen() {
       {/* Sign out: POST form on purpose (the route refuses GET, so a link or image can't sign anyone out).
           Also how teammates re-grant Google permissions (e.g. calendar.events for G2). */}
       <form action="/auth/signout" method="post">
-        <Button type="submit" variant="secondary" fullWidth>
+        <Button type="submit" variant="danger" fullWidth>
           Sign out
         </Button>
       </form>

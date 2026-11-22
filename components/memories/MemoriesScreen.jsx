@@ -115,14 +115,21 @@ export function MemoriesScreen() {
             <section aria-label="Stories">
               <ul className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none">
                 {memories.map((m, i) => (
-                  <li key={m.planId} className="w-[76px] shrink-0">
+                  <li
+                    key={m.planId}
+                    className="w-[76px] shrink-0 motion-safe:animate-pop"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  >
                     <button
                       type="button"
                       onClick={() => setOpen({ memory: i, photo: 0, play: true })}
                       aria-label={`Play ${m.place.name}, ${memoryDay(m.startAt)}, ${m.photos.length} ${m.photos.length === 1 ? "photo" : "photos"}`}
                       className={cn("flex w-full flex-col items-center gap-1 rounded-tile", pressable, focusRing)}
                     >
-                      <span className="rounded-full bg-accent p-[3px]">
+                      <span
+                        className="story-ring rounded-full p-[3px] motion-safe:animate-ring-in"
+                        style={{ animationDelay: `${120 + i * 70}ms` }}
+                      >
                         <span className="block rounded-full border-2 border-line bg-surface p-[2px]">
                           {/* eslint-disable-next-line @next/next/no-img-element -- signed Supabase URLs */}
                           <img src={m.photos[0].url} alt="" className="size-16 rounded-full object-cover" loading="lazy" />
@@ -139,14 +146,19 @@ export function MemoriesScreen() {
               <section key={month.label} aria-label={month.label} className="space-y-4">
                 <h2 className="halo font-display text-xl font-extrabold">{month.label}</h2>
                 {month.items.map(({ memory, index }) => (
-                  <MemoryGroup key={memory.planId} memory={memory} onOpen={(photo) => setOpen({ memory: index, photo, play: false })} />
+                  <MemoryGroup
+                    key={memory.planId}
+                    memory={memory}
+                    order={index}
+                    onOpen={(photo) => setOpen({ memory: index, photo, play: false })}
+                  />
                 ))}
               </section>
             ))}
           </>
         )}
 
-        <TabBar active="/plans" />
+        <TabBar active="/memories" />
       </main>
 
       {open && memories && memories[open.memory] && (
@@ -160,11 +172,14 @@ export function MemoriesScreen() {
   );
 }
 
-/** @param {{ memory: Memory, onOpen: (photoIndex: number) => void }} props */
-function MemoryGroup({ memory, onOpen }) {
+/** @param {{ memory: Memory, order: number, onOpen: (photoIndex: number) => void }} props */
+function MemoryGroup({ memory, order, onOpen }) {
   const names = Object.fromEntries(memory.people.map((p) => [p.userId, p.name]));
   return (
-    <article className="cel space-y-2.5 rounded-tile p-3">
+    <article
+      className="cel space-y-2.5 rounded-tile p-3 motion-safe:animate-rise"
+      style={{ animationDelay: `${150 + Math.min(order, 6) * 90}ms` }}
+    >
       {/* The whole header opens the plan (details, who went, the album). Photos below open the viewer. */}
       <Link
         href={`/plans/${memory.planId}?from=plans`}
@@ -183,12 +198,20 @@ function MemoryGroup({ memory, onOpen }) {
       </Link>
       <ul className="grid grid-cols-3 gap-1.5">
         {memory.photos.map((p, i) => (
-          <li key={p.id}>
+          <li
+            key={p.id}
+            className="motion-safe:animate-polaroid-in"
+            style={{ animationDelay: `${260 + Math.min(order, 6) * 90 + i * 60}ms`, "--tilt": `${i % 2 ? 5 : -6}deg` }}
+          >
             <button
               type="button"
               onClick={() => onOpen(i)}
               aria-label={`Open photo ${i + 1} of ${memory.photos.length} by ${names[p.userId] ?? "a friend"}`}
-              className={cn("block w-full rounded-[12px]", pressable, focusRing)}
+              className={cn(
+                "block w-full rounded-[12px] transition-transform duration-200 hover:-rotate-2 hover:scale-[1.03]",
+                pressable,
+                focusRing,
+              )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- signed Supabase URLs */}
               <img src={p.url} alt="" loading="lazy" className="aspect-[3/4] w-full rounded-[12px] border-2 border-line bg-raised object-cover" />

@@ -14,6 +14,8 @@ const VARIANTS = {
   dark: "press bg-ink text-canvas",
   /** Deep slate in BOTH themes (dark doesn't flip to light like `dark`): serious / destructive actions. */
   night: "press bg-on-accent text-white",
+  /** Destructive and final (Sign out): red, white text. Darkened so the text passes 4.5:1. */
+  danger: "press bg-[color-mix(in_srgb,var(--color-danger),black_15%)] text-white",
   /** No outline: low-priority actions ("Not now"). */
   ghost: cn("bg-transparent text-ink hover:bg-ink/5", pressable),
 };
@@ -51,7 +53,7 @@ function Spinner() {
 
 /**
  * @param {React.ButtonHTMLAttributes<HTMLButtonElement> & {
- *   variant?: "primary" | "secondary" | "dark" | "night" | "ghost",
+ *   variant?: "primary" | "secondary" | "danger" | "dark" | "night" | "ghost",
  *   size?: "md" | "lg",
  *   fullWidth?: boolean,
  *   loading?: boolean,

@@ -70,12 +70,7 @@ export function MyPlans() {
     <>
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
-        <Link href="/memories" className={buttonClasses({ variant: "secondary" })}>
-          <span aria-hidden="true">📸</span> Memories
-        </Link>
-      </div>
+      <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
 
       <StartNow />
 
@@ -196,7 +191,6 @@ export function StartNow({ showPreviewLink = true }) {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof json.error === "string" ? json.error : "Couldn't start a sidequest. Try again.");
-        setResetKey((k) => k + 1);
         return;
       }
       const { plan } = PlanResponse.parse(json);
@@ -204,9 +198,10 @@ export function StartNow({ showPreviewLink = true }) {
     } catch (e) {
       console.error("[plans] start now", e);
       setError("Couldn't start a sidequest. Try again.");
-      setResetKey((k) => k + 1);
     } finally {
       setBusy(false);
+      // Ready again right after it finishes (success or not), so coming back to Plans shows a fresh bar.
+      setResetKey((k) => k + 1);
     }
   };
 
