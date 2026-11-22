@@ -26,10 +26,11 @@ export function InviteBanner({ invite, moreCount = 0, onOpen, onDismiss, classNa
   const creator = invite.members.find((m) => m.isCreator);
   const who = creator?.name ?? "A friend";
 
-  // A short buzz when a new invite lands (Android; iOS Safari has no vibration API).
+  // A short buzz when a new invite lands (Android; iOS Safari has no vibration API). Only once the person has
+  // touched the page: before that Chrome blocks it and logs "[Intervention] Blocked call to navigator.vibrate".
   useEffect(() => {
     try {
-      navigator.vibrate?.([20, 40, 20]);
+      if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([20, 40, 20]);
     } catch {
       // not supported
     }
