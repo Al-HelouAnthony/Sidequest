@@ -64,7 +64,10 @@ function addVenues(ctx, { terms, nameQuery, categories }) {
   const extra = [
     ...venuesForTerms(terms, near, { existing }),
     ...(nameQuery ? venuesByName(nameQuery, near, { existing }) : []),
-    ...(terms.length === 0 && !nameQuery && categories?.length ? venuesForCategories(categories, near, { existing }) : []),
+    // Broad searches: nearest venues of those categories. Not for "event": events are Adel's dated events (loadContext).
+    ...(terms.length === 0 && !nameQuery && categories?.length
+      ? venuesForCategories(categories.filter((c) => c !== "event"), near, { existing })
+      : []),
   ];
   return extra.length > 0 ? /** @type {Ctx} */ (withExtraPlaces(ctx, extra)) : ctx;
 }
