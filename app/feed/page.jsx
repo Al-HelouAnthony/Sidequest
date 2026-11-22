@@ -6,7 +6,7 @@
  * Let's go (SwipeToGo) → InviteSheet → POST /api/plans → /plans/[id]. ⓘ → WhySheet (score breakdown).
  * Search pill → SearchSheet → POST /api/search: results replace the feed until "Clear" (F10).
  */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
@@ -65,6 +65,22 @@ async function fetchFeed(cursor, signal, filters, visit) {
   return parsed.data;
 }
 
+/**
+ * The feed survives tab switches. Next 16 keeps up to 3 routes alive (hidden with <Activity>, effects re-run
+ * when shown again) and fully remounts older ones; we have 4 tabs. So we keep (a) the loaded cards and the
+ * card you were on in this module, for remounts, and (b) never refetch page 1 just because the page is shown
+ * again. Refresh, search, "Clear" and Friends → "ideas with X" still start from the top.
+ */
+const FEED_MEMORY_MS = 30 * 60_000;
+/**
+ * @type {{ cards: import("@/types/feed").FeedCardT[], nextCursor: string | null, saved: string[],
+ *   search: { query: string, summary: string } | null, filters: import("@/types/feed").FeedFiltersT | null,
+ *   visit: { seed: number, seen: string[] } | null, index: number, cardId: string | null, at: number } | null}
+ */
+let feedMemory = null;
+/** Only read on the client after an earlier visit (null on the server, so no Date.now() while prerendering). */
+const recallFeed = () => (feedMemory && Date.now() - feedMemory.at < FEED_MEMORY_MS ? feedMemory : null);
+
 /** Cards ahead of the end of the list at which the next page starts loading (N3). */
 const PREFETCH_AHEAD = 5;
 
@@ -95,12 +111,13 @@ function sendInteraction(card, action) {
 
 /**
  * One full-screen snap page. `placeId` marks card pages so the feed can remember what was actually seen (N2).
- * @param {{ children: React.ReactNode, placeId?: string }} props
+ * @param {{ children: React.ReactNode, placeId?: string, cardId?: string }} props
  */
-function Page({ children, placeId }) {
+function Page({ children, placeId, cardId }) {
   return (
     <section
       data-place-id={placeId}
+      data-card-id={cardId}
       className="h-full px-3 pt-1"
       style={{ paddingBottom: TAB_BAR_SPACE }}
     >
@@ -110,12 +127,14 @@ function Page({ children, placeId }) {
 }
 
 function Feed() {
-  const [cards, setCards] = useState(/** @type {import("@/types/feed").FeedCardT[]} */ ([]));
-  const [nextCursor, setNextCursor] = useState(/** @type {string | null} */ (null));
-  const [status, setStatus] = useState(/** @type {"loading" | "ready" | "error"} */ ("loading"));
+  /** The feed as it was when you left it (remount after a tab switch), or null. */
+  const [restored] = useState(recallFeed);
+  const [cards, setCards] = useState(/** @type {import("@/types/feed").FeedCardT[]} */ (restored?.cards ?? []));
+  const [nextCursor, setNextCursor] = useState(/** @type {string | null} */ (restored?.nextCursor ?? null));
+  const [status, setStatus] = useState(/** @type {"loading" | "ready" | "error"} */ (restored ? "ready" : "loading"));
   const [loadingMore, setLoadingMore] = useState(false);
   const [moreFailed, setMoreFailed] = useState(false);
-  const [saved, setSaved] = useState(() => new Set(/** @type {string[]} */ ([])));
+  const [saved, setSaved] = useState(() => new Set(/** @type {string[]} */ (restored?.saved ?? [])));
   /** Cards playing the skip-out animation (still rendered, can't be tapped). */
   const [leaving, setLeaving] = useState(() => new Set(/** @type {string[]} */ ([])));
   /** Per-card counter; bumping it puts that card's swipe bar back to the start. */
@@ -130,16 +149,20 @@ function Feed() {
   /** Card whose weather sheet is open (tap the weather badge), or null. */
   const [weatherCard, setWeatherCard] = useState(/** @type {import("@/types/feed").FeedCardT | null} */ (null));
   /** Active search (F10): what was typed + Claude's summary. null = the normal feed. */
-  const [search, setSearch] = useState(/** @type {{ query: string, summary: string } | null} */ (null));
+  const [search, setSearch] = useState(/** @type {{ query: string, summary: string } | null} */ (restored?.search ?? null));
   const [searchOpen, setSearchOpen] = useState(0);
   /** Filters of the active search, reused for the next pages and for Refresh. */
-  const filtersRef = useRef(/** @type {import("@/types/feed").FeedFiltersT | null} */ (null));
+  const filtersRef = useRef(/** @type {import("@/types/feed").FeedFiltersT | null} */ (restored?.filters ?? null));
   /**
    * N2: one seed per visit + the places seen BEFORE this visit (snapshot), reused for every page.
    * Created on first use inside effects/handlers, never during render: Next 16 (cacheComponents) refuses
    * Math.random() while prerendering.
    */
-  const visitRef = useRef(/** @type {{ seed: number, seen: string[] } | null} */ (null));
+  const visitRef = useRef(/** @type {{ seed: number, seen: string[] } | null} */ (restored?.visit ?? null));
+  /** reloadKey whose first page is on screen: the page being shown again (or restored) doesn't refetch. */
+  const loadedKey = useRef(restored ? 0 : -1);
+  /** The card on screen (index + id), kept up to date while scrolling, restored when you come back. */
+  const posRef = useRef({ index: restored?.index ?? 0, cardId: restored?.cardId ?? null });
   const getVisit = () => (visitRef.current ??= { seed: newSeed(), seen: readSeen() });
   const router = useRouter();
   /** Invites from friends that I haven't answered (polling GET /api/plans). */
@@ -154,11 +177,14 @@ function Feed() {
   // One card per gesture with a cubic ease-out (Reels-style), instead of the browser's snap.
   usePager(scrollerRef);
 
-  // First page (and retries).
+  // First page (and retries). Not when the page is only being shown again after a tab switch.
   useEffect(() => {
+    if (loadedKey.current === reloadKey) return;
     const ctrl = new AbortController();
     fetchFeed(null, ctrl.signal, filtersRef.current, getVisit())
       .then((d) => {
+        loadedKey.current = reloadKey;
+        posRef.current = { index: 0, cardId: d.cards[0]?.id ?? null };
         setCards(d.cards);
         preloadPhotos(d.cards.slice(1));
         setNextCursor(d.nextCursor);
@@ -171,6 +197,41 @@ function Feed() {
       });
     return () => ctrl.abort();
   }, [reloadKey]);
+
+  // Remember the feed for a remount (see feedMemory).
+  useEffect(() => {
+    if (status !== "ready") return;
+    feedMemory = {
+      cards,
+      nextCursor,
+      saved: [...saved],
+      search,
+      filters: filtersRef.current,
+      visit: visitRef.current,
+      ...posRef.current,
+      at: Date.now(),
+    };
+  }, [status, cards, nextCursor, saved, search]);
+
+  // Back on the feed (shown again or remounted): jump to the card you were on, then track it while scrolling.
+  // A layout effect, so it runs before paint (no flash of card 1) and before usePager's effect.
+  useLayoutEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const { index, cardId } = posRef.current;
+    const target = cardId ? el.querySelector(`section[data-card-id="${CSS.escape(cardId)}"]`) : null;
+    if (target) el.scrollTop += target.getBoundingClientRect().top - el.getBoundingClientRect().top;
+    else if (index > 0) el.scrollTop = index * el.clientHeight;
+    const onScroll = () => {
+      if (!el.clientHeight) return; // hidden
+      const i = Math.round(el.scrollTop / el.clientHeight);
+      const section = /** @type {HTMLElement | undefined} */ (el.querySelectorAll("section")[i]);
+      posRef.current = { index: i, cardId: section?.dataset.cardId ?? null };
+      if (feedMemory) Object.assign(feedMemory, posRef.current, { at: Date.now() });
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
 
   const retry = () => {
     setStatus("loading");
@@ -439,7 +500,7 @@ function Feed() {
 
         {status === "ready" &&
           cards.map((card, i) => (
-            <Page key={card.id} placeId={card.place.id}>
+            <Page key={card.id} placeId={card.place.id} cardId={card.id}>
               <FeedCard
                 card={card}
                 priority={i === 0}
