@@ -8,6 +8,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PageTransition } from "@/components/nav/PageTransition";
 import { FeedResponse } from "@/types";
 import { FeedCard, FeedCardSkeleton } from "@/components/feed/FeedCard";
 import { InviteBanner } from "@/components/plans/InviteBanner";
@@ -610,8 +611,10 @@ function StateIsland({ title, body, children }) {
 
 export default function FeedPage() {
   return (
-    <ToastProvider>
-      <Feed />
-    </ToastProvider>
+    <PageTransition>
+      <ToastProvider>
+        <Feed />
+      </ToastProvider>
+    </PageTransition>
   );
 }

@@ -13,7 +13,7 @@ import { useId } from "react";
 export function AppBackground({ variant } = {}) {
   const patternId = `sq-bg-dots-${useId().replace(/:/g, "")}`;
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-canvas">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-canvas" style={{ viewTransitionName: "app-bg" }}>
       <svg className="size-full">
         <defs>
           <pattern id={patternId} width="22" height="22" patternUnits="userSpaceOnUse">

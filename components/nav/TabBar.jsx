@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useInvites } from "@/hooks/useInvites";
+import { tabDirection } from "@/components/nav/PageTransition";
 import { Icon } from "@/components/ui/Icon";
 import { cn, focusRing } from "@/components/ui/classes";
 
@@ -52,7 +53,8 @@ export function TabBar({ active }) {
     <nav
       aria-label="Main"
       className="pointer-events-none fixed inset-x-0 z-40 mx-auto w-full max-w-md px-3"
-      style={{ bottom: "calc(12px + env(safe-area-inset-bottom))" }}
+      // Stays put while the page slides (globals.css: ::view-transition-group(tab-bar)).
+      style={{ bottom: "calc(12px + env(safe-area-inset-bottom))", viewTransitionName: "tab-bar" }}
     >
       <div className="glass pointer-events-auto relative grid grid-cols-4 rounded-card p-1.5">
         <span
@@ -67,6 +69,7 @@ export function TabBar({ active }) {
             <Link
               key={tab.href}
               href={tab.href}
+              transitionTypes={on ? undefined : tabDirection(index, i)}
               aria-current={on ? "page" : undefined}
               onClick={(e) => {
                 // Already on the feed: tapping Feed again refreshes it (top + fresh ideas), like Instagram.

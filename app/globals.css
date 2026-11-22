@@ -398,3 +398,63 @@
   .sq-bg-pulse { opacity: calc((var(--lo, 0.1) + var(--hi, 0.6)) / 2); }
   .sq-bg-ring { opacity: 0.25; transform: scale(0.8); }
 }
+
+/* ---------------------------------------------------------------------------------------------------
+ * Page transitions (components/nav/PageTransition.jsx): content slides 60px in the direction you go and
+ * crossfades. "nav-forward" = a tab to the right or opening a plan; "nav-back" = a tab to the left or Back.
+ * The tab bar and the dotted background stay put. Clicks pass through during the animation.
+ * ------------------------------------------------------------------------------------------------- */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(.nav-forward) {
+  --slide-offset: -60px;
+  animation: 150ms ease-in both sq-vt-fade reverse, 320ms ease-in-out both sq-vt-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 60px;
+  animation: 200ms ease-out 120ms both sq-vt-fade, 320ms ease-in-out both sq-vt-slide;
+}
+::view-transition-old(.nav-back) {
+  --slide-offset: 60px;
+  animation: 150ms ease-in both sq-vt-fade reverse, 320ms ease-in-out both sq-vt-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -60px;
+  animation: 200ms ease-out 120ms both sq-vt-fade, 320ms ease-in-out both sq-vt-slide;
+}
+@keyframes sq-vt-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sq-vt-slide {
+  from { translate: var(--slide-offset); }
+  to { translate: 0; }
+}
+/* Anchors: no animation, old copy hidden (no double image), tab bar above the sliding content. */
+::view-transition-group(tab-bar),
+::view-transition-group(app-bg) {
+  animation: none;
+}
+::view-transition-group(tab-bar) {
+  z-index: 100;
+}
+::view-transition-old(tab-bar),
+::view-transition-old(app-bg) {
+  display: none;
+}
+::view-transition-new(tab-bar),
+::view-transition-new(app-bg) {
+  animation: none;
+}
+::view-transition-group(app-bg) {
+  z-index: -1;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

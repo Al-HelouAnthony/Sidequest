@@ -155,6 +155,7 @@ function PlanRow({ plan, meId }) {
   return (
     <Link
       href={`/plans/${plan.id}?from=plans`}
+      transitionTypes={["nav-forward"]}
       className={cn("cel flex items-center gap-3 rounded-tile p-2.5 pr-3", pressable, focusRing)}
     >
       <span className="relative size-16 shrink-0 overflow-hidden rounded-[14px] border-2 border-line bg-raised">
