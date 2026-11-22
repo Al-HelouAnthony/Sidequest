@@ -233,6 +233,14 @@ export function YouScreen() {
         </Link>
       </p>
 
+      {/* Sign out: POST form on purpose (the route refuses GET, so a link or image can't sign anyone out).
+          Also how teammates re-grant Google permissions (e.g. calendar.events for G2). */}
+      <form action="/auth/signout" method="post">
+        <Button type="submit" variant="secondary" fullWidth>
+          Sign out
+        </Button>
+      </form>
+
       <DataCredits />
 
       <TabBar active="/me" />
