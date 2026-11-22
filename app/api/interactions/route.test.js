@@ -7,6 +7,7 @@ const REGISTRY = "20000000-0000-4000-8000-000000000042";
 const UNKNOWN = "30000000-0000-4000-8000-000000000000";
 const VENUE = "40000000-0000-4000-8000-103152678294"; // "Biodôme de Montréal" in lib/geo/venues.json
 const BAD_VENUE = "40000000-0000-4000-8000-999999999999";
+const EVENT = "50000000-0000-4000-8000-00000000abcd";
 const place = (id, tags, category = "restaurant") => ({ id, tags, category });
 
 const fns = {
@@ -20,6 +21,11 @@ const fns = {
     if (!p) throw new Error("Unknown venue");
     return { ...p, hoursVerified: false };
   }),
+  eventPlaceById: vi.fn(async (id) => (id === EVENT ? { id, tags: ["live-music"], category: "event", source: "event" } : null)),
+  ensurePlaceFromEvent: vi.fn(async (p) => {
+    if (!p) throw new Error("Unknown event");
+    return p;
+  }),
   recordInteraction: vi.fn(async () => {}),
   getTagWeights: vi.fn(async () => ({})),
   setTagWeights: vi.fn(async () => {}),
@@ -30,6 +36,9 @@ vi.mock("@/lib/data", () => ({
   ensurePlaceFromRegistry: (...a) => fns.ensurePlaceFromRegistry(...a),
   ensurePlaceFromVenue: (...a) => fns.ensurePlaceFromVenue(...a),
   isVenuePlaceId: (id) => /^40000000-0000-4000-8000-\d{12}$/.test(id),
+  isEventPlaceId: (id) => /^50000000-0000-4000-8000-[0-9a-f]{12}$/.test(id),
+  eventPlaceById: (...a) => fns.eventPlaceById(...a),
+  ensurePlaceFromEvent: (...a) => fns.ensurePlaceFromEvent(...a),
   recordInteraction: (...a) => fns.recordInteraction(...a),
   getTagWeights: (...a) => fns.getTagWeights(...a),
   setTagWeights: (...a) => fns.setTagWeights(...a),
@@ -71,5 +80,12 @@ describe("POST /api/interactions", () => {
   it("unknown venue id → 404, nothing recorded", async () => {
     expect((await post(BAD_VENUE)).status).toBe(404);
     expect(fns.recordInteraction).not.toHaveBeenCalled();
+  });
+
+  it("city event card: saved from the server's event lookup, then learns its tags", async () => {
+    expect((await post(EVENT, "save")).status).toBe(200);
+    expect(fns.eventPlaceById).toHaveBeenCalledWith(EVENT);
+    expect(fns.ensurePlaceFromRegistry).not.toHaveBeenCalled();
+    expect(Object.keys(fns.setTagWeights.mock.calls[0][1])).toContain("live-music");
   });
 });

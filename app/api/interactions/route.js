@@ -15,20 +15,39 @@ import {
   recordInteraction,
   setTagWeights,
 } from "@/lib/data";
+import * as data from "@/lib/data";
 import { venuePlaceById } from "@/lib/geo/venues";
 import { applyInteraction } from "@/lib/engine/learning";
 
 /**
- * Search-only places (registry restaurants, OpenStreetMap venues) have no `places` row until someone
- * acts on them; the interactions FK needs one. Adel's ensurePlaceFrom… saves it, built server-side by id.
- * Returns null for unknown ids (→ 404).
+ * City event (Adel's events data layer): saved as a places row from the server's own event lookup.
+ * null when it isn't an event id, or before Adel's event functions are merged.
+ * @param {string} placeId
+ */
+async function ensureEventPlace(placeId) {
+  /** @type {any} */
+  let d;
+  try {
+    d = { isEvent: /** @type {any} */ (data).isEventPlaceId, byId: /** @type {any} */ (data).eventPlaceById, ensure: /** @type {any} */ (data).ensurePlaceFromEvent };
+  } catch {
+    return null; // a module mock without them (tests) or not merged yet
+  }
+  if (typeof d.isEvent !== "function" || !d.isEvent(placeId)) return null;
+  return d.ensure(await d.byId(placeId));
+}
+
+/**
+ * Search-only places (registry restaurants, OpenStreetMap venues, city events) have no `places` row
+ * until someone acts on them; the interactions FK needs one. Adel's ensurePlaceFrom… saves it, built
+ * server-side by id. Returns null for unknown ids (→ 404).
  * @param {string} placeId
  */
 async function ensureSearchPlace(placeId) {
   try {
-    return isVenuePlaceId(placeId) ? await ensurePlaceFromVenue(venuePlaceById(placeId)) : await ensurePlaceFromRegistry(placeId);
+    if (isVenuePlaceId(placeId)) return await ensurePlaceFromVenue(venuePlaceById(placeId));
+    return (await ensureEventPlace(placeId)) ?? (await ensurePlaceFromRegistry(placeId));
   } catch {
-    return null; // DataInputError: not a known registry restaurant / venue → 404 below
+    return null; // DataInputError: not a known registry restaurant / venue / event → 404 below
   }
 }
 
