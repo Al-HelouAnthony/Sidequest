@@ -59,7 +59,7 @@ export function parseSources(text) {
 /** The credits block (markdown table between markers). */
 export function creditsBlock(rows) {
   const lines = rows.map((r) => `| ${r.name} | ${r.url ? `[source](${r.url})` : "**missing: add it to sources.txt**"} |`);
-  return [START, "## Place photos (G1b)", "", "Hand-picked from Google Images (team decision, copyright risk accepted; keep this list).", "", "| Place | Source |", "|---|---|", ...lines, END].join("\n");
+  return [START, "## Place photos (G1b)", "", "Hand-picked from Tastet reviews, Wikimedia Commons, Flickr (via Openverse) and venue/listing pages (team decision, copyright risk accepted; keep this list).", "", "| Place | Source |", "|---|---|", ...lines, END].join("\n");
 }
 
 /** Crop to 3:4 around the centre, then resize to 896×1200 JPEG. */
