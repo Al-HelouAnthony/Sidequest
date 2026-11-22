@@ -6,6 +6,7 @@
  */
 import { getSessionUserId } from "@/lib/auth";
 import { jsonError } from "@/lib/http";
+import { getPlace } from "@/lib/data";
 import { bookingAgent } from "@/lib/booking/agent";
 import { PlanError, getPlan } from "@/lib/social/plans-store";
 
@@ -18,7 +19,9 @@ export async function GET(_request, { params }) {
   const { id } = await params;
   try {
     const plan = await getPlan(userId, id); // membership check
-    return Response.json(await bookingAgent(plan.place));
+    // The full place (events carry source, tags, eventUrl); the plan's summary as a fallback.
+    const place = (await getPlace(plan.placeId)) ?? plan.place;
+    return Response.json(await bookingAgent(place));
   } catch (e) {
     if (e instanceof PlanError) return jsonError(e.status, e.message);
     throw e;

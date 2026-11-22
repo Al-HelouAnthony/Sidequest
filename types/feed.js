@@ -41,10 +41,14 @@ export const FeedCard = z.object({
     lng: z.number(),
     address: z.string(),
     tags: z.array(z.string()),
-    /** N1: copied from Place. "registry" places have assumed hours. */
-    source: z.enum(["curated", "registry"]).optional(),
+    /** Copied from Place. "registry" places have assumed hours; "event" = a city event. */
+    source: z.enum(["curated", "registry", "event"]).optional(),
     /** N1: false → show "Hours not verified · call ahead". Missing = verified. */
     hoursVerified: z.boolean().optional(),
+    /** Events: exact start (ISO) → "Starts 7:30 PM". The slot itself snaps to 30 min. */
+    startsAt: IsoDateTime.optional(),
+    /** Events: the event's page (montreal.ca). */
+    eventUrl: z.string().url().optional(),
   }),
   /** The suggested visit window (ISO UTC), already trimmed to the place's typical duration. */
   slot: z.object({ start: IsoDateTime, end: IsoDateTime }),
