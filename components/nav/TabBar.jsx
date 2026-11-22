@@ -8,7 +8,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useInvites } from "@/hooks/useInvites";
-import { tabDirection } from "@/components/nav/PageTransition";
+import { anchorTabBar, tabDirection } from "@/components/nav/PageTransition";
+import { useTabSwipe } from "@/components/nav/useTabSwipe";
 import { Icon } from "@/components/ui/Icon";
 import { cn, focusRing } from "@/components/ui/classes";
 
@@ -40,6 +41,8 @@ export function TabBar({ active }) {
   const index = Math.max(0, TABS.findIndex((t) => t.href === active));
   const [pillAt, setPillAt] = useState(() => lastTab ?? index);
   const { invites } = useInvites();
+  // Swipe left/right anywhere on the screen to change tab.
+  useTabSwipe(index, TABS);
   const inviteCount = invites.length;
 
   // Next frame: move the pill to this screen's tab (a CSS transition does the spring).
@@ -52,9 +55,10 @@ export function TabBar({ active }) {
   return (
     <nav
       aria-label="Main"
+      data-tabbar
       className="pointer-events-none fixed inset-x-0 z-40 mx-auto w-full max-w-md px-3"
-      // Stays put while the page slides (globals.css: ::view-transition-group(tab-bar)).
-      style={{ bottom: "calc(12px + env(safe-area-inset-bottom))", viewTransitionName: "tab-bar" }}
+      // No viewTransitionName here: it makes the bar a "backdrop root" and kills the frosted blur.
+      style={{ bottom: "calc(12px + env(safe-area-inset-bottom))" }}
     >
       <div className="glass pointer-events-auto relative grid grid-cols-4 rounded-card p-1.5">
         <span
@@ -76,7 +80,7 @@ export function TabBar({ active }) {
                 if (on && tab.href === "/feed") {
                   e.preventDefault();
                   window.dispatchEvent(new Event(FEED_RESELECT_EVENT));
-                }
+                } else if (!on) anchorTabBar();
               }}
               aria-label={badge ? `${tab.label}, ${inviteCount} new ${inviteCount === 1 ? "invite" : "invites"}` : undefined}
               className={cn(

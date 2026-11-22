@@ -298,9 +298,9 @@
 @utility glass {
   background:
     linear-gradient(180deg, rgb(255 255 255 / var(--glass-hi, 0.5)), rgb(255 255 255 / var(--glass-lo, 0.12))),
-    color-mix(in srgb, var(--color-surface) 28%, transparent);
-  -webkit-backdrop-filter: blur(22px) saturate(1.9);
-  backdrop-filter: blur(22px) saturate(1.9);
+    color-mix(in srgb, var(--color-surface) 55%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgb(255 255 255 / var(--glass-edge, 0.75));
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / var(--glass-edge, 0.75)),
@@ -407,29 +407,26 @@
 ::view-transition {
   pointer-events: none;
 }
+/* Full-width push, no fade (like switching tabs in a native app): old page leaves one way, new comes from the other. */
 ::view-transition-old(.nav-forward) {
-  --slide-offset: -60px;
-  animation: 150ms ease-in both sq-vt-fade reverse, 320ms ease-in-out both sq-vt-slide reverse;
+  animation: 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both sq-vt-out-left;
 }
 ::view-transition-new(.nav-forward) {
-  --slide-offset: 60px;
-  animation: 200ms ease-out 120ms both sq-vt-fade, 320ms ease-in-out both sq-vt-slide;
+  animation: 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both sq-vt-in-right;
 }
 ::view-transition-old(.nav-back) {
-  --slide-offset: 60px;
-  animation: 150ms ease-in both sq-vt-fade reverse, 320ms ease-in-out both sq-vt-slide reverse;
+  animation: 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both sq-vt-out-right;
 }
 ::view-transition-new(.nav-back) {
-  --slide-offset: -60px;
-  animation: 200ms ease-out 120ms both sq-vt-fade, 320ms ease-in-out both sq-vt-slide;
+  animation: 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both sq-vt-in-left;
 }
-@keyframes sq-vt-fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes sq-vt-slide {
-  from { translate: var(--slide-offset); }
-  to { translate: 0; }
+@keyframes sq-vt-out-left { to { translate: -100% 0; } }
+@keyframes sq-vt-in-right { from { translate: 100% 0; } }
+@keyframes sq-vt-out-right { to { translate: 100% 0; } }
+@keyframes sq-vt-in-left { from { translate: -100% 0; } }
+/* The tab bar is named only while a slide runs (anchorTabBar): a permanent name kills its blur. */
+html.sq-vt nav[data-tabbar] {
+  view-transition-name: tab-bar;
 }
 /* Anchors: no animation, old copy hidden (no double image), tab bar above the sliding content. */
 ::view-transition-group(tab-bar),
@@ -457,4 +454,10 @@
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }
+}
+/* A page dragged to the right (tab swipe) must not create horizontal overflow: that resizes the viewport
+   mid-transition and the browser aborts the slide ("Transition was aborted … Viewport size changed"). */
+html,
+body {
+  overflow-x: clip;
 }

@@ -231,6 +231,7 @@ export function SwipeToGo({
   return (
     <div
       ref={rootRef}
+      data-no-tab-swipe
       className={cn("relative w-full touch-pan-y select-none", disabled && "opacity-55", className)}
       style={{ height: HEIGHT }}
     >

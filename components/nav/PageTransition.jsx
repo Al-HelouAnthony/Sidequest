@@ -18,6 +18,21 @@ export function PageTransition({ children }) {
   );
 }
 
+/** @type {ReturnType<typeof setTimeout> | undefined} */
+let anchorTimer;
+
+/**
+ * Keep the tab bar still while a slide runs: it gets view-transition-name "tab-bar" only for the duration
+ * (html.sq-vt, globals.css). A permanent name would make it a "backdrop root" and kill its frosted blur.
+ * Call right before navigating (tab tap or swipe). Browser only.
+ */
+export function anchorTabBar() {
+  const root = document.documentElement;
+  root.classList.add("sq-vt");
+  clearTimeout(anchorTimer);
+  anchorTimer = setTimeout(() => root.classList.remove("sq-vt"), 700);
+}
+
 /**
  * Direction for a tab link: towards a tab on the right slides left (forward), towards the left slides right.
  * @param {number} from current tab index @param {number} to target tab index
