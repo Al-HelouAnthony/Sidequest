@@ -17,7 +17,7 @@ import { ConfirmSheet } from "@/components/ui/ConfirmSheet";
 import { Icon } from "@/components/ui/Icon";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, focusRing } from "@/components/ui/classes";
-import { CATEGORY_LABELS } from "@/components/feed/FeedCard";
+import { CATEGORY_LABELS, HoursNotVerified } from "@/components/feed/FeedCard";
 import { startsLabel } from "@/components/feed/events";
 import { BookItSheet } from "@/components/plans/BookItSheet";
 import { LiveLocation } from "@/components/plans/LiveLocation";
@@ -138,6 +138,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
       <div className="flex items-center justify-between gap-3">
         <Link
           href={back.href}
+          transitionTypes={["nav-back"]}
           aria-label={back.label}
           className={cn("press inline-flex size-11 items-center justify-center rounded-full bg-surface text-ink", focusRing)}
         >
@@ -184,6 +185,8 @@ export function PlanScreen({ planId, back = BACK.feed }) {
           <Icon name="pin" cel strokeWidth={1.9} className="size-5" />
           {plan.place.address}
         </p>
+        {/* Registry restaurants: hours are assumed. Shown here (and in the place sheet), not on feed cards. */}
+        {plan.place.hoursVerified === false && <HoursNotVerified />}
       </div>
 
       {/* Who's in */}

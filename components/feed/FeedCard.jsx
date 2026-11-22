@@ -54,9 +54,8 @@ function travel(/** @type {number} */ min, /** @type {boolean} */ estimate) {
  */
 export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onDetails, onWeather, priority = false, leaving = false, goResetKey = 0, className }) {
   const { place, slot, friends, weather, caption, myTravelMin } = card;
-  // N1: registry places (business list) only have assumed hours. Shows once `place.hoursVerified` is in the
-  // FeedCard contract (Anthony); until then the feed's contract check strips it and nothing shows.
-  const hoursUnverified = /** @type {{ hoursVerified?: boolean }} */ (place).hoursVerified === false;
+  // N1: registry places only have assumed hours. The "Hours not verified" badge is NOT on the card (team call:
+  // it cluttered the feed); it shows in the place details sheet and on the plan screen once you lock it in.
   // City events (contract: place.source "event" + optional startsAt): exact start, "Free" badge, source line.
   const ev = /** @type {{ source?: string, startsAt?: string }} */ (place);
   const event = isEvent(place);
@@ -158,7 +157,6 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
                 Free
               </p>
             )}
-            {hoursUnverified && <HoursNotVerified />}
           </div>
 
           <div>
