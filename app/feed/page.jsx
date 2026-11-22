@@ -19,6 +19,7 @@ import { WeatherSheet } from "@/components/feed/WeatherSheet";
 import { FEED_HEADER_REM, FeedHeader } from "@/components/feed/FeedHeader";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { addVisitParams, newSeed, readSeen, rememberSeen } from "@/components/feed/visit";
+import { usePager } from "@/components/feed/usePager";
 import { AppBackground } from "@/components/ui/AppBackground";
 import { useInvites } from "@/hooks/useInvites";
 import { Button } from "@/components/ui/Button";
@@ -100,7 +101,7 @@ function Page({ children, placeId }) {
   return (
     <section
       data-place-id={placeId}
-      className="h-full snap-start snap-always px-3 pt-1"
+      className="h-full px-3 pt-1"
       style={{ paddingBottom: TAB_BAR_SPACE }}
     >
       {children}
@@ -150,6 +151,8 @@ function Feed() {
 
   const scrollerRef = useRef(/** @type {HTMLElement | null} */ (null));
   const sentinelRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  // One card per gesture with a cubic ease-out (Reels-style), instead of the browser's snap.
+  usePager(scrollerRef);
 
   // First page (and retries).
   useEffect(() => {
@@ -266,6 +269,26 @@ function Feed() {
     scrollerRef.current?.scrollTo({ top: 0 });
   };
 
+  // Friends tab → /feed?with=<id>&name=<name>: show only ideas with that friend (same UI as a search).
+  // Read after mount (and each time this kept-alive page is shown again), then drop the params from the URL.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const friendId = params.get("with");
+      if (!friendId) return;
+      const label = `with ${params.get("name") || "a friend"}`;
+      window.history.replaceState(null, "", "/feed");
+      filtersRef.current = { friendIds: [friendId] };
+      setSearch({ query: label, summary: label });
+      skipCounts.current = new Map();
+      setRefreshHint(null);
+      scrollerRef.current?.scrollTo({ top: 0 });
+      setStatus("loading");
+      setReloadKey((k) => k + 1);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
+
   /** Back to the normal feed. */
   const clearSearch = () => {
     filtersRef.current = null;
@@ -351,7 +374,7 @@ function Feed() {
       <main
         ref={scrollerRef}
         aria-label="Suggestions"
-        className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-scroll overscroll-contain scrollbar-none"
+        className="min-h-0 flex-1 touch-pan-x overflow-y-hidden overscroll-contain scrollbar-none"
       >
         {/* Top stack floating over the feed: invite banner (F7), then the Refresh pill.
             The wrapper is a live region so both get announced. */}
