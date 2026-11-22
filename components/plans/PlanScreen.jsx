@@ -39,6 +39,7 @@ const RSVP = {
 const BACK = {
   feed: { href: "/feed", label: "Back to the feed" },
   plans: { href: "/plans", label: "Back to my plans" },
+  memories: { href: "/memories", label: "Back to memories" },
 };
 
 /** @param {{ planId: string, back?: { href: string, label: string } }} props */
@@ -389,8 +390,9 @@ export function PlanScreen({ planId, back = BACK.feed }) {
 /** Reads the plan id from the URL (/plans/[id]). Must be rendered inside <Suspense>. */
 export function PlanFromUrl() {
   const { id } = useParams();
-  const fromPlans = useSearchParams().get("from") === "plans";
-  return <PlanScreen key={String(id)} planId={String(id)} back={fromPlans ? BACK.plans : BACK.feed} />;
+  const from = useSearchParams().get("from");
+  const back = from === "plans" ? BACK.plans : from === "memories" ? BACK.memories : BACK.feed;
+  return <PlanScreen key={String(id)} planId={String(id)} back={back} />;
 }
 
 /** Full-page loading state (also the Suspense fallback). */

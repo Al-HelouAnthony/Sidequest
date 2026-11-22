@@ -3,7 +3,7 @@
  * Floating glass tab bar (design-reference/components/GlassTabBar). Owner: Oscar.
  * Frosted glass 12px above the bottom and 12px in from the sides, a glossy teal pill under the active tab
  * that springs between tabs (ease-spring). Content scrolls underneath, so tabbed screens leave TAB_BAR_SPACE
- * at the bottom. Used on the three top-level screens; flows (plan page, onboarding) use Back instead.
+ * at the bottom. Used on the five top-level screens; flows (plan page, onboarding) use Back instead.
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";

@@ -325,12 +325,13 @@ export function SwipeToGo({
               />
             ))}
           {intense &&
+            phase === "drag" &&
             tension > 0.45 &&
             KNOB_CRACKS.map(([deg, k], i) => {
               // Cracks shooting out of the knob, stretching longer as the strain nears the break.
               const len = (tension - 0.45) ** 1.4 * 150 * k;
               const a = (deg * Math.PI) / 180;
-              const x0 = knobCenter + KNOB / 2 - 2;
+              const x0 = knobCenter + (KNOB / 2) * (grow - squeeze * 0.34) - 2; // the squeezed knob's right edge
               const y0 = HEIGHT / 2;
               const mx = x0 + Math.cos(a) * len * 0.5 + (i % 2 ? 4 : -4);
               const my = y0 + Math.sin(a) * len * 0.5;
@@ -475,7 +476,11 @@ export function SwipeToGo({
       {phase === "done" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold text-white drop-shadow-[0_2px_0_var(--color-shade)] motion-safe:animate-rise"
+          className={cn(
+            "pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center font-display text-lg font-extrabold motion-safe:animate-rise",
+            // On a photo (feed): white with a hard shadow. Intense bar sits on a card: plain ink, readable in both themes.
+            intense ? "text-ink" : "text-white drop-shadow-[0_2px_0_var(--color-shade)]",
+          )}
           style={{ right: KNOB + PAD * 2, animationDelay: "250ms" }}
         >
           {doneLabel}

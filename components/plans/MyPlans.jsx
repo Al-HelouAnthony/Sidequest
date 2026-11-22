@@ -180,8 +180,13 @@ export function StartNow({ showPreviewLink = true }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(/** @type {string | null} */ (null));
-  /** Bumped when starting fails, so the broken bar comes back for another try. */
+  /**
+   * Puts the broken bar back: right away when starting fails, and after a success only once this kept-alive
+   * page is hidden (the cleanup below). Never while we're still navigating to the new plan, so it can't
+   * be broken a second time and create a duplicate plan.
+   */
   const [resetKey, setResetKey] = useState(0);
+  useEffect(() => () => setResetKey((k) => k + 1), []);
 
   const start = async () => {
     setBusy(true);
@@ -191,6 +196,7 @@ export function StartNow({ showPreviewLink = true }) {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof json.error === "string" ? json.error : "Couldn't start a sidequest. Try again.");
+        setResetKey((k) => k + 1);
         return;
       }
       const { plan } = PlanResponse.parse(json);
@@ -198,10 +204,9 @@ export function StartNow({ showPreviewLink = true }) {
     } catch (e) {
       console.error("[plans] start now", e);
       setError("Couldn't start a sidequest. Try again.");
+      setResetKey((k) => k + 1);
     } finally {
       setBusy(false);
-      // Ready again right after it finishes (success or not), so coming back to Plans shows a fresh bar.
-      setResetKey((k) => k + 1);
     }
   };
 
@@ -218,11 +223,6 @@ export function StartNow({ showPreviewLink = true }) {
         doneLabel={busy ? "Finding a spot…" : "Let's go!"}
         ariaLabel="Start a sidequest now: swipe right or press Enter"
       />
-      {busy && (
-        <p role="status" className="text-sm font-semibold text-ink-muted">
-          Finding a spot…
-        </p>
-      )}
       {error && (
         <p role="alert" className="text-sm font-semibold text-danger">
           {error}

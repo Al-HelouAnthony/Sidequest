@@ -1,6 +1,6 @@
 "use client";
 /**
- * Swipe left/right anywhere on a tabbed screen to go to the next/previous tab (Feed → Plans → Friends → You).
+ * Swipe left/right anywhere on a tabbed screen to go to the next/previous tab (Feed → Plans → Memories → Friends → You).
  * The page follows the finger (a little resistance on the first/last tab); release past a quarter of the
  * screen, or flick, and it slides to the next tab (same full-width slide as tapping a tab); otherwise it
  * springs back. Ignored where a horizontal gesture already means something: sheets and dialogs, sliders

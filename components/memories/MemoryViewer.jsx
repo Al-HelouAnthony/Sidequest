@@ -238,7 +238,7 @@ export function MemoryViewer({ memories, start, onClose }) {
             {pos.p + 1} / {memory.photos.length}
           </p>
           <Link
-            href={`/plans/${memory.planId}?from=plans`}
+            href={`/plans/${memory.planId}?from=memories`}
             className={cn("pointer-events-auto inline-flex min-h-11 items-center rounded-full bg-white/15 px-4 text-sm font-bold", focusRing)}
           >
             Open the plan
