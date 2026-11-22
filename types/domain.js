@@ -47,10 +47,17 @@ export const Place = z.object({
   hours: OpeningHours,
   typicalDurationMin: z.number().int().positive(),
   indoor: z.boolean(),
-  /** N1: where the place comes from. Missing = "curated" (data/places.json). "registry" = city health registry. */
-  source: z.enum(["curated", "registry"]).optional(),
+  /**
+   * Where the place comes from. Missing = "curated" (data/places.json). "registry" = city health registry.
+   * "event" = a Montréal open-data event (category "event"; its `hours` are only the event's own window).
+   */
+  source: z.enum(["curated", "registry", "event"]).optional(),
   /** N1: false = opening hours are ASSUMED (registry places, 11:30–22:00). Missing = verified. */
   hoursVerified: z.boolean().optional(),
+  /** Events: exact start (ISO), e.g. 19:15 when the slot shows 19:00–21:30 (slots snap to 30 min). */
+  startsAt: IsoDateTime.optional(),
+  /** Events: the event's page (montreal.ca), used for "Buy tickets" / details. */
+  eventUrl: z.string().url().optional(),
 });
 /** @typedef {z.infer<typeof Place>} PlaceT */
 
