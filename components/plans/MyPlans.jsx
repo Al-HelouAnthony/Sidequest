@@ -69,7 +69,12 @@ export function MyPlans() {
     <>
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
-      <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
+        <Link href="/memories" className={buttonClasses({ variant: "secondary" })}>
+          <span aria-hidden="true">📸</span> Memories
+        </Link>
+      </div>
 
       <StartNow />
 

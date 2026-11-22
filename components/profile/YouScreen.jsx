@@ -235,6 +235,13 @@ export function YouScreen() {
       </p>
 
       <p className="halo text-sm text-ink-muted">
+        Every photo from your sidequests, one story per outing.{" "}
+        <Link href="/memories" className="font-semibold text-ink underline underline-offset-2">
+          Open Memories
+        </Link>
+      </p>
+
+      <p className="halo text-sm text-ink-muted">
         How do calendar, live location and memories work?{" "}
         <Link href="/plans/preview" className="font-semibold text-ink underline underline-offset-2">
           See a preview

@@ -114,6 +114,23 @@ export const PlanPhotosResponse = z.object({
 });
 /** @typedef {z.infer<typeof PlanPhotosResponse>} PlanPhotosResponseT */
 
+// ---- GET /api/memories → MemoriesResponse (the Memories screen: every photo from my plans) ----
+/** One entry per plan that has photos, newest plan first; photos oldest first. Signed URLs (≈1 h). */
+export const MemoriesResponse = z.object({
+  memories: z.array(
+    z.object({
+      planId: Id,
+      startAt: IsoDateTime,
+      endAt: IsoDateTime,
+      place: z.object({ id: Id, name: z.string(), category: z.string(), photoUrl: z.string() }),
+      /** Who went (rsvp "in") plus anyone who added a photo. */
+      people: z.array(z.object({ userId: Id, name: z.string(), avatarUrl: z.string() })),
+      photos: PlanPhotosResponse.shape.photos,
+    }),
+  ),
+});
+/** @typedef {z.infer<typeof MemoriesResponse>} MemoriesResponseT */
+
 // POST /api/plans
 export const CreatePlanRequest = z.object({
   placeId: Id,

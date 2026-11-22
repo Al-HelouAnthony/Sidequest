@@ -8,6 +8,7 @@
  * 404/405 = the photo API isn't live yet: the section stays hidden.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { PlanPhotosResponse } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -165,6 +166,11 @@ export function PlanPhotos({ planId, startAt, endAt, names }) {
         </ul>
       ) : (
         <p className="halo text-sm text-ink-muted">No photos yet. They show up here for everyone in the plan.</p>
+      )}
+      {photos && photos.length > 0 && (
+        <Link href="/memories" className={cn("halo inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-2", focusRing)}>
+          All your memories
+        </Link>
       )}
     </section>
   );
