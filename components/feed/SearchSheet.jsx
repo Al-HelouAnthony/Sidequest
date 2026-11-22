@@ -102,10 +102,10 @@ export function SearchSheet({ open, initialQuery = "", onClose, onResult }) {
             >
               <span
                 className={cn(
-                  // Cel field: ink outline + hard shadow; on focus the outline and shadow turn orange and it lifts.
-                  "flex min-h-14 items-center gap-2 rounded-tile border-[1.5px] border-line bg-surface pr-1.5 pl-3 shadow-cel",
+                  // Cel field: ink outline + hard shadow; on focus the outline and shadow turn teal and it lifts.
+                  "flex min-h-14 items-center gap-2 rounded-tile border-2 border-line bg-surface pr-1.5 pl-3 shadow-cel",
                   "transition-[transform,box-shadow,border-color] duration-200 ease-out",
-                  "focus-within:border-accent focus-within:shadow-[0_5px_0_var(--color-accent)] motion-safe:focus-within:-translate-y-0.5",
+                  "focus-within:border-teal focus-within:shadow-[0_5px_0_var(--color-teal)] motion-safe:focus-within:-translate-y-0.5",
                   error && "border-danger",
                 )}
               >
@@ -141,7 +141,7 @@ export function SearchSheet({ open, initialQuery = "", onClose, onResult }) {
                       inputRef.current?.focus();
                     }}
                     className={cn(
-                      "press inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-raised text-ink motion-safe:animate-pop",
+                      "press relative inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-raised text-ink motion-safe:animate-pop before:absolute before:-inset-1 before:content-['']",
                       focusRing,
                     )}
                   >

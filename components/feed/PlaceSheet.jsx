@@ -128,7 +128,7 @@ function PlaceSheetBody({ card, onClose }) {
       <div className="space-y-5 pb-4">
         {/* Photo + what it is */}
         <div className="space-y-3">
-          <div className="h-36 overflow-hidden rounded-tile border-[1.5px] border-line bg-raised">
+          <div className="h-36 overflow-hidden rounded-tile border-2 border-line bg-raised">
             {/* eslint-disable-next-line @next/next/no-img-element -- remote place photos */}
             <img src={place.photoUrl} alt="" className="size-full object-cover" />
           </div>
@@ -158,7 +158,7 @@ function PlaceSheetBody({ card, onClose }) {
           {extras && (
             <>
               {todays.length > 0 && (
-                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-line bg-teal px-3 py-1 text-sm font-bold text-on-teal">
+                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border-2 border-line bg-teal px-3 py-1 text-sm font-bold text-on-teal">
                   {openForVisit(todays, slot.start, slot.end) && <Icon name="check" strokeWidth={3} className="size-4" />}
                   Open {todays.map(intervalText).join(", ")}
                   {openForVisit(todays, slot.start, slot.end) ? " · your whole visit" : ""}

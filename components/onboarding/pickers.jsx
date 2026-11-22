@@ -57,9 +57,9 @@ export function PostalCodeField({ value, onChange, error, id = "postal-code" }) 
       </label>
       <span
         className={cn(
-          "flex min-h-14 items-center gap-2 rounded-tile border-[1.5px] bg-surface pr-3 pl-3 shadow-cel",
+          "flex min-h-14 items-center gap-2 rounded-tile border-2 bg-surface pr-3 pl-3 shadow-cel",
           "transition-[transform,box-shadow,border-color] duration-200 ease-out",
-          "focus-within:border-accent focus-within:shadow-[0_5px_0_var(--color-accent)] motion-safe:focus-within:-translate-y-0.5",
+          "focus-within:border-teal focus-within:shadow-[0_5px_0_var(--color-teal)] motion-safe:focus-within:-translate-y-0.5",
           error ? "border-danger" : "border-line",
         )}
       >
@@ -249,7 +249,7 @@ export function PeopleList({ canRemove = false }) {
             <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
             {p.isFriend ? (
               <>
-                <span className="inline-flex h-9 items-center gap-1 rounded-full border-[1.5px] border-line bg-teal px-3 text-sm font-bold text-on-teal">
+                <span className="inline-flex h-9 items-center gap-1 rounded-full border-2 border-line bg-teal px-3 text-sm font-bold text-on-teal">
                   <Icon name="check" strokeWidth={3} className="size-4" />
                   Friends
                 </span>

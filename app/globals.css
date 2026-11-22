@@ -76,8 +76,11 @@
   --radius-sheet: 1.875rem;
 
   /* Depth (hard, flat, no blur: the cel look) */
-  --shadow-cel: 0 4px 0 var(--color-shade);
+  --shadow-cel: 0 5px 0 var(--color-shade);
   --shadow-cel-sm: 0 3px 0 var(--color-shade);
+  /* Cel shading, stronger (design-system skill): a flat darker band inside the bottom, a thin light rim on top. */
+  --shadow-band: inset 0 -4px 0 color-mix(in srgb, var(--color-shade) 10%, transparent);
+  --shadow-rim: inset 0 2px 0 rgb(255 255 255 / var(--rim, 0.45));
   --shadow-float: 0 -6px 0 rgb(48 56 65 / 0.12), 0 -18px 40px rgb(48 56 65 / 0.18);
 
   /* Motion */
@@ -104,11 +107,6 @@
   --animate-shake-once: shake 70ms linear 5;
   --animate-scan: scan 0.9s ease-in-out infinite;
   --animate-stripes: stripes 0.9s linear infinite;
-  --animate-shine: shine 2.8s ease-in-out 0.6s infinite;
-  --animate-knob-hint: knob-hint 2.8s cubic-bezier(0.3, 1.4, 0.5, 1) 0.6s infinite;
-  --animate-tick-on: tick-on 380ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
-  --animate-socket: socket 700ms ease-in-out infinite;
-  --animate-spark: spark 700ms cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
 
   @keyframes sheet-up {
     from { transform: translateY(100%); }
@@ -199,31 +197,6 @@
   @keyframes stripes {
     to { background-position: 20px 0; }
   }
-  @keyframes shine {
-    0%, 55% { transform: translateX(-120%) skewX(-20deg); }
-    100% { transform: translateX(420%) skewX(-20deg); }
-  }
-  @keyframes knob-hint {
-    0%, 60%, 100% { transform: translateX(0); }
-    70% { transform: translateX(16px); }
-    80% { transform: translateX(2px); }
-    88% { transform: translateX(8px); }
-    95% { transform: translateX(0); }
-  }
-  @keyframes socket {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.12); }
-  }
-  @keyframes spark {
-    0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
-    40% { transform: translate(calc(-50% + var(--sx, 0px)), calc(-50% + var(--sy, -8px))) scale(1.2); opacity: 1; }
-    100% { transform: translate(calc(-50% + var(--sx, 0px) * 2.4), calc(-50% + var(--sy, -8px) * 2.4)) scale(0.2); opacity: 0; }
-  }
-  @keyframes tick-on {
-    0% { transform: scale(0.4); }
-    60% { transform: scale(1.8); }
-    100% { transform: scale(1.25); }
-  }
   @keyframes scan {
     0%, 100% { transform: translate(0, 0) rotate(0); }
     25% { transform: translate(-2px, -1px) rotate(-10deg); }
@@ -269,6 +242,7 @@
     --glass-hi: 0.16;
     --glass-lo: 0.03;
     --glass-edge: 0.22;
+    --rim: 0.08;
     color-scheme: dark;
   }
 }
@@ -283,25 +257,26 @@
   --glass-hi: 0.16;
   --glass-lo: 0.03;
   --glass-edge: 0.22;
+  --rim: 0.08;
   color-scheme: dark;
 }
 
 /* Island: outlined, big radius, hard shadow. Add rounded-card / rounded-tile yourself. */
 @utility cel {
   background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel);
 }
 @utility cel-sm {
   background-color: var(--color-surface);
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel-sm);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel-sm);
 }
 
 /* Physical button: outline + hard shadow that disappears as the button sinks on tap. */
 @utility press {
-  border: 1.5px solid var(--color-line);
-  box-shadow: var(--shadow-cel-sm);
+  border: 2px solid var(--color-line);
+  box-shadow: var(--shadow-rim), var(--shadow-band), var(--shadow-cel-sm);
   transition:
     transform 120ms ease,
     box-shadow 120ms ease,
@@ -310,7 +285,7 @@
     opacity 200ms;
   &:active:not(:disabled, [aria-disabled="true"]) {
     transform: translateY(3px);
-    box-shadow: none;
+    box-shadow: var(--shadow-rim), var(--shadow-band);
   }
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -350,7 +325,7 @@
 @utility glass-photo {
   background-color: var(--color-surface);
   color: var(--color-ink);
-  border: 1.5px solid var(--color-line);
+  border: 2px solid var(--color-line);
   box-shadow: 0 2px 0 var(--color-shade);
 }
 

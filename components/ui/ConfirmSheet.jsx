@@ -45,12 +45,12 @@ export function ConfirmSheet({ open, title, body, confirmLabel, cancelLabel = "K
               loading={busy}
               onClick={onConfirm}
               leadingIcon={
-                <span className="inline-flex size-6 items-center justify-center rounded-full bg-accent text-on-accent">
+                <span className="inline-flex size-6 items-center justify-center rounded-full bg-surface text-ink">
                   <Icon name="x" strokeWidth={2.8} className="size-3.5" />
                 </span>
               }
             >
-              {confirmLabel}
+              <span className="whitespace-nowrap">{confirmLabel}</span>
             </Button>
           </div>
         </div>

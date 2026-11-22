@@ -109,7 +109,7 @@ export function InviteSheet({ card, onClose, onCreated }) {
                     aria-pressed={on}
                     onClick={() => toggle(f.id)}
                     className={cn(
-                      "flex min-h-14 w-full items-center gap-3 rounded-tile border-[1.5px] border-line px-3 py-2 text-left",
+                      "flex min-h-14 w-full items-center gap-3 rounded-tile border-2 border-line px-3 py-2 text-left",
                       on ? "bg-teal/25" : "bg-surface",
                       pressable,
                       focusRing,

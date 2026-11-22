@@ -135,7 +135,7 @@ export function BottomSheet({ open, onClose, title, description, children, foote
         downOnBackdrop.current = false;
       }}
       className={cn(
-        "mx-auto mt-auto mb-0 max-h-[88dvh] w-full max-w-md overflow-hidden rounded-t-sheet border-[1.5px] border-b-0 border-line bg-surface p-0 text-ink shadow-float",
+        "mx-auto mt-auto mb-0 max-h-[88dvh] w-full max-w-md overflow-hidden rounded-t-sheet border-2 border-b-0 border-line bg-surface p-0 text-ink shadow-float",
         "open:flex open:flex-col motion-safe:open:animate-sheet-up",
         "backdrop:bg-on-accent/55 motion-safe:backdrop:animate-fade-in",
         className,

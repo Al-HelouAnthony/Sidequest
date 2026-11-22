@@ -12,7 +12,7 @@ export function PriceLevel({ level, className }) {
     <span className={cn("inline-flex font-bold tracking-tight tabular-nums", className)}>
       <span aria-hidden="true">
         {"$".repeat(n)}
-        <span className="opacity-30">{"$".repeat(4 - n)}</span>
+        <span className="opacity-55">{"$".repeat(4 - n)}</span>
       </span>
       <span className="sr-only">Price: {LABELS[/** @type {1|2|3|4} */ (n)]}</span>
     </span>
