@@ -1,12 +1,13 @@
 /**
- * Fill exact start/end times for city events from their montreal.ca page (JSON-LD "startDate"/"endDate").
+ * Fill exact start/end times + the official picture for city events from their montreal.ca page
+ * (JSON-LD "startDate"/"endDate"/"image" → events.start_at / end_at / image_url).
  * Owner: Adel. Needs migration 0006 (events.end_at).
  *
  *   node --env-file=.env.local supabase/import/events/fetch_event_times.mjs [--days 8] [--all] [--dry] [--limit N]
  *
  * Only events the app would show (lib/data/eventRules.js: kept types, not kids/seniors-only, not online,
- * with a location) that are active in the next --days days. Skips rows that already have start_at
- * unless --all. ~3 requests/second, generic User-Agent. --dry prints, writes nothing. Safe to re-run.
+ * with a location) that are active in the next --days days. Skips rows that already have both
+ * start_at and image_url unless --all. ~3 requests/second, generic User-Agent. --dry prints, writes nothing. Safe to re-run.
  */
 import { createClient } from "@supabase/supabase-js";
 import { keepEvent, parseJsonLdTimes } from "../../../lib/data/eventRules.js";
@@ -49,15 +50,15 @@ async function main() {
 
   const { data, error } = await db
     .from("events")
-    .select("id, title, url, event_type, audience, setting, lat, lng, start_at")
+    .select("id, title, url, event_type, audience, setting, lat, lng, start_at, image_url")
     .eq("source", "montreal_open_data")
     .lte("start_date", until)
     .gte("end_date", today);
   if (error) throw new Error(`events.select failed: ${error.message}`);
-  const todo = data.filter((r) => keepEvent(r) && r.url && (all || !r.start_at)).slice(0, limit);
+  const todo = data.filter((r) => keepEvent(r) && r.url && (all || !r.start_at || !r.image_url)).slice(0, limit);
   console.log(`${data.length} events active ${today}..${until}; ${data.filter(keepEvent).length} worth showing; fetching ${todo.length}${dry ? " (dry run)" : ""}…`);
 
-  let ok = 0, noTimes = 0, failed = 0;
+  let ok = 0, noTimes = 0, failed = 0, images = 0;
   for (const [i, r] of todo.entries()) {
     try {
       const times = parseJsonLdTimes(await fetchPage(r.url));
@@ -65,9 +66,10 @@ async function main() {
         noTimes++;
       } else {
         ok++;
-        if (dry) console.log(`  ${times.startAt} → ${times.endAt ?? "?"}  ${r.title.slice(0, 60)}`);
+        if (times.image) images++;
+        if (dry) console.log(`  ${times.startAt} → ${times.endAt ?? "?"} ${times.image ? "🖼" : "  "} ${r.title.slice(0, 60)}`);
         else {
-          const { error: upErr } = await db.from("events").update({ start_at: times.startAt, end_at: times.endAt, updated_at: new Date().toISOString() }).eq("id", r.id);
+          const { error: upErr } = await db.from("events").update({ start_at: times.startAt, end_at: times.endAt, ...(times.image ? { image_url: times.image } : {}), updated_at: new Date().toISOString() }).eq("id", r.id);
           if (upErr) throw new Error(`update: ${upErr.message}`);
         }
       }
@@ -78,7 +80,7 @@ async function main() {
     if ((i + 1) % 25 === 0) console.log(`  ${i + 1}/${todo.length}…`);
     await sleep(GAP_MS);
   }
-  console.log(`Done: ${ok} with times${dry ? " (not saved)" : " saved"}, ${noTimes} pages without times, ${failed} failed.`);
+  console.log(`Done: ${ok} with times (${images} with a picture)${dry ? " (not saved)" : " saved"}, ${noTimes} pages without times, ${failed} failed.`);
 }
 
 main().catch((err) => {
