@@ -1,8 +1,8 @@
 # PLAN: Sidequest @ CodeJam 16
 
-> ## ✅ Status (Sat Nov 21, ~3 PM): the original plan is COMPLETE
-> Everything in §1–§11 below is built, tested together and merged. **Live:** https://sidequest-two-smoky.vercel.app (final checkpoint `9981fb1`).
-> **New work for tonight is in [§12: New tasks (N1–N5)](#12-new-tasks-for-tonight-n1n5).** Start there.
+> ## ✅ Status (Sat Nov 21, ~9:30 PM): §1–§12 are COMPLETE
+> The original plan (§1–§11) and the tonight tasks (§12: N1–N5, Book it + booking assistant, city events) are built, tested together and merged. **Live:** https://sidequest-two-smoky.vercel.app (`main` = `46913e6`).
+> **New work is in [§13: New features (G1–G6)](#13-new-features-g1g6).** Start there. **Freeze moved to 4 AM.**
 
 > **Read this first.** It tells you what you own, what you can rely on from others, and what "done" means.
 > Product, schema and API details live in [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md). This file is *who does what, when*.
@@ -332,6 +332,7 @@ When your work touches someone else's, there are three kinds of sync point. Clau
 
 ## 12. New tasks for tonight (N1–N5)
 
+> ✅ **Done and merged** (N1–N5, plus Book it's booking assistant and city events in the feed/search, `main` = `46913e6`). Kept for reference.
 > These are **new** (added Sat ~3 PM after using the live app), not leftovers. **Order: N5 → N2 → N3 → N1 → N4 (if time).**
 > **C5 checkpoint: trial merge + full test at ~11 PM**, then merge, then **feature freeze at 1 AM**.
 > Every contract change (`types/*`) still needs a 👍 from its consumers first (§6.6).
@@ -384,3 +385,87 @@ On a **confirmed** plan, the organizer taps **Book it**:
 1. N4 → keep as documented post-hackathon work.
 2. N1 registry part → keep cuisine tags on the curated places only.
 3. N3 loop passes → keep the early prefetch.
+
+---
+
+## 13. New features (G1–G6)
+
+> Added Sat ~9:30 PM. **Build until ~2:30 AM → Anthony's trial merge 2:30–3:30 → `main` ~3:45 → FREEZE 4 AM.** Submit by 11:30.
+> Pull `main` first. Contracts (`types/*`) come from Anthony first; 👍 them in the chat before building on them (§6.6).
+> **Adel's migration `0007` is the first dependency** (calendar tokens, photos, location all need it): push it first.
+
+### What and why
+| # | Feature | In one line |
+|---|---|---|
+| G1 | **Better pictures** | Events show their official city image (automatic); the 60 places get a hand-picked photo (Google Images, team decision: copyright risk accepted, keep the source list) |
+| G2 | **Google Calendar** | Tap **I'm in** → the plan appears in your Google Calendar; **Can't make it** / cancelled → it's removed |
+| G3 | **Other times** | Each card offers up to 3 other moments (another day / time, or another date of the same show) where the group is still free |
+| G4 | **Memory photos** | During the plan (start + halfway), an in-app banner: "📸 Take a memory photo" → camera → shared album on the plan screen |
+| G5 | **Live location** | From 30 min before the plan: opt-in sharing → "Maya · 8 min away", "Karim · late", "Léa · arrived" |
+| G6 | **Speed** | Measure, stop the first page waiting 2.5 s on Claude, cache static data, index the 55k-row registry |
+
+**Facts this is built on (checked):**
+- **Sign-in:** asks `calendar.readonly` with `access_type: offline, prompt: consent`, but only uses the short-lived `provider_token`. The long-lived `provider_refresh_token` is dropped today. While the Google app is in "testing", refresh tokens last ~7 days.
+- **Event images:** montreal.ca event pages have a JSON-LD `image` (Ville de Montréal Cloudinary URL); `events.image_url` already exists.
+- **No push:** we have no service worker; Vercel's free plan runs cron at most once a day; iPhone push needs the app on the home screen. Hence an **in-app** reminder.
+- **Live updates:** the server sends data-free "plan changed" signals and phones refetch through the API (`lib/social/realtime.js`, `lib/social/live.js`). Reuse that for photos and location.
+- **Speed today:**
+  - The registry search scans 55k `businesses` rows with `name ilike %word%` (~1 s).
+  - The first feed page can wait up to 2.5 s for captions.
+  - The curated places are re-read every request.
+  - GET vs POST makes no speed difference here: round trips, indexes and the caption wait do.
+
+### Contracts (Anthony pushes first → 👍 from consumers)
+- `FeedCard.alternatives?`: ≤ 3 × `{ placeId, slot: {start, end}, friends: FeedFriend[] }` (other good times; for events `placeId` can be another date's event id). 👍 Oscar, Mhammad.
+- `PlanView.members[].calendarAdded?`: boolean. 👍 Oscar.
+- `types/api.js`:
+  - `LocationRequest { lat, lng, accuracyM }`.
+  - `PlanLocationsResponse { members: [{ userId, status: "sharing"|"arrived"|"late"|"not-sharing", distanceM?, etaMin?, updatedAt? }] }`. **Never another member's raw coordinates.**
+  - `PlanPhotosResponse { photos: [{ id, userId, url, createdAt }] }`.
+  👍 all.
+
+### 13.1 Anthony (engine, speed, calendar tokens)
+| # | Task | Files | Done when |
+|---|---|---|---|
+| G3 | `alternatives` per card: the best ≤3 other windows (another day, or ≥2 h apart) for the same place, all passing the hard rules; for events, other dates of the same show (same name + venue) | `lib/engine/` | Tests: free for their friends, never the card's own slot, ≤3, event series grouped |
+| G6a | `Server-Timing` on `/api/feed` + `/api/search` (load / engine / captions ms) | `app/api/feed/`, (search: Mhammad's OK) | Before/after numbers |
+| G6b | `captionBudgetMs` 2500 → ~800; `after()` keeps captioning, so the prefetched page and repeat visits get Claude captions | `lib/engine/config.js` | First page < 1 s live |
+| G6c | Cache curated places 5 min in the loader. Per-user data stays fresh (the skip → refresh learning demo must still work) | `lib/engine/load.js` | 2nd request skips the places query |
+| G6d | Vercel function region = Supabase region? | Vercel settings | Same, or a note |
+| G2a | Scope `calendar.events` at sign-in (+ Google Cloud consent screen); callback saves `provider_refresh_token` (Adel's `saveGoogleRefreshToken`); `lib/calendar/google.js`: `accessTokenFor(userId)`, `insertPlanEvent()`, `deletePlanEvent()` | `app/(auth)/login/LoginCard.jsx` (Mhammad's OK), `app/auth/callback/`, `lib/signin.js`, `lib/calendar/` | Sign in again → token saved; a test event appears in Google Calendar |
+
+### 13.2 Mhammad (plans, calendar hooks, photo + location APIs)
+| # | Task | Files | Done when |
+|---|---|---|---|
+| G2b | RSVP "in" → `insertPlanEvent` for that user (the creator too when the plan becomes confirmed); "out" / cancel → `deletePlanEvent`; store `plan_members.google_event_id`; `calendarAdded` in `toView`. Run it in `after()`: never block or fail an RSVP. Users without a token (demo users) are skipped | `lib/social/plans-store.js` | I'm in → in Google Calendar; Can't make it → removed |
+| G4b | `POST /api/plans/[id]/photos`: member only; from start −15 min to end +12 h; jpeg/png/webp ≤ 5 MB; private bucket `plan-photos/{planId}/{uuid}`; row in `plan_photos`; plan signal. `GET` → signed URLs (1 h). Skill: `supabase-storage` | `app/api/plans/[id]/photos/` | Sam uploads → Maya sees it live |
+| G5b | `POST /api/plans/[id]/location`: member only, window start −30 to start +30 min, ≤ 1 per 15 s → upsert `plan_locations` + data-free signal. `GET …/locations` → status / distanceM / etaMin (reuse `estimateTravelMin`, `lib/data/geo.js`); "late" = ETA after the start. Delete rows after the plan ends | `app/api/plans/[id]/location(s)/` | Maya's ETA updates on Sam's screen < 2 s |
+
+### 13.3 Adel (pictures, migrations, DB speed)
+| # | Task | Files | Done when |
+|---|---|---|---|
+| G0 | **Migration `0007` (FIRST)**, safe to re-run: `google_tokens(user_id pk, refresh_token, scope, updated_at)` with RLS on and no policies (server only); `plan_members.google_event_id`; `plan_locations(plan_id, user_id, lat, lng, accuracy_m, updated_at, pk(plan_id,user_id))`; `plan_photos(id, plan_id, user_id, path, created_at)`; private bucket `plan-photos`. Data functions `saveGoogleRefreshToken`, `getGoogleRefreshToken` | `supabase/migrations/`, `lib/data/` | Applied; data tests pass |
+| G1a | Event pictures: `fetch_event_times.mjs` also saves the JSON-LD `image` into `events.image_url`; `eventRowToPlace` uses it (svg fallback) | `supabase/import/events/`, `lib/data/events.js` | Event cards show their city image |
+| G1b | 60 place photos picked from Google Images, ~1080 px, same paths `public/places/<id>.jpg` (no code change); source URL per place in `data/photo-credits.md`; Oscar reviews the look | `public/places/`, `data/photo-credits.md` | All 60 replaced, list done |
+| G6e | Migration `0008`: `pg_trgm` GIN index on lower(`businesses.name`), btree on `(latitude, longitude)` (or partial for open restaurants); `explain analyze` before/after | `supabase/migrations/` | Registry search < 300 ms (was ~1 s) |
+| G6d | Tell Anthony the Supabase project region | — | — |
+
+### 13.4 Oscar (all the new UI)
+| # | Task | Files | Done when |
+|---|---|---|---|
+| G3b | "Also free: Sun 2 PM · Tue 7 PM" chips (card and/or invite sheet). Picking one sends that slot + its friends to `POST /api/plans` | `components/feed/`, `components/plans/InviteSheet.jsx` | Plan created at the chosen time |
+| G2c | "Added to your Google Calendar ✓" (`calendarAdded`) on the plan screen; "Reconnect Google" hint when not connected | `components/plans/PlanScreen.jsx` | Visible after I'm in |
+| G4a | Banner during the plan (first 15 min + around halfway): "📸 Take a memory photo" → `<input type="file" accept="image/*" capture="environment">` → resize in the browser (canvas ~1280 px, JPEG 0.8) → upload → shared album on the plan screen | `components/plans/` | Photo from phone 1 shows on phone 2 |
+| G5a | From 30 min before the start: opt-in "Share my location until we meet" (`navigator.geolocation.watchPosition`, only while the app is open, stops at start +30) → list with status / ETA per member | `components/plans/`, `hooks/` | Two phones see each other's status |
+
+### Privacy / safety (non-negotiable)
+- **Location:** opt-in, plan members only, only from 30 min before to 30 min after the start; others see status + ETA, **never coordinates**; rows deleted after the plan.
+- **Photos:** private bucket, signed URLs for members only.
+- **Google tokens:** server-only table, never sent to the browser, never logged.
+
+### Cut order if late
+1. G5 live location
+2. G4 reminder banner (keep upload + album)
+3. G3 event alternatives (keep places)
+4. G6e indexes
+5. G1b place re-pick (keep the AI images)
