@@ -68,6 +68,8 @@ export const PlanView = Plan.extend({
     address: z.string(),
     /** N1: false = registry restaurant, hours assumed → "call ahead". Missing = verified. */
     hoursVerified: z.boolean().optional(),
+    /** Events: exact start (the plan's own times snap to 30 min) → "Starts 7:30 PM" on the plan screen. */
+    startsAt: IsoDateTime.optional(),
   }),
   members: z.array(
     z.object({
