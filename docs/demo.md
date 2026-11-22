@@ -10,23 +10,30 @@
 
 ## 1. Before judging (do these in order)
 
+> ✅ **Done Sun 10:40:** Anthony's learned weights were cleared (all 7 categories were at −0.5 or lower, so nothing could
+> stand out). From now on **don't skip / save / Let's go on Anthony's account** except during a rehearsal or the demo.
+> Scrolling and looking are fine.
+
 | When | Step | Who |
 |---|---|---|
-| 12:30 | Confirm Vercel shows the latest `main` (the tab bar is frosted, swiping between tabs works) | Anthony |
-| 12:40 | Everyone opens the app once and signs in again if asked (re-syncs Google Calendars). On `/me`: home + interests set, 3 friends | All |
-| 12:45 | **Reset Anthony's learned weights** (see box below). After this, **Anthony doesn't skip/save anything until the demo** | Anthony + Claude |
-| 12:50 | **Warm the captions:** on Phone 1 open the feed, wait ~5 s, scroll 2 cards, tap **Feed** to refresh. Claude captions now show instantly | Anthony |
-| 12:50 | Phone 2 (Oscar): open the app on **Feed** and leave it there (that's where the invite banner pops; other tabs only show a badge on Plans) | Oscar |
-| 12:55 | Screen mirroring of Phone 1 works, phones charged, brightness up, Do Not Disturb on, Wi-Fi (not eduroam if it's slow; hotspot as backup) | All |
-| — | **Backup:** a 1-minute screen recording of the full loop on Phone 1 (record it once at 12:50) | Mohammad |
+| now | **Both phones: Add to Home Screen** (Share → Add to Home Screen / ⋮ → Install app). The app opens full screen, no URL bar: looks like a real app on the projector. Sign in there once. | Anthony, Oscar |
+| now | **Oscar's phone: clear old invites.** Open Plans, answer or cancel every old pending invite, so the only banner on stage is the live one. | Oscar |
+| now | **Anthony's phone: cancel old test plans** you organized (open the plan → Cancel plan). Cancelling also removes them from Google Calendar. | Anthony |
+| 12:00 | **Rehearsal #1 with a timer (5 min)**, exactly as §2, Anthony + Oscar's phones. Others time it and note what to cut. | All |
+| 12:15 | **Record the backup video** during rehearsal #2 (screen recording on Phone 1 + film Phone 2 receiving the invite). | Mohammad |
+| 12:30 | After rehearsals: **cancel the rehearsal plans** (Anthony: plan → Cancel) and **reset** on the laptop: `node scripts/demo-reset.mjs` | Anthony |
+| 12:35 | **Warm the captions:** Phone 1 opens the feed, waits ~5 s, taps **Feed** (refresh). Claude's captions are now cached. Check: the top cards have **Oscar** among the friends. | Anthony |
+| 12:40 | Phones: **charged** (or on a battery pack), **Do Not Disturb**, brightness up, **auto-lock off** (Oscar's screen must stay on: the invite banner is in-app, there are no push notifications). | All |
+| 12:40 | **Screen mirroring** of Phone 1 to the laptop/projector works (AirPlay/QuickTime for iPhone, scrcpy/Vysor or a USB-C display adapter for Android). Test the venue Wi-Fi; a phone **hotspot** ready as backup. | Anthony |
+| 12:45 | Phone 2 (Oscar): app open on the **Feed** tab and left there (that's where the banner pops; other tabs only show a badge on Plans). | Oscar |
+| — | Laptop: this runbook open + `docs/engine.md` for the Q&A + a terminal in the repo for the reset. | Anthony |
 
-> **Why the reset matters:** from all our testing, Anthony's account learned to dislike **every** category (all at −0.5 or lower).
-> When everything is suppressed, nothing stands out: "skip 2 bars → bars gone" leaves 2 bars in the top 10.
-> With the weights cleared, skipping 2 bars leaves **0 bars in the top 10 on 20/20 simulated visits**.
-> Reset = delete Anthony's rows in `user_tag_weights` (his swipe history stays). Claude can run it on Anthony's go, or in the
-> Supabase SQL editor: `delete from user_tag_weights where user_id = '9dd740c1-…';` (Anthony's full id is in `/me`).
+**Who answers what in Q&A:** Anthony: the feed engine, ranking, learning, Google Calendar. Mhammad: plans, live updates, search, Claude captions. Adel: data (places, events, registry, travel times, weather), database and security. Oscar: design, the app feel (cards, swipes, the breaking bar).
 
----
+### Between two judges (~1 minute)
+1. Phone 1: open the plan you just made → **Cancel plan** (keeps Oscar's phone clean, removes the calendar events).
+2. Laptop: `node scripts/demo-reset.mjs` → "Anthony Helou: cleared N learned weights".
+3. Phone 1: tap **Feed** (fresh visit, bars are back). Phone 2: back to the **Feed** tab.
 
 ## 2. The 5 minutes
 
