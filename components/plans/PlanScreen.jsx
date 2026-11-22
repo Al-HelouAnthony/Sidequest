@@ -23,13 +23,13 @@ import { BookItSheet } from "@/components/plans/BookItSheet";
 const STATUS = {
   pending: { label: "Waiting for replies", className: "bg-warning text-on-accent" },
   confirmed: { label: "Confirmed", className: "bg-teal text-on-teal" },
-  cancelled: { label: "Cancelled", className: "bg-raised text-ink-muted" },
+  cancelled: { label: "Cancelled", className: "bg-raised text-ink" },
 };
 
 const RSVP = {
   in: { label: "In", className: "bg-teal text-on-teal" },
   invited: { label: "Invited", className: "bg-surface text-ink-muted" },
-  out: { label: "Can't make it", className: "bg-raised text-ink-muted" },
+  out: { label: "Can't make it", className: "bg-raised text-ink" },
 };
 
 /** Where the plan page's Back goes. */
@@ -300,7 +300,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
             setCancelOpen(true);
           }}
           leadingIcon={
-            <span className="inline-flex size-6 items-center justify-center rounded-full bg-accent text-on-accent">
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-surface text-ink">
               <Icon name="x" strokeWidth={2.8} className="size-3.5" />
             </span>
           }
@@ -319,7 +319,7 @@ export function PlanScreen({ planId, back = BACK.feed }) {
             can&apos;t be undone, but you can always make a new plan.
           </>
         }
-        confirmLabel="Cancel plan"
+        confirmLabel="Yes, cancel"
         cancelLabel="Keep plan"
         busy={cancelling}
         error={cancelError}
