@@ -90,4 +90,28 @@ describe("POST /api/interactions", () => {
     expect(fns.ensurePlaceFromRegistry).not.toHaveBeenCalled();
     expect(Object.keys(fns.setTagWeights.mock.calls[0][1])).toContain("live-music");
   });
+
+  it("concurrent swipes by one user: every weight change is kept (no lost update)", async () => {
+    // A slow store with read → change → write, like Supabase: overlapping requests used to keep only one.
+    fns.getPlace.mockReset().mockImplementation(async (id) => (id === CURATED ? place(CURATED, ["coffee"], "cafe") : null));
+    let stored = {};
+    const tick = () => new Promise((r) => setTimeout(r, 5));
+    fns.getTagWeights.mockImplementation(async () => {
+      await tick();
+      return { ...stored };
+    });
+    fns.setTagWeights.mockImplementation(async (_u, w) => {
+      await tick();
+      stored = w;
+    });
+    try {
+      const res = await Promise.all([1, 2, 3, 4].map(() => post(CURATED, "skip")));
+      expect(res.map((r) => r.status)).toEqual([200, 200, 200, 200]);
+      expect(stored["cat:cafe"]).toBe(-1); // 4 × -0.25
+      expect(stored.coffee).toBe(-1);
+    } finally {
+      fns.getTagWeights.mockImplementation(async () => ({}));
+      fns.setTagWeights.mockImplementation(async () => {});
+    }
+  });
 });

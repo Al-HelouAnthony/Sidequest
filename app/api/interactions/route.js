@@ -64,8 +64,31 @@ export async function POST(request) {
   const place = event ?? (await getPlace(body.placeId)) ?? (await ensureSearchPlace(body.placeId));
   if (!place) return jsonError(404, "Unknown place");
 
-  await recordInteraction(userId, body);
-  const weights = await getTagWeights(userId);
-  await setTagWeights(userId, applyInteraction(weights, place, body.action));
+  await oneAtATime(userId, async () => {
+    await recordInteraction(userId, body);
+    const weights = await getTagWeights(userId);
+    await setTagWeights(userId, applyInteraction(weights, place, body.action));
+  });
   return Response.json({ ok: true });
+}
+
+/**
+ * One user's swipes are applied one after another. The weights update is read → change → write, so two
+ * swipes processed at the same time used to lose one of them (QA: 4 concurrent skips kept only 1).
+ * The feed also sends them in order (app/feed/page.jsx); this covers other clients and tabs.
+ * @type {Map<string, Promise<unknown>>}
+ */
+const queues = (globalThis.__sqInteractionQueues ??= new Map());
+
+/**
+ * @template T
+ * @param {string} userId @param {() => Promise<T>} job
+ * @returns {Promise<T>}
+ */
+function oneAtATime(userId, job) {
+  const run = (queues.get(userId) ?? Promise.resolve()).then(job, job);
+  const tail = run.catch(() => {});
+  queues.set(userId, tail);
+  void tail.then(() => queues.get(userId) === tail && queues.delete(userId));
+  return run;
 }
