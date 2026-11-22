@@ -26,7 +26,6 @@ const CREDITS = [
   { text: "© OpenStreetMap contributors", href: "https://www.openstreetmap.org/copyright" },
   { text: "© openrouteservice.org by HeiGIT", href: "https://openrouteservice.org/" },
   { text: "weather by Open-Meteo.com", href: "https://open-meteo.com/" },
-  { text: "photos: Wikimedia Commons contributors", href: "https://commons.wikimedia.org/" },
 ];
 
 function DataCredits() {
@@ -49,7 +48,8 @@ function DataCredits() {
             </a>
             {i < CREDITS.length - 1 ? ", " : "."}
           </span>
-        ))}
+        ))}{" "}
+        Place images are AI-generated illustrations, not photos of the actual venues.
       </p>
     </section>
   );

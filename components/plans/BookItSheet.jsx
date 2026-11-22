@@ -172,12 +172,13 @@ export function BookItSheet({ planId, category, open, onClose, title, onRequeste
                       aria-pressed={lang === l}
                       onClick={() => setLang(l)}
                       className={cn(
-                        "press min-h-11 rounded-full px-3 text-sm font-bold uppercase",
+                        "press min-h-11 rounded-full px-3 text-sm font-bold",
                         lang === l ? "bg-ink text-surface" : "bg-raised text-ink-muted",
                         focusRing,
                       )}
                     >
-                      {l}
+                      {/* Language codes are written in capitals; no CSS uppercase (design rule: no all-caps styling). */}
+                      {l === "fr" ? "FR" : "EN"}
                     </button>
                   ))}
                 </div>
