@@ -6,7 +6,7 @@
  * Never pretends to book: the organizer reserves through the restaurant's own channel.
  */
 import { useCallback, useEffect, useState } from "react";
-import { BookingInfo } from "@/types/api";
+import { BookingAgentResult, BookingInfo } from "@/types/api";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -51,11 +51,33 @@ export function BookItSheet({ planId, category, open, onClose, title, onRequeste
     }
   }, [planId]);
 
+  // Booking assistant: reads the place's own website (separate call: a live read can take ~10 s).
+  const [agent, setAgent] = useState(/** @type {import("@/types/api").BookingAgentResultT | null} */ (null));
+  const [agentFailed, setAgentFailed] = useState(false);
+  const loadAgent = useCallback(async () => {
+    setAgentFailed(false);
+    try {
+      const res = await fetch(`/api/plans/${encodeURIComponent(planId)}/booking/agent`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`agent ${res.status}`);
+      setAgent(BookingAgentResult.parse(await res.json()));
+    } catch (e) {
+      console.error("[book-it] assistant", e);
+      setAgentFailed(true);
+    }
+  }, [planId]);
+
   useEffect(() => {
     if (!open) return;
     const t = setTimeout(load, 0);
     return () => clearTimeout(t);
   }, [open, load]);
+
+  // Once per sheet: the answer doesn't change while it's open (cached on the server).
+  useEffect(() => {
+    if (!open || agent) return;
+    const t = setTimeout(loadAgent, 0);
+    return () => clearTimeout(t);
+  }, [open, agent, loadAgent]);
 
   const copy = async () => {
     if (!info) return;
@@ -158,6 +180,8 @@ export function BookItSheet({ planId, category, open, onClose, title, onRequeste
             </p>
           )}
 
+          {info.bookingType !== "none" && <AssistantCard agent={agent} failed={agentFailed} phone={info.links.phone} />}
+
           <p className="text-ink-muted">{HOW[info.bookingType]}</p>
 
           {info.bookingType !== "none" && (
@@ -200,5 +224,64 @@ export function BookItSheet({ planId, category, open, onClose, title, onRequeste
         </div>
       )}
     </BottomSheet>
+  );
+}
+
+/** What each assistant verdict means for the organizer. */
+const AGENT_TITLE = {
+  online: "Book online",
+  "no-reservations": "No reservations",
+  phone: "Reserve by phone",
+  unknown: "Call ahead",
+};
+
+/**
+ * Booking assistant findings (read from the place's own website; never books by itself).
+ * Fallback for "unknown": the phone number + clear steps.
+ * @param {{ agent: import("@/types/api").BookingAgentResultT | null, failed: boolean, phone?: string }} props
+ */
+function AssistantCard({ agent, failed, phone }) {
+  if (!agent && !failed) {
+    return (
+      <div role="status" className="cel flex items-center gap-3 rounded-tile p-4">
+        <span aria-hidden="true" className="size-5 animate-spin rounded-full border-2 border-current border-r-transparent text-ink-muted" />
+        <span className="text-sm font-semibold text-ink-muted">Booking assistant is reading their website…</span>
+      </div>
+    );
+  }
+  const verdict = agent?.verdict ?? "unknown";
+  const host = agent?.source ? new URL(agent.source).hostname.replace(/^www\./, "") : null;
+  return (
+    <section aria-label="Booking assistant" className="cel space-y-3 rounded-tile p-4 motion-safe:animate-rise">
+      <div className="flex items-center gap-2">
+        <Icon name="search" strokeWidth={2.4} className="size-4" />
+        <span className="text-sm font-semibold text-ink-muted">Booking assistant{host ? ` · read ${host}` : ""}</span>
+      </div>
+      <p className="font-bold">{AGENT_TITLE[verdict]}</p>
+      {agent && verdict !== "unknown" && <p className="text-sm">{agent.summary}</p>}
+      {agent?.quote && (
+        <blockquote className="border-l-4 border-line pl-3 text-sm text-ink-muted">
+          From their site: “{agent.quote}”
+        </blockquote>
+      )}
+      {verdict === "online" && agent?.bookingUrl && (
+        <a
+          href={agent.bookingUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonClasses({ variant: "primary", size: "lg", fullWidth: true, className: focusRing })}
+        >
+          {agent.platform && !/their own/i.test(agent.platform) ? `Reserve on ${agent.platform}` : "Open their booking page"}
+        </a>
+      )}
+      {verdict === "no-reservations" && <p className="text-sm">No need to book: just show up together (arrive a bit early if it&apos;s busy).</p>}
+      {verdict === "unknown" && (
+        <ol className="list-decimal space-y-1 pl-5 text-sm">
+          <li>{phone ? `Call ${prettyPhone(phone)}` : "Find their number on Google Maps (button below)"}.</li>
+          <li>Read them the message below (French or English).</li>
+          <li>Once they say yes, tap “I booked it” so everyone knows.</li>
+        </ol>
+      )}
+    </section>
   );
 }

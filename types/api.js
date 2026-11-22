@@ -124,6 +124,27 @@ export const BookingInfo = z.object({
 });
 /** @typedef {z.infer<typeof BookingInfo>} BookingInfoT */
 
+/**
+ * GET /api/plans/[id]/booking/agent → BookingAgentResult. The booking assistant read the place's
+ * official website (Claude, checked against the page): every field is something the page really says.
+ * verdict: "online" (bookingUrl found), "no-reservations" (quote from the site), "phone" (site says
+ * call), "unknown" (no website, couldn't read it, or nothing clear → fall back to phone + steps).
+ */
+export const BookingAgentResult = z.object({
+  verdict: z.enum(["online", "no-reservations", "phone", "unknown"]),
+  /** One plain sentence for the sheet, e.g. "They take reservations on OpenTable." */
+  summary: z.string(),
+  bookingUrl: z.string().url().optional(),
+  /** e.g. "OpenTable", "Resy", "Libro", "their own form". */
+  platform: z.string().optional(),
+  /** Exact sentence from the website (e.g. "We don't take reservations."). */
+  quote: z.string().optional(),
+  /** The page the assistant read (official site). Missing when there's no website on file. */
+  source: z.string().url().optional(),
+  checkedAt: IsoDateTime,
+});
+/** @typedef {z.infer<typeof BookingAgentResult>} BookingAgentResultT */
+
 // ---- Friends (GET/POST /api/friends) ----
 export const FriendView = User.pick({ id: true, name: true, avatarUrl: true }).extend({
   closeness: Closeness,
