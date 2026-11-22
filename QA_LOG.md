@@ -60,3 +60,13 @@ Times are Montréal time.
 - **Fixed `904c541`**: camera file input on the plan screen had no accessible name (axe "label", serious) → `aria-label`, nothing visible changes.
 - Broken tiles in Memories during the sweep were my own 12-byte fake JPEGs from API tests (the server only checks the first bytes; real uploads are canvas-encoded) → recommendation: verify decode or add an `onError` fallback.
 - Next: captions/Claude fallback, calendar sync, onboarding/friends/me APIs, then the demo flow ×3.
+
+## 02:25 · Claude, calendar, profile/friends, onboarding, demo run 1
+- **Captions**: invalid key → feed loads (778 ms cold, ~340 ms after), all template captions, never empty. Real key (≈ 3 live calls): page 1 waits its 800 ms budget then sends templates (Claude is slower than that), page 2 and repeat visits get Claude captions from the cache in ~200 ms. **Demo tip: open the feed once before going on stage.** P3: with a bad key every page retries Claude (no back-off).
+- **Calendar sync** (fake Google, local DB): 750 events in 3 paged calendars → 112 merged blocks in 58 ms; re-sync identical (no duplicates); expired token → error and the old blocks are kept; empty calendar → 0 blocks.
+- **Profile / friends / search**: postal code H2T/h2x → 200 (live ORS geocode, 2 calls), Toronto → 400 "only Montréal", garbage → 400; unknown interest → 400; adding yourself → 400; unknown user → 404; SQL-ish search → 0 results; accent-insensitive search works ("cote" → Côté). P3: names with an apostrophe only match after it ("brien", not "o'brien"); the API accepts 0 interests (UI requires 5).
+- **Fixed `a5a2570` (P1)**: **"Remove friend" never worked** — the button and `DELETE /api/friends/[id]` existed, but `removeFriendship` was never merged into `lib/data`, so every removal answered 405 "isn't available yet". Added it (mirrors `addFriendship`, both directions, idempotent). Unit tests + live check (200, again 200).
+- **Onboarding click-through** (Playwright, user with no interests): 4 steps → `/feed` in 6.4 s; 5 interests saved, home moved to H2X, travel recomputed (67 rows).
+- **Double taps**: double Skip → 1 skip; double Save → 1 save; double "Send invite" → **1 plan**.
+- **Demo flow run 1 (Sam + Maya, 2 phones)**: all 8 steps ✅ — feed (what/when/who/travel), Why sheet, skip 3 bars → refresh → **0 bars in the top 10**, Let's go → Maya's banner **663 ms** after Send, I'm in → Sam sees confirmed **98 ms** later, search "something cheap with Maya tomorrow night" → "Budget · with Maya · Tomorrow night", 10 cards. Trace: `qa/demo-run-1.zip` (local only, 54 MB, gitignored).
+- Next: final regression (lint, build, all tests, QA suite), demo runs ×3 from a fresh state, cleanup, prod read-only check, restore `.env.local`, report.

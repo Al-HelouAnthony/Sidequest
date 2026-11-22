@@ -48,3 +48,4 @@ evenements.csv
 /qa/backup/
 /.playwright-mcp/
 /supabase/.temp/
+/qa/*.zip
