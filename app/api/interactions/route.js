@@ -6,23 +6,29 @@
 import { InteractionRequest } from "@/types/api";
 import { getSessionUserId } from "@/lib/auth";
 import { jsonError, parseBody } from "@/lib/http";
-import { getPlace, getTagWeights, recordInteraction, setTagWeights } from "@/lib/data";
-import * as data from "@/lib/data";
+import {
+  ensurePlaceFromRegistry,
+  ensurePlaceFromVenue,
+  getPlace,
+  getTagWeights,
+  isVenuePlaceId,
+  recordInteraction,
+  setTagWeights,
+} from "@/lib/data";
+import { venuePlaceById } from "@/lib/geo/venues";
 import { applyInteraction } from "@/lib/engine/learning";
 
 /**
- * N1: a registry restaurant (from a cuisine search) has no `places` row until someone acts on it.
- * Adel's ensurePlaceFromRegistry() rebuilds it from the registry and saves it (the FK needs it).
- * Returns null for unknown / non-registry ids, or before Adel's N1 code is merged.
+ * Search-only places (registry restaurants, OpenStreetMap venues) have no `places` row until someone
+ * acts on them; the interactions FK needs one. Adel's ensurePlaceFrom… saves it, built server-side by id.
+ * Returns null for unknown ids (→ 404).
  * @param {string} placeId
  */
-async function ensureRegistryPlace(placeId) {
-  const ensure = /** @type {any} */ (data).ensurePlaceFromRegistry;
-  if (typeof ensure !== "function") return null;
+async function ensureSearchPlace(placeId) {
   try {
-    return await ensure(placeId);
+    return isVenuePlaceId(placeId) ? await ensurePlaceFromVenue(venuePlaceById(placeId)) : await ensurePlaceFromRegistry(placeId);
   } catch {
-    return null; // DataInputError: not an open registry restaurant → 404 below
+    return null; // DataInputError: not a known registry restaurant / venue → 404 below
   }
 }
 
@@ -33,7 +39,7 @@ export async function POST(request) {
   if (response) return response;
 
   // Check first: with the real DB an unknown place would also break the interactions FK.
-  const place = (await getPlace(body.placeId)) ?? (await ensureRegistryPlace(body.placeId));
+  const place = (await getPlace(body.placeId)) ?? (await ensureSearchPlace(body.placeId));
   if (!place) return jsonError(404, "Unknown place");
 
   await recordInteraction(userId, body);
