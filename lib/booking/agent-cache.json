@@ -1,0 +1,57 @@
+{
+  "10000000-0000-4000-8000-000000000003": {
+    "verdict": "unknown",
+    "summary": "Couldn't find clear booking info on their website.",
+    "source": "https://www.schwartzsdeli.com",
+    "checkedAt": "2026-11-22T00:19:49.018Z"
+  },
+  "10000000-0000-4000-8000-000000000031": {
+    "verdict": "unknown",
+    "summary": "Couldn't find clear booking info on their website.",
+    "source": "https://www.timeoutmarket.com/montreal/en/",
+    "checkedAt": "2026-11-22T00:19:50.754Z"
+  },
+  "10000000-0000-4000-8000-000000000032": {
+    "verdict": "unknown",
+    "summary": "Couldn't find clear booking info on their website.",
+    "source": "https://lestersdeli.com",
+    "checkedAt": "2026-11-22T00:19:54.848Z"
+  },
+  "10000000-0000-4000-8000-000000000034": {
+    "verdict": "unknown",
+    "summary": "Couldn't find clear booking info on their website.",
+    "source": "https://pizzeriagema.com",
+    "checkedAt": "2026-11-22T00:19:56.795Z"
+  },
+  "10000000-0000-4000-8000-000000000035": {
+    "verdict": "no-reservations",
+    "summary": "Their Montréal site only takes group booking requests for 8 to 20 people on weekdays via a form, so a small group of friends can't book in advance.",
+    "quote": "Aucune réservation le week-end et sur la terrasse.",
+    "source": "https://www.dieuduciel.com",
+    "checkedAt": "2026-11-22T00:19:58.184Z"
+  },
+  "10000000-0000-4000-8000-000000000036": {
+    "verdict": "unknown",
+    "summary": "Couldn't find clear booking info on their website.",
+    "source": "https://casadelpopolo.com",
+    "checkedAt": "2026-11-22T00:20:00.779Z"
+  },
+  "10000000-0000-4000-8000-000000000008": {
+    "verdict": "online",
+    "summary": "You can book general admission tickets online through the museum's own ticketing page.",
+    "bookingUrl": "https://www.mbam.qc.ca/fr/billets/",
+    "platform": "their own form",
+    "quote": "En réservant en ligne, vous aurez un accès garanti au Musée et éviterez la file d'attente de la billetterie à votre arrivée!",
+    "source": "https://www.mbam.qc.ca",
+    "checkedAt": "2026-11-22T00:20:02.696Z"
+  },
+  "10000000-0000-4000-8000-000000000055": {
+    "verdict": "online",
+    "summary": "You can buy general admission tickets online for a museum visit through their ticketing site.",
+    "bookingUrl": "https://billets.pacmusee.qc.ca/",
+    "platform": "their own ticketing site",
+    "quote": "Achetez vos billets en ligne pour visiter le musée dès maintenant !",
+    "source": "https://pacmusee.qc.ca",
+    "checkedAt": "2026-11-22T00:20:04.741Z"
+  }
+}
