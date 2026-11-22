@@ -172,8 +172,9 @@ function PlanRow({ plan, meId }) {
 /**
  * "Start a sidequest now": POST /api/plans/now picks one of our places + friends free for an hour starting
  * in ~10 min and creates a real plan (friends get the invite). Live location + memory photos work right away.
+ * @param {{ showPreviewLink?: boolean }} props  false on the preview page itself
  */
-export function StartNow() {
+export function StartNow({ showPreviewLink = true }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(/** @type {string | null} */ (null));
@@ -210,9 +211,11 @@ export function StartNow() {
           {error}
         </p>
       )}
-      <Link href="/plans/preview" className={cn("inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-2", focusRing)}>
-        See how memories &amp; live location work
-      </Link>
+      {showPreviewLink && (
+        <Link href="/plans/preview" className={cn("inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-2", focusRing)}>
+          See how memories &amp; live location work
+        </Link>
+      )}
     </section>
   );
 }

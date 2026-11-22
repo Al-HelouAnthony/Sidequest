@@ -117,7 +117,7 @@ export function FeaturePreview() {
         </Step>
 
         <Step step="4" title="Try it for real">
-          <StartNow />
+          <StartNow showPreviewLink={false} />
         </Step>
       </main>
     </>
