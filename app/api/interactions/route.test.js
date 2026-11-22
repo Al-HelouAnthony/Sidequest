@@ -82,8 +82,10 @@ describe("POST /api/interactions", () => {
     expect(fns.recordInteraction).not.toHaveBeenCalled();
   });
 
-  it("city event card: saved from the server's event lookup, then learns its tags", async () => {
+  it("city event card: ALWAYS saved first (getPlace finds events before they have a places row)", async () => {
+    fns.getPlace.mockImplementationOnce(async (id) => (id === EVENT ? { id, tags: ["live-music"], category: "event" } : null));
     expect((await post(EVENT, "save")).status).toBe(200);
+    expect(fns.ensurePlaceFromEvent).toHaveBeenCalledOnce();
     expect(fns.eventPlaceById).toHaveBeenCalledWith(EVENT);
     expect(fns.ensurePlaceFromRegistry).not.toHaveBeenCalled();
     expect(Object.keys(fns.setTagWeights.mock.calls[0][1])).toContain("live-music");

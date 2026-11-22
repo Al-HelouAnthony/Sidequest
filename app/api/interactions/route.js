@@ -58,7 +58,10 @@ export async function POST(request) {
   if (response) return response;
 
   // Check first: with the real DB an unknown place would also break the interactions FK.
-  const place = (await getPlace(body.placeId)) ?? (await ensureSearchPlace(body.placeId));
+  // City events: getPlace() finds them in the events table even before they have a `places` row, so
+  // always save first (idempotent upsert); the interactions FK needs the row.
+  const event = await ensureEventPlace(body.placeId).catch(() => null);
+  const place = event ?? (await getPlace(body.placeId)) ?? (await ensureSearchPlace(body.placeId));
   if (!place) return jsonError(404, "Unknown place");
 
   await recordInteraction(userId, body);
