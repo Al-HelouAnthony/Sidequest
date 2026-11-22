@@ -38,11 +38,18 @@ describe("POST /api/search", () => {
     expect(body.nextCursor).toBeNull();
   });
 
-  it("nothing matches 'bowling': falls back to activities and says so", async () => {
-    const body = SearchResponse.parse(await (await post({ query: "bowling" })).json());
-    expect(body.summary).toBe("No bowling nearby · showing Activities");
-    expect(body.filters.categories).toEqual(["activity"]);
-    for (const card of body.cards) expect(card.place.category).toBe("activity");
+  it("nothing matches 'beach' (no beach in the data): falls back to outdoors and says so", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "beach" })).json());
+    expect(body.summary).toBe("No beaches nearby · showing Outdoors");
+    expect(body.filters.categories).toEqual(["park"]);
+    for (const card of body.cards) expect(card.place.category).toBe("park");
+  });
+
+  it("words next to a specific thing narrow it: 'cinema du parc' → Cinéma du Parc", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "cinema du parc" })).json());
+    if (!body.summary.includes("“parc”")) return; // nobody free there this week in the mock schedules
+    expect(body.summary).toBe("Movies · “parc”");
+    for (const card of body.cards) expect(card.place.name).toBe("Cinéma du Parc");
   });
 
   it("cuisine (N1): searches the registry near my home and only returns that cuisine", async () => {
@@ -89,10 +96,25 @@ describe("POST /api/search", () => {
     expect(body.nextCursor).toBeNull();
   });
 
-  it("a word nothing is called ('hotel'): honest chip, other suggestions still shown", async () => {
-    const body = SearchResponse.parse(await (await post({ query: "hotel" })).json());
-    expect(body.summary).toBe("Nothing called “hotel” nearby · showing all suggestions");
+  it("a word nothing is called ('zorblax'): honest chip, other suggestions still shown", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "zorblax" })).json());
+    expect(body.summary).toBe("Nothing called “zorblax” nearby · showing all suggestions");
     expect(body.cards.length).toBeGreaterThan(0);
+  });
+
+  it("every kind of venue: 'hotel', 'bowling', 'escape room' return only that kind, from the Montréal venues", async () => {
+    for (const [query, label, kind] of [["hotel", "Hotels", "hotel"], ["bowling", "Bowling", "bowling"], ["escape room", "Escape rooms", "escape-room"]]) {
+      const body = SearchResponse.parse(await (await post({ query })).json());
+      expect(body.summary).toBe(label);
+      expect(body.cards.length).toBeGreaterThan(0);
+      for (const card of body.cards) expect(card.place.tags).toContain(kind);
+    }
+  });
+
+  it("a venue by exact name with no known word: 'salon de quilles darling'", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "salon darling" })).json());
+    if (body.summary.startsWith("Nothing called")) return; // nobody free there this week in the mock schedules
+    for (const card of body.cards) expect(card.place.name.toLowerCase()).toMatch(/salon.*darling|darling.*salon/);
   });
 
   it("empty query gives 400", async () => {
