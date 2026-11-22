@@ -11,9 +11,10 @@ import { PlanResponse, PlansResponse } from "@/types/api";
 import { formatSlot } from "@/lib/time";
 import { useMeId } from "@/components/plans/useMeId";
 import { AvatarStack } from "@/components/ui/Avatar";
-import { buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { buttonClasses } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { SwipeToGo } from "@/components/ui/SwipeToGo";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { AppBackground } from "@/components/ui/AppBackground";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
@@ -184,6 +185,8 @@ export function StartNow({ showPreviewLink = true }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(/** @type {string | null} */ (null));
+  /** Bumped when starting fails, so the broken bar comes back for another try. */
+  const [resetKey, setResetKey] = useState(0);
 
   const start = async () => {
     setBusy(true);
@@ -193,6 +196,7 @@ export function StartNow({ showPreviewLink = true }) {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof json.error === "string" ? json.error : "Couldn't start a sidequest. Try again.");
+        setResetKey((k) => k + 1);
         return;
       }
       const { plan } = PlanResponse.parse(json);
@@ -200,6 +204,7 @@ export function StartNow({ showPreviewLink = true }) {
     } catch (e) {
       console.error("[plans] start now", e);
       setError("Couldn't start a sidequest. Try again.");
+      setResetKey((k) => k + 1);
     } finally {
       setBusy(false);
     }
@@ -209,9 +214,20 @@ export function StartNow({ showPreviewLink = true }) {
     <section aria-label="Start a sidequest now" className="cel space-y-2.5 rounded-tile p-4">
       <p className="font-bold">Free right now?</p>
       <p className="text-sm text-ink-muted">We pick a spot that&apos;s open and friends who are free for the next hour, starting in 10 min.</p>
-      <button type="button" onClick={start} disabled={busy} aria-busy={busy || undefined} className={buttonClasses({ size: "lg", fullWidth: true })}>
-        {busy ? "Finding a spot…" : "Start a sidequest now"}
-      </button>
+      {/* Our breaking bar, in its most intense version: break it to start. */}
+      <SwipeToGo
+        intense
+        onGo={start}
+        resetKey={resetKey}
+        label="Start a sidequest"
+        doneLabel={busy ? "Finding a spot…" : "Let's go!"}
+        ariaLabel="Start a sidequest now: swipe right or press Enter"
+      />
+      {busy && (
+        <p role="status" className="text-sm font-semibold text-ink-muted">
+          Finding a spot…
+        </p>
+      )}
       {error && (
         <p role="alert" className="text-sm font-semibold text-danger">
           {error}

@@ -51,6 +51,17 @@ const CRACKS = [
   [[0.5, 14], [0.64, 26], [0.78, 16], [0.97, 30]],
 ];
 
+/** Intense mode: more zigzags, spreading over the whole bar as the strain builds. */
+const MORE_CRACKS = [
+  [[0.08, 10], [0.2, 24], [0.33, 12], [0.5, 26], [0.66, 8]],
+  [[0.12, 46], [0.28, 34], [0.44, 48], [0.58, 36], [0.8, 46]],
+  [[0.35, 30], [0.52, 20], [0.7, 34], [0.86, 18], [0.99, 26]],
+  [[0.6, 48], [0.74, 38], [0.88, 50], [0.98, 42]],
+  [[0.68, 6], [0.82, 20], [0.95, 8]],
+];
+/** Intense mode: cracks that shoot out of the knob and stretch ahead of it ([angle in deg, length factor]). */
+const KNOB_CRACKS = [[-28, 1], [8, 1.25], [34, 0.9], [-62, 0.55], [62, 0.6], [-8, 0.8]];
+
 const SHARD_CLIPS = [
   "polygon(0 0,100% 8%,88% 100%,6% 86%)",
   "polygon(10% 0,100% 0,92% 92%,0 100%)",
@@ -77,7 +88,10 @@ const clamp01 = (/** @type {number} */ n) => Math.max(0, Math.min(1, n));
  *   resetKey?: string | number,
  *   disabled?: boolean,
  *   className?: string,
+ *   intense?: boolean,
  * }} props
+ * `intense`: extra cracks that keep spreading and stretch out of the knob near the end, then a bigger break
+ * (more shards flying further, a white flash, four shockwaves, a shake and a longer buzz).
  */
 export function SwipeToGo({
   onGo,
@@ -87,6 +101,7 @@ export function SwipeToGo({
   resetKey = 0,
   disabled = false,
   className,
+  intense = false,
 }) {
   const rootRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   /** @type {React.RefObject<{ startX: number, startP: number, px: number, lastP: number } | null>} */
@@ -147,7 +162,7 @@ export function SwipeToGo({
     drag.current = null;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setInstant(reduce);
-    buzz([30, 30, 70]);
+    buzz(intense ? [40, 25, 40, 25, 140] : [30, 30, 70]);
     if (reduce) {
       setPhase("done");
     } else {
@@ -155,7 +170,7 @@ export function SwipeToGo({
       timers.current.push(setTimeout(() => setPhase("done"), SNAP_MS + 10));
     }
     timers.current.push(setTimeout(() => onGoRef.current?.(), GO_DELAY_MS));
-  }, [disabled]);
+  }, [disabled, intense]);
 
   /** @param {React.PointerEvent<HTMLButtonElement>} e */
   const onPointerDown = (e) => {
@@ -177,6 +192,8 @@ export function SwipeToGo({
     if (!d) return;
     const np = clamp01(d.startP + (e.clientX - d.startX) / d.px);
     if (TICKS.some((t) => d.lastP < t !== np < t)) buzz(np > 0.8 ? 14 : 8);
+    // Intense: a crackle buzz each time the strain climbs another step.
+    if (intense && np > STRAIN_AT && Math.floor(np * 20) !== Math.floor(d.lastP * 20)) buzz(np > 0.9 ? 12 : 5);
     d.lastP = np;
     setP(np);
     if (np >= BREAK_AT) shatter();
@@ -224,6 +241,18 @@ export function SwipeToGo({
         : `${prop} 600ms ${SPRING_EASE}`;
 
   const knobCenter = PAD + KNOB / 2 + px;
+  // Intense: like a drop of water pressed against the end, the knob gets narrower and taller as the strain
+  // builds, with its leading (right) side flattening. Released early, it springs back round.
+  // During the slam it stays fully squeezed, so the landing burst starts from the drop shape.
+  const squeeze = !intense ? 0 : phase === "snap" ? 1 : phase === "drag" ? tension ** 1.3 : 0;
+  const grow = 1.03 + x * 0.04;
+  const knobTransform =
+    phase === "drag" || (intense && phase === "snap")
+      ? intense
+        ? `scale(${(grow - squeeze * 0.34).toFixed(3)}, ${(grow + squeeze * 0.22).toFixed(3)})`
+        : `scale(${(grow + tension * 0.03).toFixed(3)})`
+      : undefined;
+  const knobRadius = squeeze > 0 ? `50% ${50 - squeeze * 24}% ${50 - squeeze * 24}% 50% / 50%` : undefined;
   /** Width of the strip between the track's left inset and the knob, for the pull feedback. */
   const pullRoom = PAD + px - 8 - LABEL_RIGHT;
   const showFx = phase === "done" && !instant;
@@ -232,8 +261,13 @@ export function SwipeToGo({
     <div
       ref={rootRef}
       data-no-tab-swipe
-      className={cn("relative w-full touch-pan-y select-none", disabled && "opacity-55", className)}
-      style={{ height: HEIGHT }}
+      className={cn(
+        "relative w-full touch-pan-y select-none",
+        disabled && "opacity-55",
+        intense && phase === "snap" && "motion-safe:animate-shake",
+        className,
+      )}
+      style={{ height: HEIGHT, "--amp": intense && phase === "snap" ? "8px" : undefined }}
     >
       {/* Track */}
       <div
@@ -269,12 +303,51 @@ export function SwipeToGo({
               pathLength={1}
               fill="none"
               stroke="rgb(255 255 255 / 0.95)"
-              strokeWidth={2.2}
+              strokeWidth={intense ? 2.2 + tension * 1.2 : 2.2}
               strokeLinejoin="round"
               strokeDasharray={1}
               strokeDashoffset={Math.max(0, 1 - tension * (1.2 - i * 0.15))}
             />
           ))}
+          {intense &&
+            MORE_CRACKS.map((pts, i) => (
+              <path
+                key={`m${i}`}
+                d={"M" + pts.map(([f, y]) => `${Math.round(f * w)} ${y}`).join(" L")}
+                pathLength={1}
+                fill="none"
+                stroke="rgb(255 255 255 / 0.9)"
+                strokeWidth={1.6 + tension}
+                strokeLinejoin="round"
+                strokeDasharray={1}
+                // Start later than the first three, then race to full length by the break.
+                strokeDashoffset={Math.max(0, 1 - clamp01((tension - 0.25 - i * 0.07) / 0.55))}
+              />
+            ))}
+          {intense &&
+            tension > 0.45 &&
+            KNOB_CRACKS.map(([deg, k], i) => {
+              // Cracks shooting out of the knob, stretching longer as the strain nears the break.
+              const len = (tension - 0.45) ** 1.4 * 150 * k;
+              const a = (deg * Math.PI) / 180;
+              const x0 = knobCenter + KNOB / 2 - 2;
+              const y0 = HEIGHT / 2;
+              const mx = x0 + Math.cos(a) * len * 0.5 + (i % 2 ? 4 : -4);
+              const my = y0 + Math.sin(a) * len * 0.5;
+              const ex = x0 + Math.cos(a) * len;
+              const ey = y0 + Math.sin(a) * len;
+              return (
+                <path
+                  key={`k${i}`}
+                  d={`M${x0} ${y0} L${mx} ${my} L${ex} ${ey}`}
+                  fill="none"
+                  stroke="white"
+                  strokeWidth={1.4 + tension * 1.4}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              );
+            })}
         </svg>
 
         {/* Ticks */}
@@ -337,15 +410,19 @@ export function SwipeToGo({
 
       {/* Shatter */}
       {showFx &&
-        Array.from({ length: 14 }, (_, i) => {
-          const col = i % 7;
-          const row = Math.floor(i / 7);
-          const sw = w / 7;
-          const sh = HEIGHT / 2;
-          const dx = (col - 3) * 18 + (((i * 37) % 40) - 20);
+        Array.from({ length: intense ? 36 : 14 }, (_, i) => {
+          const cols = intense ? 12 : 7;
+          const rows = intense ? 3 : 2;
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const sw = w / cols;
+          const sh = HEIGHT / rows;
+          const boost = intense ? 1.9 : 1;
+          const mid = (cols - 1) / 2;
+          const dx = ((col - mid) * (intense ? 14 : 18) + (((i * 37) % 40) - 20)) * boost;
           // Mostly upward: the card clips anything that falls below it.
-          const dy = row === 0 ? -(40 + ((i * 53) % 70)) : -(10 + ((i * 37) % 50)) + ((i * 13) % 30);
-          const rot = (i % 2 ? 1 : -1) * (40 + ((i * 71) % 160));
+          const dy = (row === 0 ? -(40 + ((i * 53) % 70)) : -(10 + ((i * 37) % 50)) + ((i * 13) % 30)) * boost;
+          const rot = (i % 2 ? 1 : -1) * (40 + ((i * 71) % 160)) * (intense ? 1.6 : 1);
           return (
             <span
               key={`shard-${i}`}
@@ -360,7 +437,7 @@ export function SwipeToGo({
                 "--dx": `${dx}px`,
                 "--dy": `${dy}px`,
                 "--rot": `${rot}deg`,
-                animationDelay: `${(6 - col) * 0.015}s`,
+                animationDelay: `${(cols - 1 - col) * (intense ? 0.008 : 0.015)}s`,
               }}
             />
           );
@@ -377,6 +454,22 @@ export function SwipeToGo({
             className="pointer-events-none absolute z-6 animate-shock rounded-full border-3 border-accent"
             style={{ left: knobCenter, top: "50%", width: KNOB, height: KNOB, margin: -KNOB / 2, animationDelay: "120ms" }}
           />
+          {intense && (
+            <>
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute z-6 animate-shock rounded-full border-4 border-white"
+                style={{ left: knobCenter, top: "50%", width: KNOB * 1.4, height: KNOB * 1.4, margin: -KNOB * 0.7, animationDelay: "60ms" }}
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute z-6 animate-shock rounded-full border-3 border-teal"
+                style={{ left: knobCenter, top: "50%", width: KNOB * 2, height: KNOB * 2, margin: -KNOB, animationDelay: "240ms" }}
+              />
+              {/* White flash where the bar was. */}
+              <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-4 animate-flash rounded-full bg-white" />
+            </>
+          )}
         </>
       )}
       {phase === "done" && (
@@ -408,15 +501,16 @@ export function SwipeToGo({
             "relative grid touch-pan-y place-items-center rounded-full border-2 border-line",
             broken ? "cursor-default" : "cursor-grab active:cursor-grabbing",
             phase === "done"
-              ? cn("bg-teal text-on-teal", !instant && "animate-land")
+              ? cn("bg-teal text-on-teal", !instant && (intense ? "animate-land-stretch" : "animate-land"))
               : "bg-on-accent text-white",
             focusRing,
           )}
           style={{
             width: KNOB,
             height: KNOB,
-            transform:
-              phase === "drag" ? `scale(${(1.03 + x * 0.04 + tension * 0.03).toFixed(3)})` : undefined,
+            transform: knobTransform,
+            borderRadius: knobRadius,
+            transition: intense && phase === "idle" ? "transform 500ms cubic-bezier(0.2, 1.5, 0.35, 1), border-radius 500ms ease" : undefined,
             boxShadow: `var(--shadow-rim), var(--shadow-band), 0 3px 0 var(--color-shade), 0 0 0 ${(x * 3).toFixed(1)}px rgb(255 255 255 / 0.4)`,
           }}
         >
