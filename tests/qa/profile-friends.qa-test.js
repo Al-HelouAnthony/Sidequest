@@ -23,6 +23,8 @@ describe("profile + friends", () => {
     for (const [label, body] of cases) {
       const r = await call("/api/me", { as: ME, method: "PATCH", body });
       rows.push(`PATCH ${label}: ${r.status}${r.json?.error ? ` "${r.json.error}"` : ""}`);
+      // Postal lookups need ROUTING_API_KEY (ORS geocoding). Without it the server answers a clean 503.
+      if (r.status === 503 && /isn't set up/.test(r.json?.error ?? "")) continue;
       expect(r.status, label).toBeLessThan(500);
     }
     const { data } = await db.from("users").select("name").eq("id", ME).single();

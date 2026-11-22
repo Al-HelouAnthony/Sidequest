@@ -70,3 +70,11 @@ Times are Montréal time.
 - **Double taps**: double Skip → 1 skip; double Save → 1 save; double "Send invite" → **1 plan**.
 - **Demo flow run 1 (Sam + Maya, 2 phones)**: all 8 steps ✅ — feed (what/when/who/travel), Why sheet, skip 3 bars → refresh → **0 bars in the top 10**, Let's go → Maya's banner **663 ms** after Send, I'm in → Sam sees confirmed **98 ms** later, search "something cheap with Maya tomorrow night" → "Budget · with Maya · Tomorrow night", 10 cards. Trace: `qa/demo-run-1.zip` (local only, 54 MB, gitignored).
 - Next: final regression (lint, build, all tests, QA suite), demo runs ×3 from a fresh state, cleanup, prod read-only check, restore `.env.local`, report.
+
+## 02:25 · Final regression + wrap-up
+- `npm run lint` ✅ · `npm run build` ✅ · `npx vitest run` ✅ **622 tests** (was 616; +6 regression tests) · QA suite (`vitest.qa.config.mjs`) ✅ 16 passed (+4 gated tests that passed in their own modes earlier).
+- **Demo flow ×3 from a fresh reset: all 8 steps ✅ each time** (invite on Maya's phone 636–706 ms after Send, "confirmed" on Sam's 116–210 ms after I'm in). Traces `qa/demo-run-{1,2,3}.zip` (local, gitignored, ~50 MB each).
+- Cleanup: `scripts/qa-cleanup.mjs` → local copy matches the backup counts again.
+- **Production read-only check: every table's row count identical to the 01:35 backup.**
+- `.env.local` restored byte-for-byte, local build redone with the real env (0 references to the local stack), local Supabase stopped (data kept).
+- Report: `QA_REPORT.md`. Recommended merge: cherry-pick `3327dd3 a5a2570 a939185 904c541 29fc00b`.

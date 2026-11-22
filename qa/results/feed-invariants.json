@@ -1,0 +1,600 @@
+{
+ "at": "2026-11-22T07:18:41.673Z",
+ "users": {
+  "Sam": {
+   "id": "00000000-0000-4000-8000-000000000001",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 385,
+   "sources": {
+    "curated": 37,
+    "event": 3
+   },
+   "threeInARow": 0
+  },
+  "Maya": {
+   "id": "00000000-0000-4000-8000-000000000002",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 166,
+   "sources": {
+    "curated": 38,
+    "event": 2
+   },
+   "threeInARow": 0
+  },
+  "Karim": {
+   "id": "00000000-0000-4000-8000-000000000003",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 194,
+   "sources": {
+    "curated": 36,
+    "event": 4
+   },
+   "threeInARow": 0
+  },
+  "Antoine": {
+   "id": "00000000-0000-4000-8000-000000000004",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 158,
+   "sources": {
+    "curated": 39,
+    "event": 1
+   },
+   "threeInARow": 0
+  },
+  "Léa": {
+   "id": "00000000-0000-4000-8000-000000000005",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 165,
+   "sources": {
+    "curated": 39,
+    "event": 1
+   },
+   "threeInARow": 0
+  },
+  "Mohammad Majzoub": {
+   "id": "2211bd7e-0cf3-450d-9719-ecb344fefdb4",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 166,
+   "sources": {
+    "curated": 37,
+    "event": 3
+   },
+   "threeInARow": 0
+  },
+  "Adel Khalife": {
+   "id": "69d6c5c7-7754-4e76-8926-70f128b4a07a",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 194,
+   "sources": {
+    "curated": 35,
+    "event": 5
+   },
+   "threeInARow": 0
+  },
+  "Anthony Helou": {
+   "id": "9dd740c1-8454-48c9-892a-8bb514a02d05",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 158,
+   "sources": {
+    "curated": 29,
+    "event": 11
+   },
+   "threeInARow": 0
+  },
+  "Oscar Moubarak": {
+   "id": "dcfe27f5-9a20-403e-a281-5350a6223387",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 115,
+   "sources": {
+    "curated": 38,
+    "event": 2
+   },
+   "threeInARow": 0
+  },
+  "qa_Filler Five": {
+   "id": "0a0a0000-0000-4000-8000-000000000030",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 174,
+   "sources": {
+    "curated": 35,
+    "event": 5
+   },
+   "threeInARow": 0
+  },
+  "qa_Hélène Côté": {
+   "id": "0a0a0000-0000-4000-8000-000000000001",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 150,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Seán O'Brien": {
+   "id": "0a0a0000-0000-4000-8000-000000000002",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 36,
+   "firstPageMs": 35,
+   "sources": {
+    "curated": 36
+   },
+   "threeInARow": 0
+  },
+  "qa_🎉 Party Pat": {
+   "id": "0a0a0000-0000-4000-8000-000000000003",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 92,
+   "sources": {
+    "curated": 36,
+    "event": 4
+   },
+   "threeInARow": 0
+  },
+  "qa_Maximiliano Alejandro de la Santísima Trinidad Fernández-Gutiérrez": {
+   "id": "0a0a0000-0000-4000-8000-000000000004",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 229,
+   "sources": {
+    "curated": 36,
+    "event": 4
+   },
+   "threeInARow": 0
+  },
+  "qa_No Interests": {
+   "id": "0a0a0000-0000-4000-8000-000000000005",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 228,
+   "sources": {
+    "curated": 34,
+    "event": 6
+   },
+   "threeInARow": 0
+  },
+  "qa_Fully Booked": {
+   "id": "0a0a0000-0000-4000-8000-000000000006",
+   "statuses": [
+    200
+   ],
+   "cards": 0,
+   "firstPageMs": 52,
+   "sources": {},
+   "threeInARow": 0
+  },
+  "qa_Zero Friends": {
+   "id": "0a0a0000-0000-4000-8000-000000000007",
+   "statuses": [
+    200
+   ],
+   "cards": 0,
+   "firstPageMs": 47,
+   "sources": {},
+   "threeInARow": 0
+  },
+  "qa_Laval Lou": {
+   "id": "0a0a0000-0000-4000-8000-000000000008",
+   "statuses": [
+    200
+   ],
+   "cards": 0,
+   "firstPageMs": 28,
+   "sources": {},
+   "threeInARow": 0
+  },
+  "qa_Far Away Frank": {
+   "id": "0a0a0000-0000-4000-8000-000000000009",
+   "statuses": [
+    200
+   ],
+   "cards": 0,
+   "firstPageMs": 40,
+   "sources": {},
+   "threeInARow": 0
+  },
+  "qa_Back-to-back Bea": {
+   "id": "0a0a0000-0000-4000-8000-000000000010",
+   "statuses": [
+    200
+   ],
+   "cards": 0,
+   "firstPageMs": 58,
+   "sources": {},
+   "threeInARow": 0
+  },
+  "qa_Midnight Mo": {
+   "id": "0a0a0000-0000-4000-8000-000000000011",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 154,
+   "sources": {
+    "curated": 34,
+    "event": 6
+   },
+   "threeInARow": 0
+  },
+  "qa_Duplicate Dee": {
+   "id": "0a0a0000-0000-4000-8000-000000000012",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 143,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Bridge Bo": {
+   "id": "0a0a0000-0000-4000-8000-000000000013",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 231,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Popular Paula": {
+   "id": "0a0a0000-0000-4000-8000-000000000014",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 412,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Sam": {
+   "id": "0a0a0000-0000-4000-8000-000000000015",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 265,
+   "sources": {
+    "curated": 34,
+    "event": 6
+   },
+   "threeInARow": 0
+  },
+  "qa_Weekend Wendy": {
+   "id": "0a0a0000-0000-4000-8000-000000000016",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 111,
+   "sources": {
+    "curated": 37,
+    "event": 3
+   },
+   "threeInARow": 0
+  },
+  "qa_Missing Avatar": {
+   "id": "0a0a0000-0000-4000-8000-000000000017",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 268,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Broken Avatar": {
+   "id": "0a0a0000-0000-4000-8000-000000000018",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 242,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Partial Pia": {
+   "id": "0a0a0000-0000-4000-8000-000000000019",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 190,
+   "sources": {
+    "event": 10,
+    "curated": 30
+   },
+   "threeInARow": 0
+  },
+  "qa_Friend-of-friend Fay": {
+   "id": "0a0a0000-0000-4000-8000-000000000020",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 226,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Morning Max": {
+   "id": "0a0a0000-0000-4000-8000-000000000021",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 63,
+   "sources": {
+    "curated": 38,
+    "event": 2
+   },
+   "threeInARow": 0
+  },
+  "qa_Evening Eve": {
+   "id": "0a0a0000-0000-4000-8000-000000000022",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 89,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Museum Mia": {
+   "id": "0a0a0000-0000-4000-8000-000000000023",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 293,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Park Pete": {
+   "id": "0a0a0000-0000-4000-8000-000000000024",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 252,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Bar Bob": {
+   "id": "0a0a0000-0000-4000-8000-000000000025",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 250,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Filler One": {
+   "id": "0a0a0000-0000-4000-8000-000000000026",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 137,
+   "sources": {
+    "curated": 34,
+    "event": 6
+   },
+   "threeInARow": 0
+  },
+  "qa_Filler Two": {
+   "id": "0a0a0000-0000-4000-8000-000000000027",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 202,
+   "sources": {
+    "curated": 33,
+    "event": 7
+   },
+   "threeInARow": 0
+  },
+  "qa_Filler Three": {
+   "id": "0a0a0000-0000-4000-8000-000000000028",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 216,
+   "sources": {
+    "curated": 32,
+    "event": 8
+   },
+   "threeInARow": 0
+  },
+  "qa_Filler Four": {
+   "id": "0a0a0000-0000-4000-8000-000000000029",
+   "statuses": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "cards": 40,
+   "firstPageMs": 215,
+   "sources": {
+    "event": 7,
+    "curated": 33
+   },
+   "threeInARow": 0
+  }
+ },
+ "violations": [],
+ "notes": []
+}

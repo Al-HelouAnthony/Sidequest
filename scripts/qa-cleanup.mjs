@@ -7,6 +7,14 @@ import { localAdmin, removeQaData } from "./qa-local.mjs";
 const db = localAdmin(process.argv[2] ?? ".env.local");
 const backup = JSON.parse(fs.readFileSync("qa/backup/_summary.json", "utf8"));
 await removeQaData(db, { since: backup.at });
+// Swipes made by tests on the real/demo users, and their learned weights: back to the backup.
+const must = (op, { error }) => {
+  if (error) throw new Error(`${op}: ${error.message}`);
+};
+must("interactions", await db.from("interactions").delete().gt("created_at", backup.at));
+const weights = JSON.parse(fs.readFileSync("qa/backup/user_tag_weights.json", "utf8"));
+must("weights.delete", await db.from("user_tag_weights").delete().neq("tag", "__none__"));
+if (weights.length) must("weights.insert", await db.from("user_tag_weights").insert(weights));
 const diffs = [];
 for (const [table, want] of Object.entries(backup.summary)) {
   if (table.includes(":")) continue;

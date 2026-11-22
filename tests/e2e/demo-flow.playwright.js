@@ -30,14 +30,26 @@ async (page) => {
       throw e;
     }
   };
-  const current = async () =>
-    ps.evaluate(() => {
+  /** Wait until the feed scroller stops moving (pager animation done), then read the card on screen. */
+  const settle = async () => {
+    let last = -1;
+    for (let i = 0; i < 20; i++) {
+      const top = await ps.evaluate(() => [...document.querySelectorAll("main[aria-label=Suggestions]")].find((m) => m.clientHeight > 0)?.scrollTop ?? 0);
+      if (Math.abs(top - last) < 1) return;
+      last = top;
+      await ps.waitForTimeout(120);
+    }
+  };
+  const current = async () => {
+    await settle();
+    return ps.evaluate(() => {
       const el = [...document.querySelectorAll("main[aria-label=Suggestions]")].find((m) => m.clientHeight > 0);
       const i = Math.round(el.scrollTop / el.clientHeight);
       const sec = el.querySelectorAll("section")[i];
       const chip = sec?.querySelector("button[aria-label^='Details about']");
       return { category: chip?.textContent?.trim() ?? "", text: sec?.textContent ?? "", id: sec?.dataset.cardId ?? "", name: chip?.getAttribute("aria-label")?.replace("Details about ", "") ?? "" };
     });
+  };
   try {
     await pm.goto(`${B}/feed`);
     await step("1. Feed opens: what + when + who + reason", async () => {
@@ -58,8 +70,10 @@ async (page) => {
     });
     let skipped = 0;
     await step("3. Skip 3 bars", async () => {
+      const seen = [];
       for (let i = 0; i < 60 && skipped < 3; i++) {
         const c = await current();
+        seen.push(c.category.slice(0, 3));
         if (/^bar/i.test(c.category)) {
           await ps.getByRole("button", { name: `Skip ${c.name}` }).first().click();
           skipped++;
@@ -69,8 +83,8 @@ async (page) => {
           await ps.waitForTimeout(420);
         }
       }
-      if (skipped < 3) throw new Error(`only ${skipped} bars found`);
-      return `${skipped} skipped`;
+      if (skipped < 3) throw new Error(`only ${skipped} bars found; saw ${seen.join(",")}`);
+      return `${skipped} skipped after ${seen.length} cards`;
     });
     await step("4. Refresh → no bars in the top 10", async () => {
       await ps.getByRole("button", { name: /Refresh/ }).first().click();

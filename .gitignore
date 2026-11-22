@@ -49,3 +49,5 @@ evenements.csv
 /.playwright-mcp/
 /supabase/.temp/
 /qa/*.zip
+/qa/optimized-photos/
+/qa/results/snap-*.json
