@@ -136,7 +136,7 @@ export function PlanPhotos({ planId, startAt, endAt, names }) {
           Memories
         </h2>
         {canUpload && !nudge && (
-          <Button variant="secondary" onClick={camera} loading={uploading} leadingIcon={<Icon name="plus" strokeWidth={2.5} className="size-4" />}>
+          <Button onClick={camera} loading={uploading} leadingIcon={<Icon name="plus" strokeWidth={2.5} className="size-4" />}>
             Add a photo
           </Button>
         )}
