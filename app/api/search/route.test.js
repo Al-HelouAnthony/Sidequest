@@ -117,6 +117,19 @@ describe("POST /api/search", () => {
     for (const card of body.cards) expect(card.place.name.toLowerCase()).toMatch(/salon.*darling|darling.*salon/);
   });
 
+  it("events: 'free expo this weekend' only returns exhibitions, never a concert", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "free expo this weekend" })).json());
+    if (body.summary.startsWith("No ")) return; // no sample exhibition this weekend with a free friend
+    expect(body.summary).toBe("Budget · This weekend · Exhibitions");
+    for (const card of body.cards) expect(card.place.tags.join(" ")).toMatch(/exhibition|exposition|museums/);
+  });
+
+  it("events: 'concert tonight' with no concert falls back to Events, not bars", async () => {
+    const body = SearchResponse.parse(await (await post({ query: "concert tonight" })).json());
+    if (body.summary.startsWith("No ")) expect(body.summary).toContain("showing Events");
+    else for (const card of body.cards) expect(card.place.tags.join(" ")).toMatch(/concert|music|jazz/);
+  });
+
   it("empty query gives 400", async () => {
     const res = await post({ query: "" });
     expect(res.status).toBe(400);
