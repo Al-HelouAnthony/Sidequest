@@ -187,7 +187,7 @@ export function FriendsScreen() {
           <h2 id="friends-manage" className="halo font-display text-xl font-extrabold">
             Add or remove
           </h2>
-          <PeopleList canRemove />
+          <PeopleList canRemove searchable />
         </section>
 
         <TabBar active="/friends" />

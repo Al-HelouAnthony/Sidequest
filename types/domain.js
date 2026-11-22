@@ -68,6 +68,8 @@ export const User = z.object({
   homeLat: z.number(),
   homeLng: z.number(),
   interests: z.array(z.string()),
+  /** @username for the friend search (lib/usernames.js; computed from the first name for now). */
+  username: z.string().optional(),
 });
 /** @typedef {z.infer<typeof User>} UserT */
 

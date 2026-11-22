@@ -6,13 +6,17 @@
 import { UpdateMeRequest } from "@/types/api";
 import { getSessionUserId } from "@/lib/auth";
 import { jsonError, parseBody } from "@/lib/http";
-import { DataInputError, getUser, updateProfile } from "@/lib/data";
+import { DataInputError, getUser, listUsers, updateProfile } from "@/lib/data";
 import { PostalCodeError, postalCodeToHome } from "@/lib/geo/postalCode";
+import { assignUsernames } from "@/lib/usernames";
 
 export async function GET() {
-  const user = await getUser(await getSessionUserId());
+  const userId = await getSessionUserId();
+  const [user, everyone] = await Promise.all([getUser(userId), listUsers().catch(() => [])]);
   if (!user) return jsonError(404, "User not found");
-  return Response.json({ user });
+  // @username (lib/usernames.js): computed from first names across all users, so it's unique.
+  const username = assignUsernames(everyone.some((u) => u.id === user.id) ? everyone : [...everyone, user]).get(user.id);
+  return Response.json({ user: { ...user, ...(username ? { username } : {}) } });
 }
 
 /**

@@ -4,6 +4,7 @@
  *  - PostalCodeField (N5): home postal code, full or just the first 3 characters (server keeps only "H2T")
  *  - InterestPicker: tag chips from PLAN.md §6.3
  *  - PeopleList: GET /api/users (people to add) → POST /api/friends; falls back to GET /api/friends.
+ *    With `searchable` (Friends tab): a search bar → GET /api/users?q= (by @username or name, debounced).
  *    With `canRemove` (You tab): ✕ on a friend → ConfirmSheet → DELETE /api/friends/[id] (proposed endpoint;
  *    404/405 = not live yet → says so, nothing changes) → row back to "Add" with an inline Undo for a few seconds.
  */
@@ -112,7 +113,10 @@ export function InterestPicker({ selected, onToggle }) {
   );
 }
 
-/** @typedef {{ id: string, name: string, avatarUrl: string, isFriend: boolean }} Person */
+/** @typedef {{ id: string, name: string, avatarUrl: string, isFriend: boolean, username?: string }} Person */
+
+/** Wait this long after the last keystroke before searching. */
+const SEARCH_DEBOUNCE_MS = 250;
 
 /**
  * GET /api/users → UsersResponse { users: [{ id, name, avatarUrl, isFriend }] } (Mhammad, everyone except me).
@@ -133,9 +137,11 @@ const UNDO_MS = 6000;
 
 /**
  * People to add as friends, with an Add button. Shows existing friends only until GET /api/users is live.
- * @param {{ canRemove?: boolean }} props `canRemove`: friends get a ✕ to remove them (You tab only).
+ * @param {{ canRemove?: boolean, searchable?: boolean }} props `canRemove`: friends get a ✕ to remove them.
+ *   `searchable`: a search bar on top (by @username or name, server-side via /api/users?q=).
  */
-export function PeopleList({ canRemove = false }) {
+export function PeopleList({ canRemove = false, searchable = false }) {
+  const [query, setQuery] = useState("");
   const [people, setPeople] = useState(/** @type {Person[] | null} */ (null));
   /** true when GET /api/users isn't live yet and we only show existing friends. */
   const [friendsOnly, setFriendsOnly] = useState(false);
@@ -152,9 +158,11 @@ export function PeopleList({ canRemove = false }) {
 
   useEffect(() => {
     const ctrl = new AbortController();
-    (async () => {
+    const q = query.trim();
+    const timer = setTimeout(async () => {
       try {
-        const res = await fetch("/api/users", { signal: ctrl.signal, cache: "no-store" });
+        const url = q ? `/api/users?q=${encodeURIComponent(q.slice(0, 30))}` : "/api/users";
+        const res = await fetch(url, { signal: ctrl.signal, cache: "no-store" });
         const users = res.ok ? parseUsers(await res.json()) : null;
         if (users) {
           setPeople(users);
@@ -170,9 +178,12 @@ export function PeopleList({ canRemove = false }) {
         console.error("[people]", e);
         setPeople([]);
       }
-    })();
-    return () => ctrl.abort();
-  }, []);
+    }, q ? SEARCH_DEBOUNCE_MS : 0);
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
+  }, [query]);
 
   const add = async (/** @type {Person} */ p) => {
     setBusy(p.id);
@@ -225,9 +236,28 @@ export function PeopleList({ canRemove = false }) {
     add(p);
   };
 
+  const searchBar = searchable && (
+    <label className="flex min-h-14 items-center gap-2 rounded-tile border-2 border-line bg-surface px-3 shadow-cel focus-within:border-teal">
+      <Icon name="search" strokeWidth={2.2} className="size-5 shrink-0 text-ink-muted" />
+      <span className="sr-only">Search friends by username or name</span>
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search by @username or name"
+        autoComplete="off"
+        autoCapitalize="none"
+        spellCheck={false}
+        maxLength={30}
+        className="min-w-0 flex-1 bg-transparent py-3 font-semibold outline-none placeholder:text-ink-muted"
+      />
+    </label>
+  );
+
   if (people === null) {
     return (
       <div className="space-y-2">
+        {searchBar}
         <span className="sr-only">Loading people…</span>
         {[0, 1, 2].map((i) => (
           <Skeleton key={i} className="h-16 rounded-tile" />
@@ -236,17 +266,29 @@ export function PeopleList({ canRemove = false }) {
     );
   }
   if (people.length === 0) {
-    return <p className="cel rounded-tile p-4 text-center text-ink-muted">Nobody here yet. You can add friends later.</p>;
+    const q = query.trim().replace(/^@+/, "");
+    return (
+      <div className="space-y-2">
+        {searchBar}
+        <p className="cel rounded-tile p-4 text-center text-ink-muted" aria-live="polite">
+          {q ? `No one called @${q} yet.` : "Nobody here yet. You can add friends later."}
+        </p>
+      </div>
+    );
   }
 
   const friendCount = people.filter((p) => p.isFriend).length;
   return (
     <div className="space-y-2">
+      {searchBar}
       <ul className="space-y-2">
         {people.map((p) => (
           <li key={p.id} className="cel flex min-h-16 items-center gap-3 rounded-tile px-3 py-2">
             <Avatar src={p.avatarUrl} name={p.name} size="md" decorative />
-            <span className="min-w-0 flex-1 truncate font-bold">{p.name}</span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-bold">{p.name}</span>
+              {p.username && <span className="block truncate text-sm text-ink-muted">@{p.username}</span>}
+            </span>
             {p.isFriend ? (
               <>
                 <span className="inline-flex h-9 items-center gap-1 rounded-full border-2 border-line bg-teal px-3 text-sm font-bold text-on-teal">
