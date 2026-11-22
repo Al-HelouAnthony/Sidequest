@@ -20,6 +20,8 @@ import { cn, focusRing } from "@/components/ui/classes";
 import { CATEGORY_LABELS } from "@/components/feed/FeedCard";
 import { startsLabel } from "@/components/feed/events";
 import { BookItSheet } from "@/components/plans/BookItSheet";
+import { LiveLocation } from "@/components/plans/LiveLocation";
+import { PlanPhotos } from "@/components/plans/PlanPhotos";
 
 const STATUS = {
   pending: { label: "Waiting for replies", className: "bg-warning text-on-accent" },
@@ -119,6 +121,8 @@ export function PlanScreen({ planId, back = BACK.feed }) {
   const members = [...plan.members].sort((a, b) => Number(b.isCreator) - Number(a.isCreator));
   const inCount = plan.members.filter((m) => m.rsvp === "in").length;
   const planStatus = cancelledHere ? "cancelled" : plan.status;
+  /** userId → first name (live location + photo captions). */
+  const firstNames = Object.fromEntries(plan.members.map((m) => [m.userId, m.name.split(" ")[0]]));
   /** Events: exact start (contract: PlanView.place.startsAt, optional). */
   const startsAt = /** @type {{ startsAt?: string }} */ (plan.place).startsAt;
   const status = STATUS[planStatus];
@@ -250,6 +254,35 @@ export function PlanScreen({ planId, back = BACK.feed }) {
 
       {me?.isCreator && planStatus === "pending" && (
         <p className="halo text-center text-sm text-ink-muted">Invites sent. This updates live when friends answer.</p>
+      )}
+
+      {/* G2c: Google Calendar status once I'm going (invitee "in", or organizer of a confirmed plan).
+          calendarAdded undefined = unknown (demo users, server still adding it in the background): say nothing. */}
+      {planStatus !== "cancelled" && (me?.rsvp === "in" || (me?.isCreator && planStatus === "confirmed")) &&
+        (me.calendarAdded === true ? (
+          <p role="status" className="halo flex items-center justify-center gap-1.5 text-sm font-semibold motion-safe:animate-rise">
+            <Icon name="calendar" cel strokeWidth={1.9} className="size-4" />
+            Added to your Google Calendar
+            <Icon name="check" strokeWidth={3} className="size-3.5 text-teal" />
+          </p>
+        ) : me.calendarAdded === false ? (
+          <p className="halo text-center text-sm text-ink-muted">
+            Not in your Google Calendar yet.{" "}
+            <Link
+              href={`/login?next=${encodeURIComponent(`/plans/${planId}`)}`}
+              className={cn("font-semibold text-ink underline underline-offset-2", focusRing)}
+            >
+              Reconnect Google
+            </Link>
+          </p>
+        ) : null)}
+
+      {/* G5 live location + G4 memory photos: plan members only, each hides itself outside its time window. */}
+      {me && planStatus !== "cancelled" && (
+        <>
+          <LiveLocation planId={planId} startAt={plan.startAt} meId={meId} names={firstNames} />
+          <PlanPhotos planId={planId} startAt={plan.startAt} endAt={plan.endAt} names={firstNames} />
+        </>
       )}
 
       {/* N4 Book it: everyone sees "requested"; the organizer gets the button */}
