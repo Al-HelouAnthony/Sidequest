@@ -241,6 +241,18 @@ export function SwipeToGo({
         : `${prop} 600ms ${SPRING_EASE}`;
 
   const knobCenter = PAD + KNOB / 2 + px;
+  // Intense: like a drop of water pressed against the end, the knob gets narrower and taller as the strain
+  // builds, with its leading (right) side flattening. Released early, it springs back round.
+  // During the slam it stays fully squeezed, so the landing burst starts from the drop shape.
+  const squeeze = !intense ? 0 : phase === "snap" ? 1 : phase === "drag" ? tension ** 1.3 : 0;
+  const grow = 1.03 + x * 0.04;
+  const knobTransform =
+    phase === "drag" || (intense && phase === "snap")
+      ? intense
+        ? `scale(${(grow - squeeze * 0.34).toFixed(3)}, ${(grow + squeeze * 0.22).toFixed(3)})`
+        : `scale(${(grow + tension * 0.03).toFixed(3)})`
+      : undefined;
+  const knobRadius = squeeze > 0 ? `50% ${50 - squeeze * 24}% ${50 - squeeze * 24}% 50% / 50%` : undefined;
   /** Width of the strip between the track's left inset and the knob, for the pull feedback. */
   const pullRoom = PAD + px - 8 - LABEL_RIGHT;
   const showFx = phase === "done" && !instant;
@@ -496,8 +508,9 @@ export function SwipeToGo({
           style={{
             width: KNOB,
             height: KNOB,
-            transform:
-              phase === "drag" ? `scale(${(1.03 + x * 0.04 + tension * 0.03).toFixed(3)})` : undefined,
+            transform: knobTransform,
+            borderRadius: knobRadius,
+            transition: intense && phase === "idle" ? "transform 500ms cubic-bezier(0.2, 1.5, 0.35, 1), border-radius 500ms ease" : undefined,
             boxShadow: `var(--shadow-rim), var(--shadow-band), 0 3px 0 var(--color-shade), 0 0 0 ${(x * 3).toFixed(1)}px rgb(255 255 255 / 0.4)`,
           }}
         >
