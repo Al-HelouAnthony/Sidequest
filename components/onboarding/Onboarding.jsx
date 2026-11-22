@@ -141,7 +141,7 @@ export function Onboarding() {
               key={s}
               className={cn(
                 "h-2 flex-1 rounded-full border-[1.5px] border-line transition-colors duration-300",
-                i <= step ? "bg-accent" : "bg-surface",
+                i <= step ? "bg-teal" : "bg-surface",
               )}
             />
           ))}
