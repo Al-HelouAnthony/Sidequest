@@ -1,9 +1,10 @@
 "use client";
 /**
  * You (/me): the third tab. Owner: Oscar.
- * Your profile after onboarding: home postal code + interests (saved with PATCH /api/me) and friends (PeopleList).
+ * Your profile after onboarding: home postal code + interests (saved with PATCH /api/me) (friends live on the Friends tab).
  * Reuses the onboarding pickers. Saving is skipped with a note while PATCH /api/me isn't live (404/405).
  */
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MeResponse } from "@/types/api";
 import { Avatar } from "@/components/ui/Avatar";
@@ -13,7 +14,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { AppBackground } from "@/components/ui/AppBackground";
 import { INTERESTS, MIN_INTERESTS } from "@/components/onboarding/options";
-import { InterestPicker, PeopleList, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
+import { InterestPicker, PostalCodeField, isPostalCode, postalErrorFrom } from "@/components/onboarding/pickers";
 
 /** @typedef {{ id: string, name: string, avatarUrl: string }} MeBasics */
 
@@ -225,12 +226,12 @@ export function YouScreen() {
         </Button>
       </div>
 
-      <section aria-labelledby="you-friends" className="space-y-3">
-        <h2 id="you-friends" className="font-display text-xl font-extrabold">
-          Friends
-        </h2>
-        <PeopleList canRemove />
-      </section>
+      <p className="halo text-sm text-ink-muted">
+        Friends moved to their own tab.{" "}
+        <Link href="/friends" className="font-semibold text-ink underline underline-offset-2">
+          Open Friends
+        </Link>
+      </p>
 
       <DataCredits />
 

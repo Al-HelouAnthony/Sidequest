@@ -14,6 +14,7 @@ import { cn, focusRing } from "@/components/ui/classes";
 export const TABS = /** @type {const} */ ([
   { href: "/feed", label: "Feed", icon: "compass" },
   { href: "/plans", label: "Plans", icon: "calendar" },
+  { href: "/friends", label: "Friends", icon: "friends" },
   { href: "/me", label: "You", icon: "user" },
 ]);
 
@@ -50,10 +51,10 @@ export function TabBar({ active }) {
       className="pointer-events-none fixed inset-x-0 z-40 mx-auto w-full max-w-md px-3"
       style={{ bottom: "calc(12px + env(safe-area-inset-bottom))" }}
     >
-      <div className="glass pointer-events-auto relative grid grid-cols-3 rounded-card p-1.5">
+      <div className="glass pointer-events-auto relative grid grid-cols-4 rounded-card p-1.5">
         <span
           aria-hidden="true"
-          className="tab-pill absolute inset-y-1.5 left-1.5 w-[calc((100%-12px)/3)] rounded-[24px] transition-transform duration-500 motion-reduce:transition-none"
+          className="tab-pill absolute inset-y-1.5 left-1.5 w-[calc((100%-12px)/4)] rounded-[24px] transition-transform duration-500 motion-reduce:transition-none"
           style={{ transform: `translateX(${pillAt * 100}%)`, transitionTimingFunction: EASE_SPRING }}
         />
         {TABS.map((tab, i) => {
