@@ -12,6 +12,7 @@ import { toLocal } from "@/lib/time";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { buttonClasses } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { Icon } from "@/components/ui/Icon";
 import { AppBackground } from "@/components/ui/AppBackground";
 import { TAB_BAR_SPACE, TabBar } from "@/components/nav/TabBar";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
@@ -164,7 +165,13 @@ function MemoryGroup({ memory, onOpen }) {
   const names = Object.fromEntries(memory.people.map((p) => [p.userId, p.name]));
   return (
     <article className="cel space-y-2.5 rounded-tile p-3">
-      <div className="flex items-center gap-3">
+      {/* The whole header opens the plan (details, who went, the album). Photos below open the viewer. */}
+      <Link
+        href={`/plans/${memory.planId}?from=plans`}
+        transitionTypes={["nav-forward"]}
+        aria-label={`${memory.place.name}, ${memoryDay(memory.startAt)}: open the plan`}
+        className={cn("-m-1 flex items-center gap-3 rounded-[12px] p-1", pressable, focusRing)}
+      >
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-bold">{memory.place.name}</h3>
           <p className="text-sm text-ink-muted">
@@ -172,7 +179,8 @@ function MemoryGroup({ memory, onOpen }) {
           </p>
         </div>
         <AvatarStack people={memory.people.map((p) => ({ id: p.userId, name: p.name, avatarUrl: p.avatarUrl }))} size="sm" max={4} />
-      </div>
+        <Icon name="arrowRight" strokeWidth={2.5} className="size-4 shrink-0 text-ink-muted" />
+      </Link>
       <ul className="grid grid-cols-3 gap-1.5">
         {memory.photos.map((p, i) => (
           <li key={p.id}>
@@ -188,9 +196,6 @@ function MemoryGroup({ memory, onOpen }) {
           </li>
         ))}
       </ul>
-      <Link href={`/plans/${memory.planId}?from=plans`} className={cn("inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-2", focusRing)}>
-        Open the plan
-      </Link>
     </article>
   );
 }
