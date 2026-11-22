@@ -65,7 +65,24 @@
 - **Book it:** party size, French/English message, booking link or phone.
 - **Swipe between tabs**, tap **Feed** again to refresh.
 
-## 5. Q&A cheat sheet
+## 5. How it works, one line each (full detail: [`docs/engine.md`](engine.md))
+
+| Concept | One line for a judge |
+|---|---|
+| **Where places come from** | 60 hand-picked places with verified hours and photos, ~150 city events this week (montreal.ca open data, official pictures), and in search 5,700 registry restaurants + 2,545 OpenStreetMap venues. |
+| **How a place is labelled** | category, tags from 15 interests (+ cuisine), price $–$$$$, hours per weekday, visit length, indoor/outdoor. Registry cuisines are guessed from the name; their hours are assumed → "Hours not verified" in the details and on the plan. |
+| **Free time** | 30-min slots over the next 7 days (9:00–23:00), from Google Calendar times only, with a 15-min buffer around every class or shift. |
+| **Hard rules** | open the whole visit, you're free, at least one friend free the whole visit, everyone within 35 min, no outdoor place if rain > 60 %. |
+| **Why one restaurant beats another** | 7 scores: interest 30 %, friends free 20 %, good hour 15 %, weather 10 %, fairness (longest trip in the group) 10 %, novelty 10 %, your own distance 5 %. Example: Ma Poule Mouillée 0.79 beats Beauty's 0.72 on "cheap-eats" (his interest) and being walkable. |
+| **Learning** | skip −0.25 on the category, save +0.15, go +0.30; two skips → that category × 0.3 → out of the top 10. |
+| **Variety** | curated first, a ±0.07 random shake per visit, −0.15 for places you just saw, no same category in 3 cards in a row, one card per place, up to 3 "also free" times. |
+| **Who gets the invite** | only the friends on that card (free for the whole visit, within 35 min), all ticked; the server re-checks they're still free, then signals only the plan's members; their phone refetches and shows the banner in < 1 s. |
+| **Confirmed** | as soon as one invitee says I'm in; everyone declines → cancelled; I'm in → Google Calendar event, Can't make it → removed. |
+| **Claude** | writes the one-line caption from the card's facts (one batched call, template if slow) and reads restaurant websites for booking. Never ranks. |
+| **Search** | plain code: words → filters (budget, friend names, tonight/tomorrow, categories, cuisines), then the same engine. |
+| **Privacy** | calendar times only, postal-code area only, opt-in location as status/ETA only, private photos, row-level security on every table. |
+
+## 6. Q&A cheat sheet
 
 | Question | Answer |
 |---|---|
@@ -79,7 +96,7 @@
 | What's next? | AI nudges ("you're all free Saturday and there's a market"), friend requests, transit, more cities. |
 | Challenges | **Touch Grass** (gets people out together), **People First** (fair for everyone's travel, privacy by design). |
 
-## 6. If something breaks on stage
+## 7. If something breaks on stage
 
 | Problem | Do |
 |---|---|
