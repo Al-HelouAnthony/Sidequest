@@ -41,6 +41,11 @@ export function MemoriesScreen() {
   const [failed, setFailed] = useState(false);
   /** Viewer position, or null when closed. `play` = auto-advance (stories row). */
   const [open, setOpen] = useState(/** @type {{ memory: number, photo: number, play: boolean } | null} */ (null));
+  /**
+   * Entrance animations play on the first visit only. Next keeps this page alive and hidden between tabs,
+   * and CSS animations would replay every time it's shown again; the effect cleanup (page hidden) turns them off.
+   */
+  const [intro, setIntro] = useState(true);
 
   const load = useCallback(async () => {
     setFailed(false);
@@ -60,6 +65,7 @@ export function MemoriesScreen() {
     return () => {
       clearTimeout(t);
       setOpen(null); // never come back to a viewer left open
+      setIntro(false);
     };
   }, [load]);
 
@@ -115,14 +121,24 @@ export function MemoriesScreen() {
             <section aria-label="Stories">
               <ul className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none">
                 {memories.map((m, i) => (
-                  <li key={m.planId} className="w-[76px] shrink-0">
+                  <li
+                    key={m.planId}
+                    className={cn("w-[76px] shrink-0", intro && "motion-safe:animate-pop")}
+                    style={{ animationDelay: `${Math.min(i, 8) * 70}ms` }}
+                  >
                     <button
                       type="button"
                       onClick={() => setOpen({ memory: i, photo: 0, play: true })}
                       aria-label={`Play ${m.place.name}, ${memoryDay(m.startAt)}, ${m.photos.length} ${m.photos.length === 1 ? "photo" : "photos"}`}
                       className={cn("flex w-full flex-col items-center gap-1 rounded-tile", pressable, focusRing)}
                     >
-                      <span className="rounded-full bg-accent p-[3px]">
+                      {/* The gradient ring sweeps in on its own layer behind the photo, which stays upright. */}
+                      <span className="relative isolate rounded-full p-[3px]">
+                        <span
+                          aria-hidden="true"
+                          className={cn("story-ring absolute inset-0 -z-10 rounded-full", intro && "motion-safe:animate-ring-in")}
+                          style={{ animationDelay: `${120 + Math.min(i, 8) * 70}ms` }}
+                        />
                         <span className="block rounded-full border-2 border-line bg-surface p-[2px]">
                           {/* eslint-disable-next-line @next/next/no-img-element -- signed Supabase URLs */}
                           <img src={m.photos[0].url} alt="" className="size-16 rounded-full object-cover" loading="lazy" />
@@ -139,14 +155,20 @@ export function MemoriesScreen() {
               <section key={month.label} aria-label={month.label} className="space-y-4">
                 <h2 className="halo font-display text-xl font-extrabold">{month.label}</h2>
                 {month.items.map(({ memory, index }) => (
-                  <MemoryGroup key={memory.planId} memory={memory} onOpen={(photo) => setOpen({ memory: index, photo, play: false })} />
+                  <MemoryGroup
+                    key={memory.planId}
+                    memory={memory}
+                    order={index}
+                    intro={intro}
+                    onOpen={(photo) => setOpen({ memory: index, photo, play: false })}
+                  />
                 ))}
               </section>
             ))}
           </>
         )}
 
-        <TabBar active="/plans" />
+        <TabBar active="/memories" />
       </main>
 
       {open && memories && memories[open.memory] && (
@@ -160,14 +182,17 @@ export function MemoriesScreen() {
   );
 }
 
-/** @param {{ memory: Memory, onOpen: (photoIndex: number) => void }} props */
-function MemoryGroup({ memory, onOpen }) {
+/** @param {{ memory: Memory, order: number, intro: boolean, onOpen: (photoIndex: number) => void }} props */
+function MemoryGroup({ memory, order, intro, onOpen }) {
   const names = Object.fromEntries(memory.people.map((p) => [p.userId, p.name]));
   return (
-    <article className="cel space-y-2.5 rounded-tile p-3">
+    <article
+      className={cn("cel space-y-2.5 rounded-tile p-3", intro && "motion-safe:animate-rise")}
+      style={{ animationDelay: `${150 + Math.min(order, 6) * 90}ms` }}
+    >
       {/* The whole header opens the plan (details, who went, the album). Photos below open the viewer. */}
       <Link
-        href={`/plans/${memory.planId}?from=plans`}
+        href={`/plans/${memory.planId}?from=memories`}
         transitionTypes={["nav-forward"]}
         aria-label={`${memory.place.name}, ${memoryDay(memory.startAt)}: open the plan`}
         className={cn("-m-1 flex items-center gap-3 rounded-[12px] p-1", pressable, focusRing)}
@@ -183,12 +208,20 @@ function MemoryGroup({ memory, onOpen }) {
       </Link>
       <ul className="grid grid-cols-3 gap-1.5">
         {memory.photos.map((p, i) => (
-          <li key={p.id}>
+          <li
+            key={p.id}
+            className={cn(intro && "motion-safe:animate-polaroid-in")}
+            style={{ animationDelay: `${260 + Math.min(order, 6) * 90 + Math.min(i, 8) * 60}ms`, "--tilt": `${i % 2 ? 5 : -6}deg` }}
+          >
             <button
               type="button"
               onClick={() => onOpen(i)}
               aria-label={`Open photo ${i + 1} of ${memory.photos.length} by ${names[p.userId] ?? "a friend"}`}
-              className={cn("block w-full rounded-[12px]", pressable, focusRing)}
+              className={cn(
+                "block w-full rounded-[12px] transition-transform duration-200 hover:-rotate-2 hover:scale-[1.03]",
+                pressable,
+                focusRing,
+              )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- signed Supabase URLs */}
               <img src={p.url} alt="" loading="lazy" className="aspect-[3/4] w-full rounded-[12px] border-2 border-line bg-raised object-cover" />

@@ -70,12 +70,7 @@ export function MyPlans() {
     <>
     <AppBackground />
     <main className="relative z-10 mx-auto min-h-dvh w-full max-w-md space-y-5 px-4 pt-safe" style={{ paddingBottom: TAB_BAR_SPACE }}>
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
-        <Link href="/memories" className={buttonClasses({ variant: "secondary" })}>
-          <span aria-hidden="true">📸</span> Memories
-        </Link>
-      </div>
+      <h1 className="halo flex min-h-11 items-center font-display text-heading font-extrabold">My plans</h1>
 
       <StartNow />
 
@@ -185,8 +180,13 @@ export function StartNow({ showPreviewLink = true }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(/** @type {string | null} */ (null));
-  /** Bumped when starting fails, so the broken bar comes back for another try. */
+  /**
+   * Puts the broken bar back: right away when starting fails, and after a success only once this kept-alive
+   * page is hidden (the cleanup below). Never while we're still navigating to the new plan, so it can't
+   * be broken a second time and create a duplicate plan.
+   */
   const [resetKey, setResetKey] = useState(0);
+  useEffect(() => () => setResetKey((k) => k + 1), []);
 
   const start = async () => {
     setBusy(true);
@@ -223,11 +223,6 @@ export function StartNow({ showPreviewLink = true }) {
         doneLabel={busy ? "Finding a spot…" : "Let's go!"}
         ariaLabel="Start a sidequest now: swipe right or press Enter"
       />
-      {busy && (
-        <p role="status" className="text-sm font-semibold text-ink-muted">
-          Finding a spot…
-        </p>
-      )}
       {error && (
         <p role="alert" className="text-sm font-semibold text-danger">
           {error}
