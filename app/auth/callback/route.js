@@ -51,12 +51,14 @@ export async function GET(request) {
   let redirectTo = next;
   try {
     const result = await afterSignIn(
-      { authUser: session.user, providerToken: session.provider_token, next },
+      { authUser: session.user, providerToken: session.provider_token, providerRefreshToken: session.provider_refresh_token, next },
       {
         getUser: data.getUser,
         ensureUser: optional("ensureUser"),
         // Part 14: Google free/busy → busy_blocks, saved with Adel's replaceBusyBlocks.
         syncCalendar: (userId, token) => syncCalendar(userId, token, { save: optional("replaceBusyBlocks") }),
+        // G2: Adel's server-only google_tokens table (absent until his migration 0007 is merged).
+        saveRefreshToken: optional("saveGoogleRefreshToken"),
       },
     );
     redirectTo = result.redirectTo;
