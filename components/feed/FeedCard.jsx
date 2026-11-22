@@ -7,6 +7,7 @@
  */
 import { Fragment, useState } from "react";
 import { formatSlot } from "@/lib/time";
+import { EVENT_SOURCE, isEvent, startsLabel } from "./events";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { IconButton } from "@/components/ui/Button";
 import { SwipeToGo } from "@/components/ui/SwipeToGo";
@@ -56,6 +57,10 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
   // N1: registry places (business list) only have assumed hours. Shows once `place.hoursVerified` is in the
   // FeedCard contract (Anthony); until then the feed's contract check strips it and nothing shows.
   const hoursUnverified = /** @type {{ hoursVerified?: boolean }} */ (place).hoursVerified === false;
+  // City events (contract: place.source "event" + optional startsAt): exact start, "Free" badge, source line.
+  const ev = /** @type {{ source?: string, startsAt?: string }} */ (place);
+  const event = isEvent(place);
+  const freeEvent = event && place.tags.includes("free");
   const [photoFailed, setPhotoFailed] = useState(false);
   // Bumped on every save so the burst replays (new key = new animation).
   const [burst, setBurst] = useState(0);
@@ -146,8 +151,13 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
           <div className="flex flex-wrap items-center gap-2">
             <p className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-line bg-teal px-3 text-sm font-bold text-on-teal tabular-nums shadow-[0_2px_0_var(--color-shade)]">
               <Icon name="clock" cel strokeWidth={1.9} className="size-[18px]" />
-              {formatSlot(slot.start, slot.end)}
+              {event && ev.startsAt ? startsLabel(ev.startsAt, { withDay: true }) : formatSlot(slot.start, slot.end)}
             </p>
+            {freeEvent && (
+              <p className="inline-flex h-8 items-center rounded-full border-2 border-line bg-surface px-3 text-sm font-bold text-ink shadow-[0_2px_0_var(--color-shade)]">
+                Free
+              </p>
+            )}
             {hoursUnverified && <HoursNotVerified />}
           </div>
 
@@ -187,6 +197,7 @@ export function FeedCard({ card, saved = false, onSkip, onSave, onGo, onWhy, onD
           </div>
 
           <p className="line-clamp-2 text-[15px] leading-snug text-white/90">{caption}</p>
+          {event && <p className="-mt-1.5 text-caption font-semibold text-white/75">Source: {EVENT_SOURCE}</p>}
 
           <div className="flex items-center gap-3 pt-1">
             <IconButton label={`Skip ${place.name}`} icon={<Icon name="x" strokeWidth={2.5} />} size="lg" onClick={onSkip} />

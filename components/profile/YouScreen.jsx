@@ -23,7 +23,7 @@ import { InterestPicker, PostalCodeField, isPostalCode, postalErrorFrom } from "
  * services' attribution terms). Wording from Adel; each source links to its licence or attribution page.
  */
 const CREDITS = [
-  { text: "Ville de Montréal (CC BY 4.0)", href: "https://creativecommons.org/licenses/by/4.0/" },
+  { text: "Ville de Montréal open data, places and events (CC BY 4.0)", href: "https://creativecommons.org/licenses/by/4.0/" },
   { text: "© OpenStreetMap contributors", href: "https://www.openstreetmap.org/copyright" },
   { text: "© openrouteservice.org by HeiGIT", href: "https://openrouteservice.org/" },
   { text: "weather by Open-Meteo.com", href: "https://open-meteo.com/" },
