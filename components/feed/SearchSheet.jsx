@@ -5,20 +5,21 @@
  * words into FeedFilters, Anthony's engine ranks) → SearchResponse { filters, summary, cards, nextCursor } → onResult.
  * 422 = the words couldn't be turned into filters: ask to rephrase (and shake the field) instead of an error.
  *
- * Cel motion (motion-safe only): contents rise in one after another, example chips pop in and press down,
- * the field lifts with an orange cel border + hard shadow on focus, the magnifier wobbles while searching,
+ * Recent searches (components/feed/searchHistory.js): the last 8 successful queries, newest first; tap to run one
+ * again, ✕ to remove it, "Clear all". Loaded after mount (localStorage doesn't exist while prerendering).
+ *
+ * Cel motion (motion-safe only): contents rise in one after another, history rows press down,
+ * the field lifts with a teal cel border + hard shadow on focus, the magnifier wobbles while searching,
  * the field shakes once on a "can't understand", the summary chips pop in one by one.
  */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SearchResponse } from "@/types/api";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { cn, focusRing, pressable } from "@/components/ui/classes";
-
-/** Tap-to-try queries (the first one is the demo line in PLAN.md §8). */
-const EXAMPLES = ["something cheap with Maya tomorrow night", "coffee this weekend", "outdoors with Karim on Saturday"];
+import { addToHistory, clearHistory, readHistory, removeFromHistory } from "@/components/feed/searchHistory";
 
 /** Stagger for the rise-in, in ms. */
 const STEP = 60;
@@ -39,6 +40,14 @@ export function SearchSheet({ open, initialQuery = "", onClose, onResult }) {
   /** Bumped on a "can't understand" so the field shake replays each time. */
   const [nope, setNope] = useState(0);
   const inputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  /** Recent searches; null until read from storage after mount. */
+  const [history, setHistory] = useState(/** @type {string[] | null} */ (null));
+
+  useEffect(() => {
+    // Next tick: keeps the read out of render and out of the effect body (no cascading render warning).
+    const t = setTimeout(() => setHistory(readHistory()), 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const run = async (/** @type {string} */ text) => {
     const q = text.trim();
@@ -63,6 +72,7 @@ export function SearchSheet({ open, initialQuery = "", onClose, onResult }) {
         console.error("[search] response does not match SearchResponse", parsed.error.issues);
         throw new Error("bad shape");
       }
+      setHistory(addToHistory(q)); // only successful searches are remembered
       onResult(parsed.data, q);
     } catch (e) {
       console.error("[search]", e);
@@ -165,30 +175,60 @@ export function SearchSheet({ open, initialQuery = "", onClose, onResult }) {
           </Button>
         </div>
 
-        <div className="space-y-2">
-          <p {...rise(2)} className="text-sm font-semibold text-ink-muted motion-safe:animate-rise">
-            Try
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {EXAMPLES.map((ex, i) => (
+        <section aria-labelledby="recent-searches" className="space-y-2" {...rise(2)}>
+          <h3 id="recent-searches" className="text-label font-bold text-ink-muted">
+            Recent searches
+          </h3>
+          {history !== null && history.length === 0 && (
+            <p className="text-sm text-ink-muted">Your searches show up here.</p>
+          )}
+          {history !== null && history.length > 0 && (
+            <>
+              <ul className="space-y-2">
+                {history.map((h) => (
+                  <li key={h} className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => run(h)}
+                      className={cn(
+                        // A cel-sm island that sinks when pressed (press = outline, rim, band, hard shadow).
+                        "press flex min-h-12 min-w-0 flex-1 items-center gap-2.5 rounded-tile bg-surface px-3.5 text-left text-sm font-semibold text-ink disabled:opacity-55",
+                        focusRing,
+                      )}
+                    >
+                      <Icon name="clock" cel strokeWidth={1.9} className="size-5 shrink-0" />
+                      <span className="truncate">{h}</span>
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Remove ${h}`}
+                      disabled={busy}
+                      onClick={() => setHistory(removeFromHistory(h))}
+                      className={cn(
+                        "press inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-ink disabled:opacity-55",
+                        focusRing,
+                      )}
+                    >
+                      <Icon name="x" strokeWidth={2.6} className="size-4" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
               <button
-                key={ex}
                 type="button"
                 disabled={busy}
-                onClick={() => run(ex)}
-                style={{ animationDelay: `${(3 + i) * STEP}ms` }}
+                onClick={() => setHistory(clearHistory())}
                 className={cn(
-                  // Example chips are real cel buttons: outlined, hard shadow, they sink when pressed.
-                  "press min-h-11 rounded-full bg-surface px-3.5 text-left text-sm font-semibold text-ink disabled:opacity-55",
-                  "hover:bg-peach/40 motion-safe:animate-pop",
+                  "min-h-11 rounded-full px-1 text-sm font-semibold text-ink-muted underline underline-offset-2 hover:text-ink",
                   focusRing,
                 )}
               >
-                {ex}
+                Clear all
               </button>
-            ))}
-          </div>
-        </div>
+            </>
+          )}
+        </section>
       </form>
     </BottomSheet>
   );
