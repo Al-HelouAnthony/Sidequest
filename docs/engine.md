@@ -246,7 +246,7 @@ On a confirmed plan, the organizer gets a **booking type**: events → tickets (
 Opt-in, members only, from **30 min before to 30 min after** the start, at most one update every 15 s. Others see **status only**: *arrived* (within 150 m), *8 min away*, *running late* (ETA after the start) or *not sharing*. **Never coordinates.** Rows are deleted after the plan.
 
 ### Memory photos → Memories
-In the first 15 minutes of a plan and around halfway, a banner says "📸 Take a memory photo"; members can add photos from 15 min before the start until 12 h after the end. Photos are resized in the phone (1280 px), checked on the server (real JPEG/PNG/WebP, ≤ 5 MB), stored in a **private** bucket and shown with links that expire after 1 hour, to members only. **Memories** (My plans → 📸) gathers every photo from all your plans: a story ring per outing, then month → outing → grid; tap an outing to open its plan.
+In the first 15 minutes of a plan and around halfway, a banner says "📸 Take a memory photo"; members can add photos from 15 min before the start until 12 h after the end. Photos are resized in the phone (1280 px), checked on the server (real JPEG/PNG/WebP, ≤ 5 MB), stored in a **private** bucket and shown with links that expire after 1 hour, to members only. **Memories** (its own tab, camera icon) gathers every photo from all your plans: a story ring per outing, then month → outing → grid; tap an outing to open its plan.
 
 ---
 

@@ -66,7 +66,7 @@
 ## 4. Features to mention if asked (each is one tap away)
 
 - **Start a sidequest now** (My plans): picks a place open now + friends free in the next hour.
-- **Memories** (My plans → 📸): every photo from your outings, story style. Tap an outing → its plan.
+- **Memories** (its own tab, camera icon): every photo from your outings, story style. Tap an outing → its plan.
 - **Live location** (from 30 min before): "Maya · 8 min away / running late", **never** coordinates.
 - **Google Calendar:** I'm in → added; can't make it / cancelled → removed.
 - **Book it:** party size, French/English message, booking link or phone.
