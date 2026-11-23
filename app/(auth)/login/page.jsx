@@ -4,6 +4,7 @@
  * (it reads ?error=, which is request data under cacheComponents).
  */
 import { Suspense } from "react";
+import Link from "next/link";
 import { mockUsers, DEMO_USER_ID } from "@/lib/mocks/users";
 import { LoginCard } from "./LoginCard";
 
@@ -17,6 +18,11 @@ export default function LoginPage() {
       <Suspense fallback={null}>
         <LoginCard demoFriends={demoFriends} />
       </Suspense>
+      <p className="mt-6 text-center text-xs text-ink-muted">
+        <Link href="/privacy" className="underline underline-offset-2">
+          Privacy policy
+        </Link>
+      </p>
     </main>
   );
 }
